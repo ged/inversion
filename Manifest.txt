@@ -1,0 +1,6 @@
+History.md
+README.md
+Rakefile
+bin/inversion
+lib/inversion.rb
+spec/inversion_spec.rb
