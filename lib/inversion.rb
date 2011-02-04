@@ -8,7 +8,7 @@ require 'nokogiri'
 # @author Michael Granger <ged@FaerieMUD.org>
 # @author Mahlon E. Smith <mahlon@martini.nu>
 #
-module Inversion
+class Inversion
 
 	# Library version constant
 	VERSION = '0.0.1'
