@@ -1,4 +1,5 @@
 #!/usr/bin/env rspec -cfd -b
+# vim: set noet nosta sw=4 ts=4 :
 
 BEGIN {
 	require 'pathname'
@@ -13,8 +14,8 @@ require 'inversion'
 
 describe Inversion do
 
-	it "is well-tested" do
-		fail "it isn't"
+	it "defines a version" do
+		Inversion::VERSION.should =~ /^\d+(\.\d+)*$/
 	end
 
 end
