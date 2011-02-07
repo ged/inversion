@@ -12,6 +12,18 @@ require 'nokogiri'
 #
 class Inversion::Template
 
+	# The hash of loaded tag types
+	@tag_types = nil
+
+
+	### Return a Hash of all loaded tag types, loading them if they haven't been loaded already.
+	### @return [Hash<Symbol => Inversion::Template::Tag>] the hash of tags
+	def self::tag_types
+		@tag_types ||= Inversion::Template::Tag.load_all
+		return @tag_types
+	end
+
+
 	### Create a new Inversion:Template with the given +source+.
 	### @param [String, #read]  source  the template source, which can either be a String or
 	###                                 an object that can be #read from.
