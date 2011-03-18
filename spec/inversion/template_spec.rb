@@ -27,6 +27,5 @@ describe Inversion::Template do
 	it "renders the source as-is if there are no instructions" do
 		Inversion::Template.new( "a template" ).render.should == 'a template'
 	end
-
 end
 
