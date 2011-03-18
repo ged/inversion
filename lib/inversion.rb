@@ -13,7 +13,7 @@ module Inversion
 	VERSION = '0.0.1'
 
 	# Version-control revision constant
-	REVISION = %q$Revision: 7f68e6c0e7f1 $
+	REVISION = %q$Revision$
 
 	require 'inversion/template'
 
