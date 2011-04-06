@@ -12,12 +12,12 @@ BEGIN {
 
 require 'rspec'
 require 'spec/lib/helpers'
-require 'inversion'
+require 'inversion/template/textnode'
 
-describe Inversion do
+describe Inversion::Template::TextNode do
 
-	it "defines a version" do
-		Inversion::VERSION.should =~ /^\d+(\.\d+)*$/
+	it "renders itself unchanged" do
+		Inversion::Template::TextNode.new( "unto thee" ).render.should == "unto thee"
 	end
 
 end

@@ -2,46 +2,40 @@
 
 require 'pp'
 require 'ripper'
-require 'nokogiri'
 
 class IdentifierFinder < Ripper::Filter
 
-	def initialize( *args )
-		@after_period = false
-		super
-	end
-
+	### Add the identifier to the accumulator
 	def on_ident( tok, data )
-		data << tok unless @after_period
-		@after_period = false
-		data
-	end
-
-	def on_period( tok, data )
-		@after_period = true
-		data
+		data << tok
 	end
 
 	def on_default( event, tok, data )
 		$stderr.puts "%s: %p" % [ event, tok ]
-		@after_period = false
 		data
 	end
 
+
 end
 
+$stderr.puts "Creating an IdentifierFinder"
+idfinder = IdentifierFinder.new( "foo" )
+$stderr.puts "  %p" % [ idfinder ]
+identifiers = idfinder.parse( [] )
+$stderr.puts "  done: %p" % [ identifiers ]
 
 
-$stdout.sync = true
 
-doc = Nokogiri::XML( DATA.read )
-doc.xpath( '//processing-instruction()' ).each do |elem|
-	# identifiers = IdentifierFinder.new( elem.text ).parse( [] )
-	# $stderr.puts "%s: %p" % [ elem, tree ]
-
-	iter = Ripper.sexp( elem.text ).flatten.each_cons( 3 )
-	pp iter.find_all {|op, _, ident| op == :var_ref }.map {|triple| triple[2] } 
-end
+# $stdout.sync = true
+#
+# doc = Nokogiri::XML( DATA.read )
+# doc.xpath( '//processing-instruction()' ).each do |elem|
+# 	# identifiers = IdentifierFinder.new( elem.text ).parse( [] )
+# 	# $stderr.puts "%s: %p" % [ elem, tree ]
+#
+# 	iter = Ripper.sexp( elem.text ).flatten.each_cons( 3 )
+# 	pp iter.find_all {|op, _, ident| op == :var_ref }.map {|triple| triple[2] }
+# end
 
 
 

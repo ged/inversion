@@ -1,6 +1,10 @@
 #!/usr/bin/env rake
 
-require 'hoe'
+begin
+	require 'hoe'
+rescue LoadError
+	abort "This Rakefile requires hoe (gem install hoe)"
+end
 
 Hoe.plugin :mercurial
 Hoe.plugin :yard
@@ -16,7 +20,6 @@ hoespec = Hoe.spec 'inversion' do
 	self.developer 'Mahlon E. Smith', 'mahlon@martini.nu'
 
 	self.extra_deps.push *{
-		'nokogiri' => '~> 1.4',
 	}
 
 	self.extra_dev_deps.push *{

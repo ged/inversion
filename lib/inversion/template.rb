@@ -1,9 +1,7 @@
 #!/usr/bin/env ruby
 # vim: set noet nosta sw=4 ts=4 :
 
-require 'inversion'
-require 'ripper'
-require 'nokogiri'
+require 'inversion' unless defined?( Inversion )
 
 # FIX (top-level documentation)
 #
@@ -12,17 +10,7 @@ require 'nokogiri'
 #
 class Inversion::Template
 
-	# The hash of loaded tag types
-	@tag_types = nil
-
-
-	### Return a Hash of all loaded tag types, loading them if they haven't been loaded already.
-	### @return [Hash<Symbol => Inversion::Template::Tag>] the hash of tags
-	def self::tag_types
-		@tag_types ||= Inversion::Template::Tag.load_all
-		return @tag_types
-	end
-
+	require 'inversion/template/parser'
 
 	### Create a new Inversion:Template with the given +source+.
 	### @param [String, #read]  source  the template source, which can either be a String or
@@ -31,6 +19,8 @@ class Inversion::Template
 	def initialize( source )
 		source  = source.read if source.respond_to?( :read )
 		@source = source
+		@parser = Inversion::Template::Parser.new
+		@tree   = @parser.parse( source )
 	end
 
 
