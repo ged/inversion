@@ -1,10 +1,63 @@
 # inversion
 
-* FIX (url)
+* http://deveiate.org/projects/Inversion
+
 
 ## Description
 
-FIX (describe your package)
+Inversion is a templating system for Ruby that implements the [Passive
+View][passview] pattern. It uses the [Inversion of Control][ioc] principle to
+decouple the contents and structure of the template from the code that uses it,
+and is intended for use by implementations of the 
+[Supervising Controller][supcontrol] pattern.
+
+What this means is that setting data values in an Inversion template is
+accomplished using Ruby attribute methods on the template object, rather than
+intermediate data structures that is combined with the template when it's
+rendered. This allows the programmer to add data directly and individually from
+whatever part of the code it is generated, by the systems which generate it,
+rather than requiring that all code that affects rendering be written with the
+intermediate data structures in mind. The template object itself can be passed
+around without sacrificing encapsulation or exposing unnecessary scope.
+
+It also means that the scope of the template object when it's being rendered is
+not shared with the code that uses it, or vice-versa, in contrast to many modern
+implementations of Model-View-Controller. This encourages proper separation of
+responsibility and makes it possible to test the Controller and View independent
+of one another.
+
+For instance, ERB templates such as those used by Ruby on Rails' Action View are
+rendered by evaluating them in the Binding of their caller. This means that the
+controller must be explicitly aware of the variables and data structures
+required by the template, making it impossible, or at least impractical, to test
+either part in isolation.
+
+It also means that changes to state that happen in the template bleed over into
+the state of the controller. This is often used to introduce side-effects while
+rendering the template, further coupling the presentation layer to the
+controlling layer.
+
+	#!/usr/bin/env ruby
+	require 'erb'
+	
+	TEMPLATE = <<END_TEMPLATE
+	<% var = "foo" %>
+	END_TEMPLATE
+	 
+	var = 1
+	template = ERB.new( TEMPLATE )
+	   
+	puts "Before rendering, var = %p" % [ var ]
+	output = template.result( binding() )
+	puts "After rendering, var = %p" % [ var ]
+
+This outputs:
+ 
+	$ ruby experiments/erb_scope_bleed.rb 
+	Before rendering, var = 1
+	After rendering, var = "foo"
+
+[...more examples forthcoming...]
 
 
 ## Installation
@@ -14,17 +67,15 @@ FIX (describe your package)
 
 ## Contributing
 
-You can check out the current development source with Mercurial like so:
+You can check out the current development source [with Mercurial][hgrepo], or
+if you prefer Git, via the project's [Github mirror][gitmirror].
 
-    hg clone FIX (hg repo)
-
-Or if you prefer Git, via its Github mirror:
-
-    FIX (github mirror)
+You can submit bug reports, suggestions, and read more about future plans at
+[the project page][projectpage].
 
 After checking out the source, run:
 
-  $ rake newb
+	$ rake newb
 
 This task will install any missing dependencies, run the tests/specs,
 and generate the API documentation.
@@ -59,3 +110,13 @@ SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
 CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
 OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+
+[passview]: http://martinfowler.com/eaaDev/PassiveScreen.html
+[ioc]: http://en.wikipedia.org/wiki/Inversion_of_control
+[supcontrol]: http://martinfowler.com/eaaDev/SupervisingPresenter.html
+[hgrepo]: http://repo.deveiate.org/Inversion
+[gitmirror]: git://github.com/ged/Inversion.git
+[projectpage]: http://deveiate.org/projects/Inversion
+
+
