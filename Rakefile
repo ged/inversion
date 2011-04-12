@@ -19,27 +19,12 @@ hoespec = Hoe.spec 'inversion' do
 	self.developer 'Michael Granger', 'ged@FaerieMUD.org'
 	self.developer 'Mahlon E. Smith', 'mahlon@martini.nu'
 
-	self.extra_deps.push *{
-	}
-
-	self.extra_dev_deps.push *{
-		'rspec' => '~> 2.4',
-	}
+	self.dependency 'ripper', '~> 1.0'
+	self.dependency 'rspec', '~> 2.4', :development
 
 	self.spec_extras[:licenses] = ["BSD"]
-	self.spec_extras[:post_install_message] = %{
-
-		Ka-plow!
-		
-	}.gsub( /^\t{2}/, '' )
-
-	self.spec_extras[:signing_key] = '/Volumes/Keys/ged-private_gem_key.pem'
-
 	self.require_ruby_version( '>=1.9.2' )
-
 	self.hg_sign_tags = true if self.respond_to?( :hg_sign_tags= )
-	self.yard_opts = [ '--protected', '--verbose' ] if self.respond_to?( :yard_opts= )
-
 	self.rdoc_locations << "deveiate:/usr/local/www/public/code/#{remote_rdoc_dir}"
 end
 
