@@ -91,7 +91,7 @@ and generate the API documentation.
 
 ## License
 
-Copyright (c) 2011, Michael Granger
+Copyright © 2011, Michael Granger and Mahlon E. Smith
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
