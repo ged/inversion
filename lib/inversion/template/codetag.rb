@@ -93,6 +93,7 @@ class Inversion::Template::CodeTag < Inversion::Template::Tag
 		super
 
 		@body = body.strip
+		@identifiers = []
 		@matched_pattern = self.match_tag_pattern( body )
 	end
 
@@ -106,6 +107,12 @@ class Inversion::Template::CodeTag < Inversion::Template::Tag
 
 	# @return [Array<Symbol>] the identifiers in the code contained in the tag
 	attr_reader :identifiers
+
+
+	### Render the node as text.
+	### @return [String] the rendered node
+	pure_virtual :render
+
 
 
 	#########

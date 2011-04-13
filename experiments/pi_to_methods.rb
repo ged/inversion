@@ -39,7 +39,7 @@ class InversionTemplate
 
 	def create_tag( type, content )
 		case type
-			
+
 		when 'call'
 			return eval "lambda { #{content} }", binding()
 		else

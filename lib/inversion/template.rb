@@ -1,4 +1,3 @@
-#!/usr/bin/env ruby
 # vim: set noet nosta sw=4 ts=4 :
 
 require 'inversion' unless defined?( Inversion )
@@ -17,10 +16,14 @@ class Inversion::Template
 	###                                 an object that can be #read from.
 	### @return [Inversion::Template]   the new template
 	def initialize( source )
-		source  = source.read if source.respond_to?( :read )
-		@source = source
-		@parser = Inversion::Template::Parser.new
-		@tree   = @parser.parse( source )
+		source      = source.read if source.respond_to?( :read )
+		@source     = source
+		@parser     = Inversion::Template::Parser.new
+		@tree       = @parser.parse( source )
+
+		@attributes = {}
+
+		self.define_attribute_accessors
 	end
 
 
@@ -31,12 +34,74 @@ class Inversion::Template
 	### @return [String] the raw template source
 	attr_reader :source
 
+	### @return [Hash] the hash of attributes added by template directives
+	attr_reader :attributes
+
+	### @return [Array] the array of Inversion::Template::Node objects
+	attr_reader :tree
+
 
 	### Render the template.
 	### @return [String] the rendered template content
 	def render
-		return self.source
+		output = ''
+
+		self.walk_tree do |node|
+			output << node.render( self )
+		end
+
+		return output
 	end
+
+
+
+	#########
+	protected
+	#########
+
+	### Search for identifiers in the template's node tree and declare an accessor
+	### for each one that's found.
+	def define_attribute_accessors
+		self.walk_tree do |node|
+			self.add_attributes_from_node( node )
+		end
+
+		self.attributes.each do |key, _|
+			reader, writer = self.make_attribute_accessors( key )
+
+			self.singleton_class.send( :define_method, key, &reader )
+			self.singleton_class.send( :define_method, "#{key}=", &writer )
+		end
+	end
+
+
+	### Add attributes for the given +node+'s identifiers.
+	def add_attributes_from_node( node )
+		if node.respond_to?( :identifiers )
+			node.identifiers.each do |id|
+				next if @attributes.key?( id.to_sym )
+				@attributes[ id.to_sym ] = nil
+			end
+		end
+	end
+
+
+	### Walk the template's node tree, yielding each node in turn to the given block.
+	def walk_tree( nodes=@tree, &block )
+		nodes.each do |node|
+			yield( node )
+		end
+	end
+
+
+	### Make method bodies
+	def make_attribute_accessors( key )
+		reader = lambda { self.attributes[key] }
+		writer = lambda {|newval| self.attributes[key] = newval }
+
+		return reader, writer
+	end
+
 
 end # class Inversion::Template
 

@@ -36,6 +36,9 @@ class Inversion::Template::AttrTag < Inversion::Template::CodeTag
 		@format = nil
 
 		super
+
+		# Add an identifier for the tag name
+		self.identifiers << self.name.untaint.to_sym
 	end
 
 
@@ -50,6 +53,12 @@ class Inversion::Template::AttrTag < Inversion::Template::CodeTag
 	# one was declared)
 	attr_accessor :format
 
+
+	### Render the tag attributes of the specified +template+ and return them.
+	def render( template=nil )
+		return '' if template.nil?
+		return template.attributes[ self.name.to_sym ].to_s
+	end
 
 end # class Inversion::Template::AttrTag
 

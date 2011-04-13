@@ -24,7 +24,7 @@ class Inversion::Template::TextNode < Inversion::Template::Node
 
 	### Render the node.
 	### @return [String]  the rendered text
-	def render
+	def render( unused=nil )
 		return @source.dup
 	end
 
