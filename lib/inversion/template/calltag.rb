@@ -29,11 +29,14 @@ class Inversion::Template::CallTag < Inversion::Template::CodeTag
 
 	### Parse a new CodeTag from the given +code+.
 	def initialize( code )
-		@identifier = nil
+		@attribute = nil
 		@methodchain = []
 		@format = nil
 
 		super
+
+		self.identifiers << self.attribute.untaint.to_sym
+		# :TODO: Add identifiers for the methodchain, too.
 	end
 
 

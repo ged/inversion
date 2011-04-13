@@ -37,23 +37,23 @@ describe Inversion::Template do
 		let( :template ) { Inversion::Template.new("<h1><?attr foo ?></h1>") }
 
 
-		# it "has a reader for getting the tag's value" do
-		# 	template.should respond_to( :foo )
-		# end
-		# 
-		# it "has an accessor for setting the tag's value" do
-		# 	template.should respond_to( :foo= )
-		# end
+		it "has a reader for getting the tag's value" do
+			template.should respond_to( :foo )
+		end
 
-		# it "renders scalar values set for the tag" do
-		# 	template.foo = "a lion"
-		# 	template.render.should == "<h1>a lion</h1>"
-		# end
-		# 
-		# it "renders an array value set for the tag by joining" do
-		# 	template.foo = [ 'a lion', 'a little guy', 'a bad mousie', 'one birdy' ]
-		# 	template.render.should == "<h1>a lion a little guy a bad mousie one birdy</h1>"
-		# end
+		it "has an accessor for setting the tag's value" do
+			template.should respond_to( :foo= )
+		end
+
+		it "renders scalar values set for the tag" do
+			template.foo = "a lion"
+			template.render.should == "<h1>a lion</h1>"
+		end
+
+		it "renders an non-String value set for the tag using #to_s" do
+			template.foo = [ 'a lion', 'a little guy', 'a bad mousie', 'one birdy' ]
+			template.render.should == %{<h1>["a lion", "a little guy", "a bad mousie", "one birdy"]</h1>}
+		end
 	end
 end
 
