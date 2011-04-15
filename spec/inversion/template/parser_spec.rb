@@ -26,7 +26,7 @@ describe Inversion::Template::Parser do
 
 		result.should have( 1 ).member
 		result.first.should be_a( Inversion::Template::TextNode )
-		result.first.source.should == 'render unto Caesar'
+		result.first.body.should == 'render unto Caesar'
 	end
 
 	it "parses an empty string as a empty tree" do
@@ -56,8 +56,23 @@ describe Inversion::Template::Parser do
 		result[2].should be_a( Inversion::Template::TextNode )
 	end
 
-	it "can ignore unknown tags"
-	it "can raise exceptions on unknown tags"
+	it "ignores unknown tags by default" do
+		result = Inversion::Template::Parser.new.parse( "Text <?hoooowhat ?>" )
+
+		result.should have( 2 ).members
+		result[0].should be_a( Inversion::Template::TextNode )
+		result[1].should be_a( Inversion::Template::TextNode )
+		result[1].body.should == '<?hoooowhat ?>'
+	end
+
+
+	it "can raise exceptions on unknown tags" do
+		expect {
+			Inversion::Template::Parser.new( :raise_on_unknown => true ).
+				parse( "Text <?hoooowhat ?>" )
+		}.to raise_exception( Inversion::ParseError, /unknown tag/i )
+
+	end
 
 end
 

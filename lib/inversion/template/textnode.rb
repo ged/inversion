@@ -8,8 +8,8 @@ class Inversion::Template::TextNode < Inversion::Template::Node
 
 	### Create a new TextNode with the specified +source+.
 	### @param [String] source  the text source to wrap in the node object
-	def initialize( source )
-		@source = source
+	def initialize( body )
+		@body = body
 		super()
 	end
 
@@ -18,14 +18,14 @@ class Inversion::Template::TextNode < Inversion::Template::Node
 	public
 	######
 
-	# The node source
-	attr_reader :source
+	# The node body
+	attr_reader :body
 
 
 	### Render the node.
 	### @return [String]  the rendered text
 	def render( unused=nil )
-		return @source.dup
+		return @body.dup
 	end
 
 end # class Inversion::Template::TextNode
