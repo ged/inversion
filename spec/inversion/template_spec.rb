@@ -28,6 +28,12 @@ describe Inversion::Template do
 		Inversion::Template.new( io ).source.should == 'a template'
 	end
 
+	it "can be loaded from a file" do
+		io = StringIO.new( 'file contents' )
+		File.should_receive( :open ).with( '/tmp/hooowat', 'r' ).and_yield( io )
+		Inversion::Template.load( '/tmp/hooowat' ).source.should == 'file contents'
+	end
+
 	it "renders the source as-is if there are no instructions" do
 		Inversion::Template.new( "a template" ).render.should == 'a template'
 	end

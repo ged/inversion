@@ -2,14 +2,29 @@
 
 require 'inversion' unless defined?( Inversion )
 
-# FIX (top-level documentation)
+# The main template class. Instances of this class are created by parsing template
+# source and combining the resulting node tree with a set of attributes that
+# can be used to populate it when rendered.
 #
 # @author Michael Granger <ged@FaerieMUD.org>
 # @author Mahlon E. Smith <mahlon@martini.nu>
 #
 class Inversion::Template
+	include Inversion::Loggable
 
 	require 'inversion/template/parser'
+
+
+	### Read a template object from the specified +path+.
+	### @param [String] path  the path to the template
+	### @return [Inversion::Template]
+	def self::load( path )
+		File.open( path, 'r' ) do |io|
+			return self.new( io )
+		end
+	end
+
+
 
 	### Create a new Inversion:Template with the given +source+.
 	### @param [String, #read]  source  the template source, which can either be a String or

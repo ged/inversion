@@ -20,15 +20,40 @@ class Inversion::Template::Parser
 	# The pattern for matching the beginning of a tag.
 	TAG_START = /[<\[]\?/
 
+	# Default values for parser configuration options.
+	DEFAULT_OPTIONS = {
+		:raise_on_unknown => false,
+	}
 
-	### Parse the given +source+ and return a
+
+
+	### Create a new Inversion::Template::Parser with the specified config +options+.
+	### @param [Hash] options  configuration options that override DEFAULT_OPTIONS
+	def initialize( options={} )
+		@options = DEFAULT_OPTIONS.merge( options )
+	end
+
+
+	######
+	public
+	######
+
+	# The parser's config options
+	attr_reader :options
+
+
+	### Parse the given +source+ into one or more Inversion::Template::Nodes and return 
+	### it as an Array.
+	### @param [String] source  the template source
+	### @return [Array<Inversion::Template::Node>]  the nodes parsed from the +source+.
 	def parse( source )
 		tree = []
 
 		scanner = StringScanner.new( source )
-
+		self.log.debug "Starting parse of template source (%0.2fK" % [ source.length/1024.0 ]
 		until scanner.eos?
 			startpos = scanner.pos
+			self.log.debug "  scanning from offset: %d" % [ startpos ]
 
 			# Scan for the next directive. When the scanner reaches
 			# the end of the parsed string, just append any plain
@@ -46,17 +71,26 @@ class Inversion::Template::Parser
 
 				# Look for the end of the tag based on what its opening characters were
 				tagopen  = scanner.matched
-				tagclose = Regexp.new( Regexp.escape( tagopen.reverse.tr('<[', '>]') ))
+				tagclose = tagopen.reverse.tr( '<[', '>]' )
+				tagclose_re = Regexp.new( Regexp.escape(tagclose) )
 				self.log.debug "  looking for tag close: %p" % [ tagclose ]
 
 				# Handle unclosed tags
-				unless scanner.skip_until( tagclose )
+				unless scanner.skip_until( tagclose_re )
 					raise Inversion::ParseError, "Unable to locate closing tag"
 				end
 
-				tag, body = scanner.string[ tagstart..(scanner.pos - 3) ].split( /\s+/, 2 )
+				tagcontent = scanner.string[ tagstart..(scanner.pos - 3) ]
+				tag, body = tagcontent.split( /\s+/, 2 )
 				self.log.debug "  found tag: %p, body %p" % [ tag, body ]
+
 				tag = Inversion::Template::Tag.create( tag, body )
+				if tag.nil?
+					raise Inversion::ParseError, "Unknown tag %p" % [ body ] if
+						self.options[ :raise_on_unknown ]
+				    tag = Inversion::Template::TextNode.new( tagopen + tagcontent + tagclose )
+				end
+
 				self.log.debug "  created tag node: %p" % [ tag ]
 				tree << tag
 			else
