@@ -57,7 +57,11 @@ class Inversion::Template::AttrTag < Inversion::Template::CodeTag
 	### Render the tag attributes of the specified +template+ and return them.
 	def render( template=nil )
 		return '' if template.nil?
-		return template.attributes[ self.name.to_sym ].to_s
+		if self.format
+			return sprintf( self.format, template.attributes[self.name.to_sym] )
+		else
+			return template.attributes[ self.name.to_sym ].to_s
+		end
 	end
 
 end # class Inversion::Template::AttrTag
