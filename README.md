@@ -62,8 +62,34 @@ This outputs:
 
 ### Tags To Implement
 
-* <?config ?>
-* <?if ?>…<?elsif ?>…<?else?>…<?end?>
+* <?if «conditional expression» ?>…<?elsif «conditional expression» ?>…<?else?>…<?end?>
+* <?comment «comment text» ?>
+* <?comment?>…<?end?>
+* <?escape «attr/methodchain» ?>
+* <?for «Enumerable attr/methodchain» ?>
+
+  <?for obj, i in attr.each_with_index ?>
+  <?end?>
+
+* <?pp «attr/methodchain» ?>
+* <?prettyprint «attr/methodchain» ?>
+* <?timedelta «attr/methodchain» ?>
+* <?unless «conditional expression» ?>
+* <?urlencode «attr/methodchain» ?>
+
+* <?config?>
+  escaping: 'html'
+  raise_on_unknown: true
+  <?end ?>
+* <?export «attr» ?>
+* <?import «attr» ?>
+* <?include «template path» ?>
+* <?render «attr/methodchain» USING «template path» ?>
+* <?yield ?>
+
+
+* <?set  ?>
+
 
 
 ## References
