@@ -5,60 +5,65 @@
 
 ## Description
 
-Inversion is a templating system for Ruby that uses the Inversion of Control 
+Inversion is a templating system for Ruby. It uses the Inversion of Control
 principle to decouple the contents and structure of the template from the 
-code that uses it It is intended for use as a Passive View by implementations 
-of the Supervising Controller pattern.
+code that uses it, making it easier to use, test-friendly, and clean.
 
 
 ### Details
 
-Setting data values in an Inversion template is accomplished using Ruby
-attribute methods on the template object, rather than intermediate data
-structures that is combined with the template when it's rendered. This allows
-the programmer to add data directly and individually from whatever part of the
-code it is generated, by the systems which generate it, rather than requiring
-that all code that affects rendering be written with the intermediate data
-structures in mind. The template object itself can be passed around without
-sacrificing encapsulation or exposing unnecessary scope.
+Inversion, like most other templating systems, works by giving you a way of defining the static parts of your output, and then letting you combine that at a later point with the dynamic parts:
 
-The scope of the template object when it's being rendered is not shared with the
-code that uses it, or vice-versa, in contrast to many modern implementations of
-Model-View-Controller. This encourages proper separation of responsibility and
-makes it possible to test the Controller and View independently.
+Create the template and use it to render an exciting message:
 
-For instance, ERB templates such as those used by Ruby on Rails' Action View are
-rendered by evaluating them in the Binding of their caller. This means that the
-controller must be explicitly aware of the variables and data structures
-required by the template, making it impossible, or at least impractical, to test
-either part in isolation.
+	tmpl = Inversion::Template.new( "Hello, [?attr name ?]!" )
+	tmpl.name = "World"
+	puts tmpl.render
 
-It also means that changes to state that happen in the template bleed over into
-the state of the controller. This is often used to introduce side-effects while
-rendering the template, further coupling the presentation layer to the
-controlling layer.
+The `[?attr name ?]` tag (which can also be written as an XML Processing Instruction, i.e. `<?attr name ?>`) defines the `name` accessor on the template object, the value of which is substituted for any occurances of the `name` tag in the output:
 
-	#!/usr/bin/env ruby
-	require 'erb'
+    Hello, World!
+
+This by itself isn't fantastically useful, but it does illustrate one of ways in which Inversion is different: the program and the template share data through an API, instead of through a complex data structure, which establishes a clear delineation between what responsibility is the program's and which is the template's. 
+
+Define a simple email template:
+
+	Dear [?call employee.fullname ?],
 	
-	TEMPLATE = <<END_TEMPLATE
-	<% var = "foo" %>
-	END_TEMPLATE
-	 
-	var = 1
-	template = ERB.new( TEMPLATE )
-	   
-	puts "Before rendering, var = %p" % [ var ]
-	output = template.result( binding() )
-	puts "After rendering, var = %p" % [ var ]
+	Congratulations! You have been selected by [?call failed_company.name ?]'s
+	elite management team as one of the many lucky individuals that will
+	enjoy the exciting challenge of pursuing other rewarding employment
+	opportunities!
+	
+	Kudos!
+	
+	You will find your accounts have been disabled, your desk has been helpfully 
+	cleared out for you, and all of your personal effects packaged up and
+	delivered to your address of record:
+	
+	[?call employee.address ?]
+	
+	Please visit your customized Man OverBoard™ transition site immediately:
+	
+	[?call config.overboard_url ?]/[?urlencode failed_company.id ?]/[?urlencode employee.id ?]
+	
+	This will acknowledge that you have received this message, and automatically 
+	disable your email account.  Be sure and save this message!
 
-This outputs:
- 
-	$ ruby experiments/erb_scope_bleed.rb 
-	Before rendering, var = 1
-	After rendering, var = "foo"
+	[?if employee.severance_amount.nonzero? ?]
+	Failure to acknowledge this message could result in delay of your final 
+	severance pay, in the amount of [?call "$%0.2f" % employee.severance_amount ?].
+	[?else?]
+	Failure to acknowledge this message within 30 days will result in automatic forfeiture of your
+	numerous Man Overboard™ package benefits.
+	[?end?]
+		
+	Good Luck,
+	Your friends at Spime-Thorpe, Inc!
+	http://www.spime-thorpe.com/
 
-[...more examples forthcoming...]
+Loading this object 
+
 
 ### Tags To Implement
 
@@ -86,7 +91,6 @@ This outputs:
 * <?include «template path» ?>
 * <?render «attr/methodchain» USING «template path» ?>
 * <?yield ?>
-
 
 * <?set  ?>
 

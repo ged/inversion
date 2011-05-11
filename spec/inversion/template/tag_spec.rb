@@ -70,5 +70,22 @@ describe Inversion::Template::Tag do
 		result.should be_empty()
 	end
 
+
+	describe "concrete subclass" do
+
+		before( :each ) do
+			@tagclass = Class.new( Inversion::Template::Tag ) do
+				def self::name; "Inversion::Template::ConcreteTag"; end
+			end
+			@tag = @tagclass.new( "the body" )
+		end
+
+
+		it "can render itself as a comment for template debugging" do
+			@tag.as_comment_body.should == %{Concrete "the body"}
+		end
+
+	end
+
 end
 

@@ -14,10 +14,13 @@ require 'rspec'
 require 'stringio'
 
 require 'spec/lib/helpers'
-
 require 'inversion/template'
 
 describe Inversion::Template do
+
+	before( :all ) do
+		setup_logging( :fatal )
+	end
 
 	it "can be loaded from a String" do
 		Inversion::Template.new( "a template" ).source.should == 'a template'
@@ -38,7 +41,8 @@ describe Inversion::Template do
 		Inversion::Template.new( "a template" ).render.should == 'a template'
 	end
 
-	context "with an attribute tag" do
+
+	context "with an attribute PI" do
 
 		let( :template ) { Inversion::Template.new("<h1><?attr foo ?></h1>") }
 
@@ -61,5 +65,38 @@ describe Inversion::Template do
 			template.render.should == %{<h1>["a lion", "a little guy", "a bad mousie", "one birdy"]</h1>}
 		end
 	end
+
+
+	context "if Configurability is installed", :if => defined?( Configurability ) do
+
+		after( :each ) do
+			Inversion::Template.config = Inversion::Template::DEFAULT_CONFIG
+		end
+
+		it "is included in the list of configurable objects" do
+			Configurability.configurable_objects.should include( Inversion::Template )
+		end
+
+		it "can be configured using a Configurability::Config object" do
+			config = Configurability::Config.new( %{
+			---
+			templates:
+			  raise_on_unknown: true
+			  debugging_comments: true
+			  comment_start: "#"
+			  comment_end: ""
+			}.gsub(/^\t{3}/, '') )
+
+			Inversion::Template.configure( config.templates )
+
+			Inversion::Template.config[:raise_on_unknown].should be_true()
+			Inversion::Template.config[:debugging_comments].should be_true()
+			Inversion::Template.config[:comment_start].should == '#'
+			Inversion::Template.config[:comment_end].should == ''
+
+		end
+
+	end
+
 end
 

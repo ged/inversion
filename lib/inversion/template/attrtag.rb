@@ -28,7 +28,7 @@ class Inversion::Template::AttrTag < Inversion::Template::CodeTag
 	end
 
 
-	### Create a new AttrTag with the given +name+, which should be a valid 
+	### Create a new AttrTag with the given +name+, which should be a valid
 	### Ruby identifier.
 	### @param [String] name  the name of the attribute to declare in the template
 	def initialize( code )
@@ -46,10 +46,10 @@ class Inversion::Template::AttrTag < Inversion::Template::CodeTag
 	public
 	######
 
-	# @return [String]  the name of the attribute 
+	# @return [String]  the name of the attribute
 	attr_accessor :name
 
-	# @return [String]  the format string used to format the attribute in the template (if 
+	# @return [String]  the format string used to format the attribute in the template (if
 	# one was declared)
 	attr_accessor :format
 
@@ -57,11 +57,23 @@ class Inversion::Template::AttrTag < Inversion::Template::CodeTag
 	### Render the tag attributes of the specified +template+ and return them.
 	def render( template=nil )
 		return '' if template.nil?
+		value = template.attributes[ self.name.to_sym ] or return ''
+
 		if self.format
-			return sprintf( self.format, template.attributes[self.name.to_sym] )
+			return self.format % value
 		else
-			return template.attributes[ self.name.to_sym ].to_s
+			return value.to_s
 		end
+	end
+
+
+	### Render the tag as the body of a comment, suitable for template debugging.
+	### @return [String]  the tag as the body of a comment
+	def as_comment_body
+		comment = super
+		comment << " with format: %p" % [ self.format ] if self.format
+
+		return comment
 	end
 
 end # class Inversion::Template::AttrTag

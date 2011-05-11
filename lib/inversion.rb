@@ -4,7 +4,10 @@
 require 'logger'
 
 
-# FIX (top-level documentation)
+# The Inversion templating system. This module provides the namespace for all the other
+# classes and modules, and contains the logging subsystem. A good place to start for 
+# documentation would be to check out the examples in the README, and then 
+# {Inversion::Template} for a list of tags, configuration options, etc.
 #
 # @author Michael Granger <ged@FaerieMUD.org>
 # @author Mahlon E. Smith <mahlon@martini.nu>

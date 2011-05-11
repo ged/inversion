@@ -26,7 +26,6 @@ class Inversion::Template::Parser
 	}
 
 
-
 	### Create a new Inversion::Template::Parser with the specified config +options+.
 	### @param [Hash] options  configuration options that override DEFAULT_OPTIONS
 	def initialize( options={} )
