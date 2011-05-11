@@ -128,7 +128,7 @@ class Inversion::Template::CodeTag < Inversion::Template::Tag
 
 		self.class.tag_patterns.each do |tp, callback|
 			if match = tp.match( body.strip )
-				self.log.debug "Matched tag pattern: %p" % [ tp ]
+				self.log.debug "Matched tag pattern: %p, match is: %p" % [ tp, match ]
 				callback.call( self, match )
 				return tp
 			end

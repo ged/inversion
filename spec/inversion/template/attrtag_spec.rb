@@ -45,27 +45,65 @@ describe Inversion::Template::AttrTag do
 		}.to raise_exception( Inversion::ParseError, /expected/ )
 	end
 
-	it "without a format, renders as the stringified contents of the template attribute with " +
-	   "the same name" do
-		attributes = double( "template object attributes" )
-		template = stub( "template object", :attributes => attributes )
+	describe "without a format" do
 
-		tag = Inversion::Template::AttrTag.new( 'foo' )
-		attributes.should_receive( :[] ).with( :foo ).and_return([ "floppy", "the", "turtle" ])
+		before( :each ) do
+			@tag = Inversion::Template::AttrTag.new( 'foo' )
+		end
 
-		tag.render( template ).should == %{["floppy", "the", "turtle"]}
+		it "renders as the stringified contents of the template attribute with the same name" do
+			attributes = double( "template object attributes" )
+			template = stub( "template object", :attributes => attributes )
+
+			attributes.should_receive( :[] ).with( :foo ).and_return([ "floppy", "the", "turtle" ])
+
+			@tag.render( template ).should == %{["floppy", "the", "turtle"]}
+		end
+
+		it "doesn't error if the attribute isn't set on the template" do
+			attributes = double( "template object attributes" )
+			template = stub( "template object", :attributes => attributes )
+
+			attributes.should_receive( :[] ).with( :foo ).and_return( nil )
+
+			@tag.render( template ).should == ''
+		end
+
+		it "can render itself as a comment for template debugging" do
+			@tag.as_comment_body.should == %{Attr "foo"}
+		end
+
 	end
 
-	it "with a format, renders as the formatted contents of the template attribute with the " +
-	   "same name" do
-		attributes = double( "template object attributes" )
-		template = stub( "template object", :attributes => attributes )
+	describe "with a format" do
 
-		tag = Inversion::Template::AttrTag.new( 'foo' )
-		tag.format = "%0.2f"
-		attributes.should_receive( :[] ).with( :foo ).and_return( 3.1415926525797275 )
+		before( :each ) do
+			@tag = Inversion::Template::AttrTag.new( 'foo' )
+			@tag.format = "%0.2f"
+		end
 
-		tag.render( template ).should == '3.14'
+		it "renders as the formatted contents of the template attribute with the same name" do
+			attributes = double( "template object attributes" )
+			template = stub( "template object", :attributes => attributes )
+
+			attributes.should_receive( :[] ).with( :foo ).and_return( Math::PI )
+
+			@tag.render( template ).should == '3.14'
+		end
+
+		it "doesn't error if the attribute isn't set on the template" do
+			attributes = double( "template object attributes" )
+			template = stub( "template object", :attributes => attributes )
+
+			attributes.should_receive( :[] ).with( :foo ).and_return( nil )
+
+			@tag.render( template ).should == ''
+		end
+
+		it "can render itself as a comment for template debugging" do
+			@tag.as_comment_body.should == %Q{Attr "foo" with format: "%0.2f"}
+		end
+
 	end
 
 end

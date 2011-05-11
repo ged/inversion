@@ -129,7 +129,21 @@ class Inversion::Template::Tag < Inversion::Template::Node
 		@body = body.strip
 	end
 
+
+	######
+	public
+	######
+
+	# @return [String] the body of the tag
 	attr_reader :body
+
+
+	### Render the tag as the body of a comment, suitable for template debugging.
+	### @return [String]  the tag as the body of a comment
+	def as_comment_body
+		tagname = self.class.name.sub(/Tag$/, '').sub( /^.*::/, '' )
+		return "%s %s" % [ tagname, self.body.dump ]
+	end
 
 end # class Inversion::Template::Tag
 
