@@ -4,6 +4,12 @@
 require 'ripper'
 require 'inversion/template/tag'
 
+class Ripper::TokenPattern::MatchData
+	# @return [Array<Array<>>] the array of token tuples
+	attr_reader :tokens
+end # class Ripper::TokenPattern::MatchData
+
+
 ### FIXME: Top-level docs
 ###
 class Inversion::Template::CodeTag < Inversion::Template::Tag
