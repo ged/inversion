@@ -20,7 +20,7 @@ hoespec = Hoe.spec 'inversion' do
 	self.developer 'Michael Granger', 'ged@FaerieMUD.org'
 	self.developer 'Mahlon E. Smith', 'mahlon@martini.nu'
 
-	self.dependency 'ripper', '~> 1.0'
+	self.dependency 'ripper', '~> 1.0', :development unless defined?( Encoding )
 	self.dependency 'rspec', '~> 2.4', :development
 
 	self.spec_extras[:licenses] = ["BSD"]

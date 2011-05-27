@@ -12,20 +12,18 @@ require 'inversion/template/codetag'
 #
 #   <?call foo.bar ?>
 #   <?call "%0.2f" % foo.bar ?>
-#
+
 class Inversion::Template::CallTag < Inversion::Template::CodeTag
 
-	tag_pattern '$(ident) period $(ident)' do |tag, match|
-		tag.attribute = match.string( 1 )
-		tag.methodchain << [ match.string(2) ]
-	end
-
-	tag_pattern '$(ident) period $(ident) lparen (.*?) rparen' do |tag, match|
-		tag.attribute = match.string( 1 )
-		tag.methodchain << [ match.string(2), match.string(3).strip ]
+	tag_pattern '$(ident) $( .+ )' do |tag, match|
+		tag.attribute = match.string( 1 ).untaint.to_sym
+		tag.methodchain = match.string( 2 )
 	end
 
 
+	########################################################################
+	### I N S T A N C E   M E T H O D S
+	########################################################################
 
 	### Parse a new CodeTag from the given +code+.
 	def initialize( code )
@@ -44,7 +42,7 @@ class Inversion::Template::CallTag < Inversion::Template::CodeTag
 	public
 	######
 
-	# @return [String]  the name of the attribute 
+	# @return [Symbol]  the name of the attribute 
 	attr_accessor :attribute
 
 	# @return [String]  the format string used to format the attribute in the template (if 
@@ -53,6 +51,32 @@ class Inversion::Template::CallTag < Inversion::Template::CodeTag
 
 	# @return [Array<String>]  the chain of methods that should be called.
 	attr_accessor :methodchain
+
+
+	### Render the tag attributes of the specified +template+ and return them.
+	def render( template=nil )
+		return '' if template.nil?
+
+		attribute = template.attributes[ self.attribute ]
+		unless attribute.respond_to?( :get_binding )
+			def attribute.get_binding; binding(); end
+		end
+
+		methodchain = "self" + self.methodchain
+		self.log.debug "Evaling methodchain: %p on: %p" % [ methodchain, attribute ]
+		result = eval( methodchain, attribute.get_binding )
+
+		return result
+	end
+
+
+	### Render the tag as the body of a comment, suitable for template debugging.
+	### @return [String]  the tag as the body of a comment
+	def as_comment_body
+		tagname = self.class.name.sub(/Tag$/, '').sub( /^.*::/, '' )
+		return "%s: { template.attributes[ :%s ]%s }" %
+			[ tagname, self.attribute, self.methodchain ]
+	end
 
 
 end # class Inversion::Template::CallTag
