@@ -115,8 +115,10 @@ class Inversion::Template
 		output = ''
 
 		self.walk_tree do |node|
-			output << self.make_comment( node.as_comment_body ) if
-				self.options[:debugging_comments]
+			if self.options[:debugging_comments] && (comment_body = node.as_comment_body)
+				output << self.make_comment( comment_body )
+			end
+
 			output << node.render( self )
 		end
 

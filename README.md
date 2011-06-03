@@ -68,7 +68,6 @@ Loading this object
 ### Tags To Implement
 
 * <?if «conditional expression» ?>…<?elsif «conditional expression» ?>…<?else?>…<?end?>
-* <?comment «comment text» ?>
 * <?comment?>…<?end?>
 * <?escape «attr/methodchain» ?>
 * <?for «Enumerable attr/methodchain» ?>

@@ -7,6 +7,7 @@ require 'inversion/template' unless defined?( Inversion::Template )
 require 'inversion/mixins'
 require 'inversion/template/textnode'
 require 'inversion/template/tag'
+require 'inversion/template/endtag'
 
 # This is the parser for Inversion templates. It takes template source and
 # returns a tree of Inversion::Template::Node objects (if parsing is successful).
@@ -46,7 +47,7 @@ class Inversion::Template::Parser
 	### @param [String] source  the template source
 	### @return [Array<Inversion::Template::Node>]  the nodes parsed from the +source+.
 	def parse( source )
-		tree = []
+		state = State.new
 
 		scanner = StringScanner.new( source )
 		self.log.debug "Starting parse of template source (%0.2fK" % [ source.length/1024.0 ]
@@ -65,7 +66,7 @@ class Inversion::Template::Parser
 				# as a text node.
 				unless ( scanner.pre_match == '' )
 					self.log.debug "  adding literal text node '%s...'" % [ scanner.pre_match[0,20] ]
-					tree << Inversion::Template::TextNode.new( scanner.pre_match )
+					state << Inversion::Template::TextNode.new( scanner.pre_match )
 				end
 
 				# Look for the end of the tag based on what its opening characters were
@@ -91,19 +92,74 @@ class Inversion::Template::Parser
 				end
 
 				self.log.debug "  created tag node: %p" % [ tag ]
-				tree << tag
+				state << tag
 			else
 				self.log.debug "  adding a text node for the rest of the template"
-				tree << Inversion::Template::TextNode.new( scanner.rest )
+				state << Inversion::Template::TextNode.new( scanner.rest )
 				self.log.debug "  finished parsing."
 				scanner.terminate
 			end
 		end
 
-		return tree
+		return state.tree
 	end
 
 
+
+	# Parse state object class. State objects keep track of where in the parse tree
+	# new nodes should be appended, and matches <?end?> tags with their openers.
+	class State
+		include Inversion::Loggable
+
+		### Create a new State object
+		def initialize
+			@tree = []
+			@node_stack = [ @tree ]
+		end
+
+		######
+		public
+		######
+
+
+		### Append operator: add nodes to the correct part of the parse tree.
+		### @param [Inversion::Template::Node] node  the parsed node
+		def <<( node )
+			if node.is_a?( Inversion::Template::EndTag )
+				self.log.debug "End tag for %s" %
+					[ node.body ? "#{node.body} tag" : "unnamed tag" ]
+
+				closed_node = @node_stack.pop
+				raise Inversion::ParseError, "unbalanced end: no open tag in stack" if @node_stack.empty?
+
+				if node.body && node.body.downcase != closed_node.tagname.downcase
+					raise Inversion::ParseError, "unbalanced end: expected %p, got %p" %
+						[ closed_node.tagname.downcase, node.body.downcase ]
+				end
+			else
+				self.log.debug "Appending %p" % [ node ]
+				@node_stack.last << node
+				@node_stack.push( node ) if node.is_container?
+			end
+
+			self
+		end
+
+
+		### Returns the tree if it's well formed.
+		def tree
+			raise Inversion::ParseError, "Unclosed container tag: %s" %
+				[ @node_stack.last.tagname ] unless self.is_well_formed?
+			return @tree
+		end
+
+		### Check to see if all open tags have been closed.
+		def is_well_formed?
+			return @node_stack.length == 1
+		end
+		alias_method :well_formed?, :is_well_formed?
+
+	end # class Inversion::Template::Parser::State
 
 end # class Inversion::Template::Parser
 

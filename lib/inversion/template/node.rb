@@ -21,5 +21,12 @@ class Inversion::Template::Node
 		return self.inspect
 	end
 
+
+	### Returns +true+ if the node introduces a new parsing/rendering scope.
+	def is_container?
+		return false
+	end
+	alias_method :container?, :is_container?
+
 end # class Inversion::Template::Node
 

@@ -141,8 +141,13 @@ class Inversion::Template::Tag < Inversion::Template::Node
 	### Render the tag as the body of a comment, suitable for template debugging.
 	### @return [String]  the tag as the body of a comment
 	def as_comment_body
-		tagname = self.class.name.sub(/Tag$/, '').sub( /^.*::/, '' )
-		return "%s %s" % [ tagname, self.body.dump ]
+		return "%s %s" % [ self.tagname, self.body.dump ]
+	end
+
+
+	### Return the human-readable name of the tag class
+	def tagname
+		return self.class.name.sub(/Tag$/, '').sub( /^.*::/, '' )
 	end
 
 end # class Inversion::Template::Tag

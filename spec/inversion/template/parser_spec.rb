@@ -74,5 +74,58 @@ describe Inversion::Template::Parser do
 
 	end
 
+
+	describe Inversion::Template::Parser::State do
+
+		before( :each ) do
+			@state = Inversion::Template::Parser::State.new
+		end
+
+		it "returns the node tree if it's well-formed" do
+			open_tag = Inversion::Template::ForTag.new( 'foo in bar' )
+			@state << open_tag
+			@state << Inversion::Template::EndTag.new( 'for' )
+
+			@state.tree.should == [ open_tag ]
+		end
+
+		it "knows it is well-formed if there are no open tags" do
+			@state << Inversion::Template::ForTag.new( 'foo in bar' )
+			@state.should_not be_well_formed
+
+			@state << Inversion::Template::ForTag.new( 'foo in bar' )
+			@state.should_not be_well_formed
+
+			@state << Inversion::Template::EndTag.new( 'for' )
+			@state.should_not be_well_formed
+
+			@state << Inversion::Template::EndTag.new( 'for' )
+			@state.should be_well_formed
+		end
+
+		it "raises an error on the addition of a unbalanced end tag" do
+			expect {
+				@state << Inversion::Template::EndTag.new( 'for' )
+			}.to raise_exception( Inversion::ParseError, /unbalanced/i )
+		end
+
+		it "raises an error on the addition of a mismatched end tag" do
+			@state << Inversion::Template::ForTag.new( 'foo in bar' )
+
+			expect {
+				@state << Inversion::Template::EndTag.new( 'if' )
+			}.to raise_exception( Inversion::ParseError, /unbalanced/i )
+		end
+
+		it "raises an error when the tree is fetched if it isn't well-formed" do
+			open_tag = Inversion::Template::ForTag.new( 'foo in bar' )
+			@state << open_tag
+
+			expect {
+				@state.tree
+			}.to raise_exception( Inversion::ParseError, /unclosed/i )
+		end
+	end
+
 end
 
