@@ -6,7 +6,7 @@ require 'inversion/template/codetag'
 
 # Inversion 'for' tag.
 #
-# Iteration tag for outputting a template part for each member of a collection (i.e., 
+# Iteration tag for outputting a template part for each member of a collection (i.e.,
 # an object that is Enumerable).
 #
 # == Syntax
@@ -19,13 +19,14 @@ require 'inversion/template/codetag'
 # == Examples
 #
 #    <?for employee in company.employees ?>
-#    
+#
 #    Hey <?call employee.name ?>! You're fired!
-#    
+#
 #    <?end ?>
 #
 class Inversion::Template::ForTag < Inversion::Template::CodeTag
-	include Inversion::Loggable
+	include Inversion::Loggable,
+			Inversion::Template::ContainerTag
 
 	# <?for var in attribute ?>
 	tag_pattern 'kw sp $(ident) sp $(kw) sp $( .+ )' do |tag, match|
@@ -67,7 +68,6 @@ class Inversion::Template::ForTag < Inversion::Template::CodeTag
 
 	# The attribute or methodchain that yields the enumerable object
 	attr_accessor :enumerator
-
 
 end # class Inversion::Template::ForTag
 

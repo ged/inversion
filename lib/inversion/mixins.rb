@@ -190,7 +190,5 @@ module Inversion
 
 
 	end # module AbstractClass
-
-
 end # module Inversion
 

@@ -29,5 +29,10 @@ describe Inversion::Template::Node do
 		node.as_comment_body.should == node.inspect
 	end
 
+	it "isn't a container" do
+		node = concrete_subclass.new
+		node.should_not be_a_container()
+	end
+
 end
 
