@@ -67,6 +67,25 @@ describe Inversion::Template do
 	end
 
 
+	context "with numerous attribute PIs" do
+
+		let( :template ) { Inversion::Template.new("<h1><?attr foo ?> <?attr foo?> RUN!</h1>") }
+
+		it "has a reader for getting the tag's value" do
+			template.should respond_to( :foo )
+		end
+
+		it "has an accessor for setting the tag's value" do
+			template.should respond_to( :foo= )
+		end
+
+		it "renders scalar values set for the tag(s)" do
+			template.foo = "lions!!"
+			template.render.should == "<h1>lions!! lions!! RUN!</h1>"
+		end
+	end
+
+
 	context "if Configurability is installed", :if => defined?( Configurability ) do
 
 		after( :each ) do

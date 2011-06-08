@@ -81,7 +81,7 @@ class Inversion::Template
 	def initialize( source, opts={} )
 		source      = source.read if source.respond_to?( :read )
 		@source     = source
-		@parser     = Inversion::Template::Parser.new
+		@parser     = Inversion::Template::Parser.new( opts )
 		@tree       = @parser.parse( source )
 		@options    = self.class.config.merge( opts )
 
@@ -114,6 +114,7 @@ class Inversion::Template
 	def render
 		output = ''
 
+		self.log.debug "Rendering node tree: %p" % [ @tree ]
 		self.walk_tree do |node|
 			if self.options[:debugging_comments] && (comment_body = node.as_comment_body)
 				output << self.make_comment( comment_body )

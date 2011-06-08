@@ -104,9 +104,11 @@ class Inversion::Template::Tag < Inversion::Template::Node
 	### Create a new Inversion::Template::Tag from the specified +tagname+ and +body+.
 	### @param [String] tagname  the name of the processing instruction
 	### @param [String] body     the body of the processing instruction
+	### @param [Integer] linenum the line number the tag was parsed from
+	### @param [Integer] colnum  the column number the tag was parsed from
 	### @return [Inversion::Template::Tag]  the resulting tag object, or +nil+ if no tag class
 	###            corresponds to +tagname+.
-	def self::create( tagname, body )
+	def self::create( tagname, body, linenum=nil, colnum=nil )
 		tagtype = $1.downcase.untaint if tagname =~ /^(\w+)$/i
 		unless tagclass = self.types[ tagtype.to_sym ]
 			Inversion.log.warn "Unknown tag type %p; registered: %p" %
@@ -114,7 +116,7 @@ class Inversion::Template::Tag < Inversion::Template::Node
 			return nil
 		end
 
-		return tagclass.new( body )
+		return tagclass.new( body, linenum, colnum )
 	end
 
 
@@ -124,9 +126,12 @@ class Inversion::Template::Tag < Inversion::Template::Node
 
 	### Create a new Inversion::Template::Tag with the specified +body+.
 	### @param [String] body     the body of the processing instruction
+	### @param [Integer] linenum the line number the tag was parsed from
+	### @param [Integer] colnum  the column number the tag was parsed from
 	### @return [Inversion::Template::Tag]  the resulting tag object.
-	def initialize( body )
+	def initialize( body, linenum=nil, colnum=nil )
 		@body = body.strip
+		super
 	end
 
 
@@ -141,7 +146,7 @@ class Inversion::Template::Tag < Inversion::Template::Node
 	### Render the tag as the body of a comment, suitable for template debugging.
 	### @return [String]  the tag as the body of a comment
 	def as_comment_body
-		return "%s %s" % [ self.tagname, self.body.dump ]
+		return "%s %s at %s" % [ self.tagname, self.body.dump, self.location ]
 	end
 
 

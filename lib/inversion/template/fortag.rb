@@ -2,6 +2,7 @@
 # vim: set noet nosta sw=4 ts=4 :
 
 require 'inversion/template/codetag'
+require 'inversion/template/containertag'
 
 
 # Inversion 'for' tag.
@@ -50,11 +51,14 @@ class Inversion::Template::ForTag < Inversion::Template::CodeTag
 
 
 	### Create a new ForTag with the specified +body+.
-	def initialize( body )
+	### @param [String]  body  the for tag content
+	### @param [Integer] linenum the line number the tag was parsed from
+	### @param [Integer] colnum  the column number the tag was parsed from
+	def initialize( body, linenum=nil, colnum=nil )
 		@block_args = []
 		@enumerator = nil
 
-		super( 'for ' + body )
+		super( 'for ' + body, linenum, colnum )
 	end
 
 
