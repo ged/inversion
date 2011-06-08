@@ -35,10 +35,6 @@ describe Inversion::Template::Parser do
 	end
 
 	it "parses a string with a single 'attr' tag as a single AttrTag node" do
-		Inversion.log.debug "Types: %p" % [ Inversion::Template::Tag.types ]
-		Inversion.log.debug "Derivatives: %p" % [ Inversion::Template::Tag.derivatives ]
-		Inversion.log.debug "LOADED_FEATURES: %p" % [ $LOADED_FEATURES ]
-
 		result = Inversion::Template::Parser.new.parse( "<?attr foo ?>" )
 
 		result.should have( 1 ).member
@@ -65,13 +61,23 @@ describe Inversion::Template::Parser do
 		result[1].body.should == '<?hoooowhat ?>'
 	end
 
-
 	it "can raise exceptions on unknown tags" do
 		expect {
 			Inversion::Template::Parser.new( :raise_on_unknown => true ).
 				parse( "Text <?hoooowhat ?>" )
 		}.to raise_exception( Inversion::ParseError, /unknown tag/i )
+	end
 
+	it "can raise exceptions on unclosed (nested) tags" do
+		expect {
+			Inversion::Template::Parser.new.parse( "Text <?attr something <?attr something_else ?>" )
+		}.to raise_exception( Inversion::ParseError, /unclosed tag/i )
+	end
+
+	it "can raise exceptions on unclosed (eof) tags" do
+		expect {
+			Inversion::Template::Parser.new.parse( "Text <?hoooowhat" )
+		}.to raise_exception( Inversion::ParseError, /unclosed tag/i )
 	end
 
 

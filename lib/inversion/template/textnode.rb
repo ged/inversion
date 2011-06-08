@@ -3,14 +3,16 @@
 
 require 'inversion/template/node'
 
-# Inversion template tag base class.
+# Inversion template textnode base class.
 class Inversion::Template::TextNode < Inversion::Template::Node
 
 	### Create a new TextNode with the specified +source+.
 	### @param [String] source  the text source to wrap in the node object
-	def initialize( body )
+	### @param [Integer] linenum the line number the node was parsed from
+	### @param [Integer] colnum  the column number the node was parsed from
+	def initialize( body, linenum=nil, colnum=nil )
 		@body = body
-		super()
+		super
 	end
 
 

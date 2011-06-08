@@ -89,7 +89,10 @@ class Inversion::Template::CodeTag < Inversion::Template::Tag
 	### Initialize a new tag that expects Ruby code in its +body+. Calls the
 	### tag's #parse_pi_body method with the specified +body+.
 	### @param [String] body  the Ruby source of the tag body
-	def initialize( body ) # :notnew:
+	### @param [Integer] linenum the line number the tag was parsed from
+	### @param [Integer] colnum  the column number the tag was parsed from
+	### @return [Inversion::Template::CodeTag]  the resulting tag object.
+	def initialize( body, linenum=nil, colnum=nil ) # :notnew:
 		super
 
 		@body = body.strip
@@ -142,8 +145,8 @@ class Inversion::Template::CodeTag < Inversion::Template::Tag
 			"%s<%s>" % [ tok[1][3..-1], tok[2] ]
 		end.join(' ')
 
-		raise Inversion::ParseError, "malformed %s: expected one of:\n  %s\ngot:\n  %s" %
-			[ self.class.name.sub(/.*::/, ''), valid_patterns, tokenized_src ]
+		raise Inversion::ParseError, "malformed %s at %s: expected one of:\n  %s\ngot:\n  %s" %
+			[ self.tagname, self.location, valid_patterns, tokenized_src ]
 	end
 
 end # class Inversion::Template::CodeTag

@@ -82,7 +82,7 @@ describe Inversion::Template::Tag do
 
 
 		it "can render itself as a comment for template debugging" do
-			@tag.as_comment_body.should == %{Concrete "the body"}
+			@tag.as_comment_body.should == %{Concrete "the body" at line ??, column ??}
 		end
 
 	end

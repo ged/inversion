@@ -26,7 +26,10 @@ class Inversion::Template::CallTag < Inversion::Template::CodeTag
 	########################################################################
 
 	### Parse a new CodeTag from the given +code+.
-	def initialize( code )
+	### @param [String] code  ruby code to be evaluated
+	### @param [Integer] linenum the line number the tag was parsed from
+	### @param [Integer] colnum  the column number the tag was parsed from
+	def initialize( body, linenum=nil, colnum=nil )
 		@attribute = nil
 		@methodchain = []
 		@format = nil
