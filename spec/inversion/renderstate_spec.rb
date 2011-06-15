@@ -34,6 +34,36 @@ describe Inversion::RenderState do
 	end
 
 
+	it "preserves tainted status when copying its attributes" do
+		attributes = { :danger => "in pants" }
+		attributes[:danger].taint
+
+		state = Inversion::RenderState.new( attributes )
+
+		state.attributes[:danger].should be_tainted()
+	end
+
+
+	it "preserves frozen status when copying its attributes" do
+		attributes = { :danger => "in pants" }
+		attributes[:danger].freeze
+
+		state = Inversion::RenderState.new( attributes )
+
+		state.attributes[:danger].should be_frozen()
+	end
+
+
+	it "preserves singleton methods on attribute objects when copying" do
+		obj = Object.new
+		def obj.foo; "foo!"; end
+
+		state = Inversion::RenderState.new( :foo => obj )
+
+		state.attributes[:foo].singleton_methods.should include( :foo )
+	end
+
+
 	it "can evaluate code in the context of itself" do
 		attributes = { :foot => "in mouth", :bear => "in woods" }
 

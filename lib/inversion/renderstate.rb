@@ -90,7 +90,7 @@ class Inversion::RenderState
 				newhash
 
 			else
-				obj.dup
+				obj.clone
 			end
 	end
 
