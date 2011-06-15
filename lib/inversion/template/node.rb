@@ -19,9 +19,9 @@ class Inversion::Template::Node
 	end
 
 
-	### Render the node in the given +template+. By default, rendering a node
+	### Render the node using the given +render_state+. By default, rendering a node
 	### returns the empty string.
-	def render( template=nil )
+	def render( render_state=nil )
 		return ''
 	end
 

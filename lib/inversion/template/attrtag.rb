@@ -57,10 +57,10 @@ class Inversion::Template::AttrTag < Inversion::Template::CodeTag
 	attr_accessor :format
 
 
-	### Render the tag attributes of the specified +template+ and return them.
-	def render( template=nil )
-		return '' if template.nil?
-		value = template.attributes[ self.name.to_sym ] or return ''
+	### Render the tag attributes of the specified +render_state+ and return them.
+	def render( render_state=nil )
+		return '' if render_state.nil?
+		value = render_state.attributes[ self.name.to_sym ] or return ''
 
 		if self.format
 			return self.format % value

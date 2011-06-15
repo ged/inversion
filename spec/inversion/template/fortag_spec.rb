@@ -13,6 +13,9 @@ BEGIN {
 require 'rspec'
 require 'spec/lib/helpers'
 require 'inversion/template/fortag'
+require 'inversion/template/attrtag'
+require 'inversion/template/textnode'
+require 'inversion/renderstate'
 
 describe Inversion::Template::ForTag do
 
@@ -30,6 +33,21 @@ describe Inversion::Template::ForTag do
 
 		tag.block_args.should == [ :foo ]
 		tag.enumerator.should == 'bar'
+	end
+
+	it "renders each of its subnodes for each iteration, replacing its " +
+	   "block arguments with the yielded values" do
+		render_scope = Inversion::RenderState.new( :bar => %w[monkey goat] )
+
+		# <?for foo in bar ?>
+		tag = Inversion::Template::ForTag.new( 'foo in bar' )
+
+		# [<?attr foo?>]
+		tag << Inversion::Template::TextNode.new( '[' )
+		tag << Inversion::Template::AttrTag.new( 'foo' )
+		tag << Inversion::Template::TextNode.new( ']' )
+
+		tag.render( render_scope ).should == "[monkey][goat]"
 	end
 
 	it "raises a ParseError if a keyword other than 'in' is used" do

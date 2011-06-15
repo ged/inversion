@@ -41,6 +41,10 @@ describe Inversion::Template do
 		Inversion::Template.new( "a template" ).render.should == 'a template'
 	end
 
+	it "can be configured to completely ignore exceptions raised while rendering"
+	it "can be configured to insert debugging comments for exceptions raised while " +
+	   "rendering"
+	it "can be configured to propagate exceptions raised while rendering"
 
 	context "with an attribute PI" do
 
