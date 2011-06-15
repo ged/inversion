@@ -115,7 +115,7 @@ class Inversion::Template::Parser
 				state << tag
 			else
 				self.log.debug "  adding a text node for the rest of the template"
-				state << Inversion::Template::TextNode.new( scanner.rest, scanner )
+				state << Inversion::Template::TextNode.new( scanner.rest, linenum, colnum )
 				self.log.debug "  finished parsing."
 				scanner.terminate
 			end
