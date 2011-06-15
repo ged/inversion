@@ -37,7 +37,7 @@ describe Inversion::Template::ForTag do
 
 	it "renders each of its subnodes for each iteration, replacing its " +
 	   "block arguments with the yielded values" do
-		render_scope = Inversion::RenderState.new( :bar => %w[monkey goat] )
+		render_state = Inversion::RenderState.new( :bar => %w[monkey goat] )
 
 		# <?for foo in bar ?>
 		tag = Inversion::Template::ForTag.new( 'foo in bar' )
@@ -47,7 +47,7 @@ describe Inversion::Template::ForTag do
 		tag << Inversion::Template::AttrTag.new( 'foo' )
 		tag << Inversion::Template::TextNode.new( ']' )
 
-		tag.render( render_scope ).should == "[monkey][goat]"
+		tag.render( render_state ).should == "[monkey][goat]"
 	end
 
 	it "raises a ParseError if a keyword other than 'in' is used" do
