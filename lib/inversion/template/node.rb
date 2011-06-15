@@ -14,9 +14,21 @@ class Inversion::Template::Node
 	### @param [Integer] linenum the line number the tag was parsed from
 	### @param [Integer] colnum  the column number the tag was parsed from
 	def initialize( body, linenum=nil, colnum=nil )
-		@body = body
-		@location = [ linenum, colnum ]
+		@body    = body
+		@linenum = linenum
+		@colnum  = colnum
 	end
+
+
+	######
+	public
+	######
+
+	# The line number the node was parsed from in the template source (if known)
+	attr_reader :linenum
+
+	# The column number the node was parsed from in the template source (if known)
+	attr_reader :colnum
 
 
 	### Render the node using the given +render_state+. By default, rendering a node
@@ -42,8 +54,10 @@ class Inversion::Template::Node
 	### Return the location of the tag in the template, if it was parsed from one (i.e.,
 	### if it was created with a StringScanner)
 	def location
-		return "line ??, column ??" unless @location.first
-		return "line %d, column %d" % @location
+		return "line %s, column %s" % [
+			self.linenum || '??',
+			self.colnum  || '??',
+		]
 	end
 
 end # class Inversion::Template::Node
