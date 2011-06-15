@@ -10,6 +10,7 @@
 module Inversion
 
 	class ParseError < ::RuntimeError; end
+	class OptionsError < ::RuntimeError; end
 
 end # module Inversion
 

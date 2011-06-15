@@ -41,10 +41,41 @@ describe Inversion::Template do
 		Inversion::Template.new( "a template" ).render.should == 'a template'
 	end
 
-	it "can be configured to completely ignore exceptions raised while rendering"
-	it "can be configured to insert debugging comments for exceptions raised while " +
-	   "rendering"
-	it "can be configured to propagate exceptions raised while rendering"
+
+	context "exception-handling" do
+
+		before( :each ) do
+			@source = "Some stuff\n<?call obj.raise_exception ?>\nMore stuff"
+			@tmpl = Inversion::Template.new( @source )
+
+			@obj = Object.new
+			def @obj.raise_exception
+				raise "Okay, here's an exception!"
+			end
+
+			@tmpl.obj = @obj
+		end
+
+		it "can be configured to completely ignore exceptions raised while rendering" do
+			@tmpl.options[:on_render_error] = :ignore
+			@tmpl.render.should == "Some stuff\n\nMore stuff"
+		end
+
+		it "can be configured to insert debugging comments for exceptions raised while rendering" do
+			@tmpl.options[:on_render_error] = :comment
+			@tmpl.render.bytes.to_a.should == 
+				"Some stuff\n<!-- RuntimeError: Okay, here's an exception! -->\nMore stuff".bytes.to_a
+		end
+
+		it "can be configured to propagate exceptions raised while rendering" do
+			@tmpl.options[:on_render_error] = :propagate
+			expect {
+				@tmpl.render
+			}.to raise_exception( RuntimeError, /Okay, here's an exception!/ )
+		end
+
+	end
+
 
 	context "with an attribute PI" do
 
