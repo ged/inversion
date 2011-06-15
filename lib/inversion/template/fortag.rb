@@ -73,5 +73,32 @@ class Inversion::Template::ForTag < Inversion::Template::CodeTag
 	# The attribute or methodchain that yields the enumerable object
 	attr_accessor :enumerator
 
+
+	### Iterate over the enumerator in +state+ and render the tag's
+	### contents for each iteration.
+	### @param [Inversion::RenderState] state  the current rendering state
+	def render( state )
+		result = []
+		enum = state.eval( self.enumerator ).each
+
+		self.log.debug "Rendering %p via block args: %p" % [ enum, self.block_args ]
+
+		enum.each do |*args|
+			# Turn the block arguments into an overrides hash by zipping up
+			# the arguments names and values
+			overrides = Hash[ self.block_args.zip(args) ]
+
+			# Overlay the block args from the 'for' over the template attributes and render 
+			# each subnode
+			state.with_attributes( overrides ) do
+				self.subnodes.each do |node|
+					result << node.render( state )
+				end
+			end
+		end
+
+		return result.join
+	end
+
 end # class Inversion::Template::ForTag
 

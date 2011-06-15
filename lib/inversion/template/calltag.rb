@@ -56,11 +56,12 @@ class Inversion::Template::CallTag < Inversion::Template::CodeTag
 	attr_accessor :methodchain
 
 
-	### Render the tag attributes of the specified +template+ and return them.
-	def render( template=nil )
-		return '' if template.nil?
+	### Render the method chains against the attributes of the specified +render_state+ 
+	### and return them.
+	def render( render_state=nil )
+		return '' if render_state.nil?
 
-		attribute = template.attributes[ self.attribute ]
+		attribute = render_state.attributes[ self.attribute ]
 		unless attribute.respond_to?( :get_binding )
 			def attribute.get_binding; binding(); end
 		end

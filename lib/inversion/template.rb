@@ -33,11 +33,20 @@ class Inversion::Template
 	require 'inversion/template/parser'
 	require 'inversion/template/node'
 	require 'inversion/template/tag'
+	require 'inversion/renderstate'
 
+
+	# Valid actions for 'on_render_error'
+	VALID_ERROR_ACTIONS = [
+		:ignore,
+		:comment,
+		:propagate,
+	]
 
 	### Default config values
 	DEFAULT_CONFIG = {
 		:raise_on_unknown   => false,
+		:on_render_error    => :comment,
 		:debugging_comments => false,
 		:comment_start      => '<!-- ',
 		:comment_end        => '-->',
@@ -113,6 +122,7 @@ class Inversion::Template
 	### @return [String] the rendered template content
 	def render
 		output = ''
+		state = Inversion::RenderState.new( self.attributes )
 
 		self.log.debug "Rendering node tree: %p" % [ @tree ]
 		self.walk_tree do |node|
@@ -120,7 +130,7 @@ class Inversion::Template
 				output << self.make_comment( comment_body )
 			end
 
-			output << node.render( self )
+			output << node.render( state )
 		end
 
 		return output
