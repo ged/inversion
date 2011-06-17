@@ -44,6 +44,14 @@ describe Inversion::Template::Node do
 		node.location.should == 'line ??, column ??'
 	end
 
+	it "doesn't raise an exception when the on_append event callback is called" do
+		state = double( "parser state" )
+		node = concrete_subclass.new( '' )
+		expect {
+			node.on_append( state )
+		}.to_not raise_error()
+	end
+
 end
 
 

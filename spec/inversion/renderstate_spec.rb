@@ -14,6 +14,8 @@ require 'rspec'
 
 require 'spec/lib/helpers'
 require 'inversion/renderstate'
+require 'inversion/template/attrtag'
+require 'inversion/template/textnode'
 
 describe Inversion::RenderState do
 
@@ -88,5 +90,56 @@ describe Inversion::RenderState do
 			Inversion::RenderState.new.with_attributes( {} )
 		}.to raise_error( LocalJumpError, /no block/i )
 	end
+
+	it "can make a debugging comment from a node" do
+		node  = Inversion::Template::AttrTag.new( 'foo' )
+		opts  = {
+			:debugging_comments => true,
+			:comment_start      => '/* ',
+			:comment_end        => ' */'
+		}
+		state = Inversion::RenderState.new( {}, opts )
+
+		state.make_node_comment( node ).should == '/* Attr "foo" */'
+	end
+
+	it "can make a debugging comment from a node" do
+		node = Inversion::Template::AttrTag.new( 'foo' )
+		state = Inversion::RenderState.new( {}, :debugging_comments => true )
+
+		state.make_node_comment( node ).should == '<!-- Attr "foo" -->'
+	end
+
+	it "returns an empty string for a debugging comment if debugging comments are disabled" do
+		node = Inversion::Template::AttrTag.new( 'foo' )
+		state = Inversion::RenderState.new( {}, :debugging_comments => false )
+
+		state.make_node_comment( node ).should == ''
+	end
+
+	it "returns a comment for render errors in 'ignore' mode" do
+		node  = Inversion::Template::AttrTag.new( 'boom' )
+		state = Inversion::RenderState.new( {}, :on_render_error => :ignore )
+		error = RuntimeError.new( "Ahooooonahooooo!" )
+		state.handle_render_error( node, error ).should == ''
+	end
+
+	it "returns a comment for render errors in 'comment' mode" do
+		node  = Inversion::Template::AttrTag.new( 'boom' )
+		state = Inversion::RenderState.new( {}, :on_render_error => :comment )
+		error = RuntimeError.new( "Ahooooonahooooo!" )
+		state.handle_render_error( node, error ).should == '<!-- RuntimeError: Ahooooonahooooo! -->'
+	end
+
+	it "re-raises render errors in 'propagate' mode" do
+		node  = Inversion::Template::AttrTag.new( 'boom' )
+		state = Inversion::RenderState.new( {}, :on_render_error => :propagate )
+		error = RuntimeError.new( "Ahooooonahooooo!" )
+
+		expect {
+			state.handle_render_error( node, error )
+		}.to raise_error( error )
+	end
+
 end
 
