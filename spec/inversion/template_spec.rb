@@ -26,15 +26,15 @@ describe Inversion::Template do
 		Inversion::Template.new( "a template" ).source.should == 'a template'
 	end
 
-	it "can be loaded from an IO" do
-		io = StringIO.new( 'a template' )
-		Inversion::Template.new( io ).source.should == 'a template'
+	it "can be loaded from a file" do
+		IO.should_receive( :read ).with( '/tmp/hooowat' ).and_return( 'file contents' )
+		Inversion::Template.load( '/tmp/hooowat' ).source.should == 'file contents'
 	end
 
-	it "can be loaded from a file" do
-		io = StringIO.new( 'file contents' )
-		File.should_receive( :open ).with( '/tmp/hooowat', 'r' ).and_yield( io )
-		Inversion::Template.load( '/tmp/hooowat' ).source.should == 'file contents'
+	it "untaints template content loaded from a file" do
+		content = 'file contents'.taint
+		IO.should_receive( :read ).with( '/tmp/hooowat' ).and_return( content )
+		Inversion::Template.load( '/tmp/hooowat' ).source.should_not be_tainted()
 	end
 
 	it "renders the source as-is if there are no instructions" do

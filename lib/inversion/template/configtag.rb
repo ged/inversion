@@ -4,7 +4,6 @@
 require 'yaml'
 require 'inversion/mixins'
 require 'inversion/template/tag'
-require 'inversion/template/containertag'
 
 
 # Inversion 'config' tag.
@@ -32,7 +31,7 @@ class Inversion::Template::ConfigTag < Inversion::Template::Tag
 
 
 	### Create a new ConfigTag with the specified +body+.
-	### @param [String]  body  the for tag content
+	### @param [String]  body  the config tag content
 	### @param [Integer] linenum the line number the tag was parsed from
 	### @param [Integer] colnum  the column number the tag was parsed from
 	def initialize( body, linenum=nil, colnum=nil )

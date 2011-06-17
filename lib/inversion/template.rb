@@ -75,9 +75,9 @@ class Inversion::Template
 	### @param [String] path  the path to the template
 	### @return [Inversion::Template]
 	def self::load( path )
-		File.open( path, 'r' ) do |io|
-			return self.new( io )
-		end
+		source = IO.read( path )
+		source.untaint
+		return self.new( source )
 	end
 
 
@@ -88,7 +88,6 @@ class Inversion::Template
 	### @param [#[]] opts               overrides of the global template options; @see ::configure
 	### @return [Inversion::Template]   the new template
 	def initialize( source, opts={} )
-		source      = source.read if source.respond_to?( :read )
 		@source     = source
 		@parser     = Inversion::Template::Parser.new( opts )
 		@tree       = @parser.parse( source )
