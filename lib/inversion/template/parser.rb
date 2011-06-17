@@ -23,7 +23,7 @@ class Inversion::Template::Parser
 
 	# Default values for parser configuration options.
 	DEFAULT_OPTIONS = {
-		:raise_on_unknown => false,
+		:ignore_unknown_tags => true,
 	}
 
 
@@ -47,7 +47,7 @@ class Inversion::Template::Parser
 	### @param [String] source  the template source
 	### @return [Array<Inversion::Template::Node>]  the nodes parsed from the +source+.
 	def parse( source )
-		state = State.new
+		state = State.new( self.options )
 
 		scanner = StringScanner.new( source )
 		self.log.debug "Starting parse of template source (%0.2fK)" % [ source.length/1024.0 ]
@@ -102,7 +102,7 @@ class Inversion::Template::Parser
 
 				tag = Inversion::Template::Tag.create( tagname, body, linenum, colnum )
 				if tag.nil?
-					if self.options[ :raise_on_unknown ]
+					unless state.options[ :ignore_unknown_tags ]
 						raise Inversion::ParseError, "Unknown tag %p at line %d, column %d" %
 							[ tagname , linenum, colnum ]
 					end
@@ -132,8 +132,9 @@ class Inversion::Template::Parser
 		include Inversion::Loggable
 
 		### Create a new State object
-		def initialize
-			@tree = []
+		def initialize( options={} )
+			@options    = options.dup
+			@tree       = []
 			@node_stack = [ @tree ]
 		end
 
@@ -141,10 +142,15 @@ class Inversion::Template::Parser
 		public
 		######
 
+		# The parse options in effect for this parse state
+		attr_reader :options
+
 
 		### Append operator: add nodes to the correct part of the parse tree.
 		### @param [Inversion::Template::Node] node  the parsed node
 		def <<( node )
+			node.on_append( self )
+
 			if node.is_a?( Inversion::Template::EndTag )
 				self.log.debug "End tag for %s" %
 					[ node.body ? "#{node.body} tag" : "unnamed tag" ]

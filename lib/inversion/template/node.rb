@@ -60,5 +60,12 @@ class Inversion::Template::Node
 		]
 	end
 
+
+	### Default (no-op) implementation of the append callback. This exists so defining
+	### the append callback is optional for Node's subclasses.
+	def on_append( state )
+		# Nothing to do
+	end
+
 end # class Inversion::Template::Node
 

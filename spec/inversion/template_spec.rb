@@ -63,8 +63,8 @@ describe Inversion::Template do
 
 		it "can be configured to insert debugging comments for exceptions raised while rendering" do
 			@tmpl.options[:on_render_error] = :comment
-			@tmpl.render.bytes.to_a.should == 
-				"Some stuff\n<!-- RuntimeError: Okay, here's an exception! -->\nMore stuff".bytes.to_a
+			@tmpl.render.should ==
+				"Some stuff\n<!-- RuntimeError: Okay, here's an exception! -->\nMore stuff"
 		end
 
 		it "can be configured to propagate exceptions raised while rendering" do
@@ -135,7 +135,7 @@ describe Inversion::Template do
 			config = Configurability::Config.new( %{
 			---
 			templates:
-			  raise_on_unknown: true
+			  ignore_unknown_tags: false
 			  debugging_comments: true
 			  comment_start: "#"
 			  comment_end: ""
@@ -143,7 +143,7 @@ describe Inversion::Template do
 
 			Inversion::Template.configure( config.templates )
 
-			Inversion::Template.config[:raise_on_unknown].should be_true()
+			Inversion::Template.config[:ignore_unknown_tags].should be_false()
 			Inversion::Template.config[:debugging_comments].should be_true()
 			Inversion::Template.config[:comment_start].should == '#'
 			Inversion::Template.config[:comment_end].should == ''

@@ -45,11 +45,11 @@ class Inversion::Template
 
 	### Default config values
 	DEFAULT_CONFIG = {
-		:raise_on_unknown   => false,
-		:on_render_error    => :comment,
-		:debugging_comments => false,
-		:comment_start      => '<!-- ',
-		:comment_end        => ' -->',
+		:ignore_unknown_tags => true,
+		:on_render_error     => :comment,
+		:debugging_comments  => false,
+		:comment_start       => '<!-- ',
+		:comment_end         => ' -->',
 	}
 
 
@@ -122,18 +122,16 @@ class Inversion::Template
 	### @return [String] the rendered template content
 	def render
 		output = ''
-		state = Inversion::RenderState.new( self.attributes )
+		state = Inversion::RenderState.new( self.attributes, self.options )
 
 		self.log.debug "Rendering node tree: %p" % [ @tree ]
 		self.walk_tree do |node|
-			if self.options[:debugging_comments] && (comment_body = node.as_comment_body)
-				output << self.make_comment( comment_body )
-			end
+			output << state.make_node_comment( node )
 
 			begin
 				output << node.render( state )
 			rescue => err
-				output << self.handle_render_error( node, err )
+				output << state.handle_render_error( node, err )
 			end
 		end
 
@@ -144,16 +142,6 @@ class Inversion::Template
 	#########
 	protected
 	#########
-
-	### Return the specified +content+ inside of the configured comment characters.
-	def make_comment( content )
-		return [
-			self.options[:comment_start],
-			content,
-			self.options[:comment_end],
-		].join
-	end
-
 
 	### Search for identifiers in the template's node tree and declare an accessor
 	### for each one that's found.
@@ -197,33 +185,5 @@ class Inversion::Template
 
 		return reader, writer
 	end
-
-
-	### Handle an error while rendering according to the behavior specified by the
-	### `on_render_error` option.
-	### @param [Inversion::Template::Node] node  the node that caused the exception
-	### @param [RuntimeError] exception  the error that was raised
-	def handle_render_error( node, exception )
-		self.log.error "%s while rendering %p: %s" %
-			[ exception.class.name, node.as_comment_body, exception.message ]
-
-		return case self.options[:on_render_error]
-			when :ignore
-				''
-
-			when :comment
-				msg = "%s: %s" % [ exception.class.name, exception.message ]
-				self.make_comment( msg )
-
-			when :propagate
-				raise( exception )
-
-			else
-				raise Inversion::OptionsError,
-					"unknown exception-handling mode: %p" % [ self.options[:on_render_error] ]
-			end
-	end
-
-
 end # class Inversion::Template
 

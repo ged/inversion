@@ -63,7 +63,7 @@ describe Inversion::Template::Parser do
 
 	it "can raise exceptions on unknown tags" do
 		expect {
-			Inversion::Template::Parser.new( :raise_on_unknown => true ).
+			Inversion::Template::Parser.new( :ignore_unknown_tags => false ).
 				parse( "Text <?hoooowhat ?>" )
 		}.to raise_exception( Inversion::ParseError, /unknown tag/i )
 	end
@@ -131,6 +131,14 @@ describe Inversion::Template::Parser do
 				@state.tree
 			}.to raise_exception( Inversion::ParseError, /unclosed/i )
 		end
+
+		it "calls the #on_append callback on nodes that are appended to it" do
+			node = mock( "node", :is_container? => false )
+			node.should_receive( :on_append ).with( @state )
+
+			@state << node
+		end
+
 	end
 
 end
