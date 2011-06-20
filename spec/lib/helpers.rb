@@ -130,8 +130,8 @@ module Inversion::SpecHelpers
 end
 
 
-### Mock with Rspec
-Rspec.configure do |c|
+### Mock with RSpec
+RSpec.configure do |c|
 	include Inversion::TestConstants
 
 	c.mock_with :rspec
