@@ -61,10 +61,19 @@ class Inversion::Template::Node
 	end
 
 
-	### Default (no-op) implementation of the append callback. This exists so defining
-	### the append callback is optional for Node's subclasses.
-	def on_append( state )
+	### Default (no-op) implementation of the before_append callback. This exists so defining
+	### the append callbacks are optional for Node's subclasses.
+	def before_append( state )
 		# Nothing to do
+		return nil
+	end
+
+
+	### Default (no-op) implementation of the after_append callback. This exists so defining
+	### the append callbacks are optional for Node's subclasses.
+	def after_append( state )
+		# Nothing to do
+		return nil
 	end
 
 end # class Inversion::Template::Node
