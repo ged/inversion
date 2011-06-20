@@ -28,8 +28,9 @@ class Inversion::Template::Parser
 
 
 	### Create a new Inversion::Template::Parser with the specified config +options+.
+	### @param [Inversion::Template] template  The template object this parser was generated for
 	### @param [Hash] options  configuration options that override DEFAULT_OPTIONS
-	def initialize( options={} )
+	def initialize( template, options={} )
 		@options = DEFAULT_OPTIONS.merge( options )
 	end
 
@@ -46,8 +47,9 @@ class Inversion::Template::Parser
 	### it as an Array.
 	### @param [String] source  the template source
 	### @return [Array<Inversion::Template::Node>]  the nodes parsed from the +source+.
-	def parse( source )
-		state = State.new( self.options )
+	def parse( source, parsestate=nil )
+		state = parsestate || State.new( @template, self.options )
+		self.log.debug "Parsing %d bytes with %p" % [ source.length, parsestate ]
 
 		scanner = StringScanner.new( source )
 		self.log.debug "Starting parse of template source (%0.2fK)" % [ source.length/1024.0 ]
@@ -62,8 +64,8 @@ class Inversion::Template::Parser
 				tagstart     = scanner.pos - scanner.matched.length
 				tagbodystart = scanner.pos
 				linenum      = scanner.pre_match.count( "\n" ) + 1
-				line_start   = scanner.pre_match.rindex( "\n" ) || 0
-				colnum       = scanner.pre_match.length - line_start - 1
+				line_start   = scanner.pre_match.rindex( "\n" ) || -1
+				colnum       = (scanner.pre_match.length - line_start) - 1
 
 				self.log.debug "  tag start position is (%d) %p (line %d, col %d)" %
 					[ tagstart, scanner.rest, linenum, colnum ]
@@ -132,11 +134,22 @@ class Inversion::Template::Parser
 		include Inversion::Loggable
 
 		### Create a new State object
-		def initialize( options={} )
-			@options    = options.dup
-			@tree       = []
-			@node_stack = [ @tree ]
+		def initialize( template, options={} )
+			@template      = template
+			@options       = options.dup
+			@tree          = []
+			@node_stack    = [ @tree ]
+			@include_stack = []
 		end
+
+
+		### Copy constructor -- duplicate everything but the node tree.
+		def initialize_copy( original )
+			@tree          = []
+			@node_stack    = [ @tree ]
+			@include_stack = original.include_stack.dup
+		end
+
 
 		######
 		public
@@ -145,11 +158,17 @@ class Inversion::Template::Parser
 		# The parse options in effect for this parse state
 		attr_reader :options
 
+		# The template object for this parser state
+		attr_reader :template
+
+		# The stack of templates that have been loaded for this state; for loop detection.
+		attr_reader :include_stack
+
 
 		### Append operator: add nodes to the correct part of the parse tree.
 		### @param [Inversion::Template::Node] node  the parsed node
 		def <<( node )
-			node.on_append( self )
+			node.before_append( self )
 
 			if node.is_a?( Inversion::Template::EndTag )
 				self.log.debug "End tag for %s" %
@@ -175,7 +194,16 @@ class Inversion::Template::Parser
 				@node_stack.push( node ) if node.is_container?
 			end
 
+			node.after_append( self )
 			self
+		end
+
+
+		### Append another Array of nodes onto this state's node tree.
+		def append_tree( newtree )
+			newtree.each do |node|
+				@node_stack.last << node
+			end
 		end
 
 

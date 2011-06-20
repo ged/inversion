@@ -1,6 +1,7 @@
 #!/usr/bin/env ruby
 # vim: set noet nosta sw=4 ts=4 :
 
+require 'pathname'
 require 'inversion' unless defined?( Inversion )
 
 # Load the Configurability library if it's installed
@@ -24,7 +25,7 @@ class Inversion::Template
 	# Configurability support -- load template configuration from the 'templates' section
 	# of the config.
 	if defined?( Configurability )
-		extend Configurability 
+		extend Configurability
 		config_key :templates if respond_to?( :config_key )
 	end
 
@@ -50,6 +51,7 @@ class Inversion::Template
 		:debugging_comments  => false,
 		:comment_start       => '<!-- ',
 		:comment_end         => ' -->',
+		:template_paths      => [],
 	}
 
 
@@ -74,12 +76,43 @@ class Inversion::Template
 	### Read a template object from the specified +path+.
 	### @param [String] path  the path to the template
 	### @return [Inversion::Template]
-	def self::load( path )
-		source = IO.read( path )
-		source.untaint
-		return self.new( source )
-	end
+	def self::load( path, parsestate=nil, opts={} )
 
+		# Shift the options hash over if there isn't a parse state
+		if parsestate.is_a?( Hash )
+			opts = parsestate
+			parsestate = nil
+		end
+
+		tmpl = nil
+		path = Pathname( path )
+		template_paths = self.config[:template_paths] + [ Dir.pwd ]
+
+		# Unrestricted template location.
+		if path.absolute?
+			tmpl = path
+
+		# Template files searched under paths specified in 'template_paths', then
+		# the current working directory. First match wins.
+		else
+			tmpl = template_paths.collect {|dir| Pathname(dir) + path }.find do |tmpl|
+				tmpl.exist?
+			end
+
+			raise RuntimeError, "Unable to find template %p within configured paths %p" %
+				[ path.to_s, template_paths ] if tmpl.nil?
+		end
+
+		# We trust files read from disk
+		source = tmpl.read
+		source.untaint
+
+		# Load the instance and set the path to the source
+		template = self.new( source, parsestate, opts )
+		template.source_file = tmpl.expand_path
+
+		return template
+	end
 
 
 	### Create a new Inversion:Template with the given +source+.
@@ -87,13 +120,22 @@ class Inversion::Template
 	###                                 an object that can be #read from.
 	### @param [#[]] opts               overrides of the global template options; @see ::configure
 	### @return [Inversion::Template]   the new template
-	def initialize( source, opts={} )
-		@source     = source
-		@parser     = Inversion::Template::Parser.new( opts )
-		@tree       = @parser.parse( source )
-		@options    = self.class.config.merge( opts )
+	def initialize( source, parsestate=nil, opts={} )
+		if parsestate.is_a?( Hash )
+			self.log.debug "Shifting template options: %p" % [ parsestate ]
+			opts = parsestate
+			parsestate = nil
+		else
+			self.log.debug "Parse state is: %p" % [ parsestate ]
+		end
 
-		@attributes = {}
+		@source       = source
+		@parser       = Inversion::Template::Parser.new( self, opts )
+		@node_tree    = @parser.parse( source, parsestate )
+		@options      = self.class.config.merge( opts )
+
+		@attributes   = {}
+		@source_file  = nil
 
 		self.define_attribute_accessors
 	end
@@ -107,14 +149,17 @@ class Inversion::Template
 	### @return [String] the raw template source
 	attr_reader :source
 
+	### @return [String] the path to the template's source file (if loaded from a file)
+	attr_accessor :source_file
+
 	### @return [Hash] the hash of attributes added by template directives
 	attr_reader :attributes
 
-	### @return [Array] the array of Inversion::Template::Node objects
-	attr_reader :tree
-
 	### @return [Hash] the Hash of configuration options
 	attr_reader :options
+
+	### @return [Array] the node tree of the parsed template
+	attr_reader :node_tree
 
 
 	### Render the template.
@@ -123,7 +168,7 @@ class Inversion::Template
 		output = ''
 		state = Inversion::RenderState.new( self.attributes, self.options )
 
-		self.log.debug "Rendering node tree: %p" % [ @tree ]
+		self.log.debug "Rendering node tree: %p" % [ @node_tree ]
 		self.walk_tree do |node|
 			output << state.make_node_comment( node )
 
@@ -170,7 +215,7 @@ class Inversion::Template
 
 
 	### Walk the template's node tree, yielding each node in turn to the given block.
-	def walk_tree( nodes=@tree, &block )
+	def walk_tree( nodes=@node_tree, &block )
 		nodes.each do |node|
 			yield( node )
 		end

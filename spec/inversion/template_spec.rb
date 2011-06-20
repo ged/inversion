@@ -26,19 +26,84 @@ describe Inversion::Template do
 		Inversion::Template.new( "a template" ).source.should == 'a template'
 	end
 
-	it "can be loaded from a file" do
-		IO.should_receive( :read ).with( '/tmp/hooowat' ).and_return( 'file contents' )
-		Inversion::Template.load( '/tmp/hooowat' ).source.should == 'file contents'
+	it "renders the source as-is if there are no instructions" do
+		Inversion::Template.new( "a template" ).render.should == 'a template'
 	end
 
 	it "untaints template content loaded from a file" do
 		content = 'file contents'.taint
 		IO.should_receive( :read ).with( '/tmp/hooowat' ).and_return( content )
+
 		Inversion::Template.load( '/tmp/hooowat' ).source.should_not be_tainted()
 	end
 
-	it "renders the source as-is if there are no instructions" do
-		Inversion::Template.new( "a template" ).render.should == 'a template'
+	context "without template paths set" do
+
+		before( :each ) do
+			Inversion::Template.config[:template_paths].clear
+		end
+
+		it "instances can be loaded from an absolute path" do
+			IO.should_receive( :read ).with( '/tmp/hooowat' ).and_return( 'file contents' )
+			Inversion::Template.load( '/tmp/hooowat' ).source.should == 'file contents'
+		end
+
+		it "instances can be loaded from a path relative to the current working directory" do
+			tmplpath = Pathname.pwd + 'hooowat.tmpl'
+			FileTest.should_receive( :exist? ).with( tmplpath.to_s ).and_return( true )
+			IO.should_receive( :read ).with( tmplpath.to_s ).and_return( 'file contents' )
+			Inversion::Template.load( 'hooowat.tmpl' ).source.should == 'file contents'
+		end
+	end
+
+
+	context "with template paths set" do
+
+		before( :each ) do
+			Inversion::Template.config[:template_paths] = [ '/tmp', '/fun' ]
+		end
+
+		after( :each ) do
+			Inversion::Template.config[:template_paths].clear
+		end
+
+		it "instances can be loaded from an absolute path" do
+			FileTest.should_not_receive( :exist? )
+
+			IO.should_receive( :read ).with( '/tmp/hooowat' ).and_return( 'file contents' )
+			Inversion::Template.load( '/tmp/hooowat' ).source.should == 'file contents'
+		end
+
+		it "raises a runtime exception if unable to locate the template" do
+			tmplpath = Pathname.pwd + 'sadmanhose.tmpl'
+
+			FileTest.should_receive( :exist? ).with( '/tmp/sadmanhose.tmpl' ).and_return( false )
+			FileTest.should_receive( :exist? ).with( '/fun/sadmanhose.tmpl' ).and_return( false )
+			FileTest.should_receive( :exist? ).with( tmplpath.to_s ).and_return( false )
+
+			expect {
+				Inversion::Template.load( 'sadmanhose.tmpl' )
+			}.to raise_error( RuntimeError, /unable to find template ".+" within configured paths/i )
+		end
+
+		it "loads template relative to directories in the template_paths" do
+			FileTest.should_receive( :exist? ).with( '/tmp/hooowat.tmpl' ).and_return( false )
+			FileTest.should_receive( :exist? ).with( '/fun/hooowat.tmpl' ).and_return( true )
+			IO.should_receive( :read ).with( '/fun/hooowat.tmpl' ).and_return( 'file contents' )
+
+			Inversion::Template.load( 'hooowat.tmpl' ).source.should == 'file contents'
+		end
+
+		it "falls back to loading the template relative to the current working directory" do
+			tmplpath = Pathname.pwd + 'hooowat.tmpl'
+
+			FileTest.should_receive( :exist? ).with( '/tmp/hooowat.tmpl' ).and_return( false )
+			FileTest.should_receive( :exist? ).with( '/fun/hooowat.tmpl' ).and_return( false )
+			FileTest.should_receive( :exist? ).with( tmplpath.to_s ).and_return( true )
+			IO.should_receive( :read ).with( tmplpath.to_s ).and_return( 'file contents' )
+
+			Inversion::Template.load( 'hooowat.tmpl' ).source.should == 'file contents'
+		end
 	end
 
 

@@ -21,8 +21,12 @@ describe Inversion::Template::Parser do
 		Inversion::Template::Tag.load_all
 	end
 
+	before( :each ) do
+		@template = double( "An Inversion::Template" )
+	end
+
 	it "parses a string with no PIs as a single text node" do
-		result = Inversion::Template::Parser.new.parse( "render unto Caesar" )
+		result = Inversion::Template::Parser.new( @template ).parse( "render unto Caesar" )
 
 		result.should have( 1 ).member
 		result.first.should be_a( Inversion::Template::TextNode )
@@ -30,12 +34,12 @@ describe Inversion::Template::Parser do
 	end
 
 	it "parses an empty string as a empty tree" do
-		result = Inversion::Template::Parser.new.parse( "" )
+		result = Inversion::Template::Parser.new( @template ).parse( "" )
 		result.should be_empty
 	end
 
 	it "parses a string with a single 'attr' tag as a single AttrTag node" do
-		result = Inversion::Template::Parser.new.parse( "<?attr foo ?>" )
+		result = Inversion::Template::Parser.new( @template ).parse( "<?attr foo ?>" )
 
 		result.should have( 1 ).member
 		result.first.should be_a( Inversion::Template::AttrTag )
@@ -43,7 +47,7 @@ describe Inversion::Template::Parser do
 	end
 
 	it "parses a single 'attr' tag surrounded by plain text" do
-		result = Inversion::Template::Parser.new.parse( "beginning<?attr foo ?>end" )
+		result = Inversion::Template::Parser.new( @template ).parse( "beginning<?attr foo ?>end" )
 
 		result.should have( 3 ).members
 		result[0].should be_a( Inversion::Template::TextNode )
@@ -53,7 +57,7 @@ describe Inversion::Template::Parser do
 	end
 
 	it "ignores unknown tags by default" do
-		result = Inversion::Template::Parser.new.parse( "Text <?hoooowhat ?>" )
+		result = Inversion::Template::Parser.new( @template ).parse( "Text <?hoooowhat ?>" )
 
 		result.should have( 2 ).members
 		result[0].should be_a( Inversion::Template::TextNode )
@@ -63,20 +67,20 @@ describe Inversion::Template::Parser do
 
 	it "can raise exceptions on unknown tags" do
 		expect {
-			Inversion::Template::Parser.new( :ignore_unknown_tags => false ).
+			Inversion::Template::Parser.new( @template, :ignore_unknown_tags => false ).
 				parse( "Text <?hoooowhat ?>" )
 		}.to raise_exception( Inversion::ParseError, /unknown tag/i )
 	end
 
 	it "can raise exceptions on unclosed (nested) tags" do
 		expect {
-			Inversion::Template::Parser.new.parse( "Text <?attr something <?attr something_else ?>" )
+			Inversion::Template::Parser.new( @template ).parse( "Text <?attr something <?attr something_else ?>" )
 		}.to raise_exception( Inversion::ParseError, /unclosed tag/i )
 	end
 
 	it "can raise exceptions on unclosed (eof) tags" do
 		expect {
-			Inversion::Template::Parser.new.parse( "Text <?hoooowhat" )
+			Inversion::Template::Parser.new( @template ).parse( "Text <?hoooowhat" )
 		}.to raise_exception( Inversion::ParseError, /unclosed tag/i )
 	end
 
@@ -84,7 +88,7 @@ describe Inversion::Template::Parser do
 	describe Inversion::Template::Parser::State do
 
 		before( :each ) do
-			@state = Inversion::Template::Parser::State.new
+			@state = Inversion::Template::Parser::State.new( @template )
 		end
 
 		it "returns the node tree if it's well-formed" do
@@ -132,12 +136,20 @@ describe Inversion::Template::Parser do
 			}.to raise_exception( Inversion::ParseError, /unclosed/i )
 		end
 
-		it "calls the #on_append callback on nodes that are appended to it" do
-			node = mock( "node", :is_container? => false )
-			node.should_receive( :on_append ).with( @state )
+		it "calls the #before_append callback on nodes that are appended to it" do
+			node = mock( "node", :is_container? => false, :after_append => nil )
+			node.should_receive( :before_append ).with( @state )
 
 			@state << node
 		end
+
+		it "calls the #after_append callback on nodes that are appended to it" do
+			node = mock( "node", :is_container? => false, :before_append => nil )
+			node.should_receive( :after_append ).with( @state )
+
+			@state << node
+		end
+
 
 	end
 

@@ -130,8 +130,8 @@ class Inversion::Template::Tag < Inversion::Template::Node
 	### @param [Integer] colnum  the column number the tag was parsed from
 	### @return [Inversion::Template::Tag]  the resulting tag object.
 	def initialize( body, linenum=nil, colnum=nil )
-		@body = body.strip
 		super
+		@body = body.strip
 	end
 
 
