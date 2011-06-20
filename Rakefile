@@ -20,8 +20,8 @@ hoespec = Hoe.spec 'inversion' do
 	self.developer 'Michael Granger', 'ged@FaerieMUD.org'
 	self.developer 'Mahlon E. Smith', 'mahlon@martini.nu'
 
-	self.dependency 'ripper', '~> 1.0', :development unless defined?( Encoding )
-	self.dependency 'rspec', '~> 2.4', :development
+	self.dependency 'ripper', '~> 1.0',  :development unless defined?( Encoding )
+	self.dependency 'rspec', '~> 2.6.0', :development
 
 	self.spec_extras[:licenses] = ["BSD"]
 	self.require_ruby_version( '>=1.9.2' )
