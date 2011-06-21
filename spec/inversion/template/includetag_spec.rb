@@ -36,15 +36,6 @@ describe Inversion::Template::IncludeTag do
 		tmpl.render.should == "hi there, handsome!"
 	end
 
-	it "allows the same template to be included multiple times" do
-		included_path = Pathname.pwd + 'included.tmpl'
-		FileTest.stub( :exist? ).with( included_path.to_s ).and_return true
-		IO.stub( :read ).with( included_path.to_s ).and_return( ' hi' )
-
-		tmpl = Inversion::Template.new( "hi<?include included.tmpl ?><?include included.tmpl ?> handsome!" )
-		tmpl.render.should == "hi hi hi handsome!"
-	end
-
 
 	it "renders debugging comments with the included template path" do
 		included_path = Pathname.pwd + 'included.tmpl'
@@ -55,6 +46,7 @@ describe Inversion::Template::IncludeTag do
 			new( "hi <?include included.tmpl ?> handsome!", :debugging_comments => true )
 		tmpl.render.should =~ /Include "included\.tmpl"/
 	end
+
 
 	it "appends the nodes from a separate template onto the including template" do
 		included_path = Pathname.pwd + 'included.tmpl'
@@ -69,6 +61,18 @@ describe Inversion::Template::IncludeTag do
 		tmpl.node_tree[3].should be_a( Inversion::Template::TextNode )
 	end
 
+
+	it "allows the same template to be included multiple times" do
+		included_path = Pathname.pwd + 'included.tmpl'
+		FileTest.stub( :exist? ).with( included_path.to_s ).and_return true
+		IO.stub( :read ).with( included_path.to_s ).and_return( ' hi' )
+
+		tmpl = Inversion::Template.
+			new( "hi<?include included.tmpl ?><?include included.tmpl ?> handsome!" )
+		tmpl.render.should == "hi hi hi handsome!"
+	end
+
+
 	it "raises exception on include loops" do
 		included_path = Pathname.pwd + 'included.tmpl'
 		FileTest.stub( :exist? ).with( included_path.to_s ).and_return true
@@ -78,6 +82,7 @@ describe Inversion::Template::IncludeTag do
 			Inversion::Template.new( "hi <?include included.tmpl ?> handsome!" )
 		}.to raise_error( Inversion::StackError, /Recursive include .+"included.tmpl"/ )
 	end
+
 
 	it "raises exception on complex include loops" do
 		top_path    = Pathname.pwd + 'top.tmpl'
