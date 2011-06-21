@@ -78,7 +78,6 @@ Loading this object
 
 * <?export «attr» ?>
 * <?import «attr» ?>
-* <?include «template path» ?>
 * <?render «attr/methodchain» USING «template path» ?>
 * <?yield ?>
 
@@ -96,6 +95,7 @@ Loading this object
 	  escaping: 'html'
 	  ignore_unknown_tags: false
   ?>
+* <?include «template path» ?>
 
 
 
