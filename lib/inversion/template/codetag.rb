@@ -60,15 +60,11 @@ class Inversion::Template::CodeTag < Inversion::Template::Tag
 	###	C L A S S   M E T H O D S
 	#################################################################
 
-	class << self
-		attr_accessor :tag_patterns
-	end
-
-
-	### Inheritance hook -- set the subclass's tag patterns.
-	def self::inherited( subclass )
-		super
-		subclass.tag_patterns = []
+	### Return the tag patterns for this class, or those of its superclass
+	### if it doesn't override them.
+	def self::tag_patterns
+		return @tag_patterns if defined?( @tag_patterns )
+		return self.superclass.tag_patterns
 	end
 
 
@@ -78,7 +74,8 @@ class Inversion::Template::CodeTag < Inversion::Template::Tag
 	### @param [Proc, #to_proc] callback  the block to call when the tag is instantiated
 	def self::tag_pattern( token_pattern, &callback )
 		pattern = TokenPattern.compile( token_pattern )
-		self.tag_patterns << [ pattern, callback ]
+		@tag_patterns = [] unless defined?( @tag_patterns )
+		@tag_patterns << [ pattern, callback ]
 	end
 
 
