@@ -68,7 +68,6 @@ Loading this object
 ### Tags To Implement
 
 * <?if «conditional expression» ?>…<?elsif «conditional expression» ?>…<?else?>…<?end?>
-* <?escape «attr/methodchain» ?>
 
 * <?pp «attr/methodchain» ?>
 * <?prettyprint «attr/methodchain» ?>
@@ -96,6 +95,7 @@ Loading this object
 	  ignore_unknown_tags: false
   ?>
 * <?include «template path» ?>
+* <?escape «attr/methodchain» ?>
 
 
 
