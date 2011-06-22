@@ -69,11 +69,9 @@ Loading this object
 
 * <?if «conditional expression» ?>…<?elsif «conditional expression» ?>…<?else?>…<?end?>
 
-* <?pp «attr/methodchain» ?>
 * <?prettyprint «attr/methodchain» ?>
 * <?timedelta «attr/methodchain» ?>
 * <?unless «conditional expression» ?>
-* <?urlencode «attr/methodchain» ?>
 
 * <?export «attr» ?>
 * <?import «attr» ?>
@@ -96,7 +94,8 @@ Loading this object
   ?>
 * <?include «template path» ?>
 * <?escape «attr/methodchain» ?>
-
+* <?urlencode «attr/methodchain» ?>
+* <?pp «attr/methodchain» ?>
 
 
 ## References
