@@ -262,6 +262,37 @@ module Inversion
 	end # HashUtilities
 
 
+	### A mixin that adds configurable escaping to a tag class.
+	module Escaping
+
+		# The fallback escape format
+		DEFAULT_ESCAPE_FORMAT = :none
+
+
+		### Escape the +output+ using the format specified by the given +render_state+'s config.
+		def escape( output, render_state )
+			format = render_state.options[:escape_format] || DEFAULT_ESCAPE_FORMAT
+			return output if format == :none
+
+			unless self.respond_to?( "escape_#{format}" )
+				self.log.error "Format %p not supported. To add support, define a #escape_%s to %s" %
+					[ format, format, __FILE__ ]
+				raise Inversion::OptionsError, "No such escape format %p" % [ format ]
+			end
+
+			return self.__send__( "escape_#{format}", output )
+		end
+
+
+		### Escape the given +output+ using HTML entity-encoding.
+		def escape_html( output )
+			return output.
+				gsub( /&/, '&amp;' ).
+				gsub( /</, '&lt;' ).
+				gsub( />/, '&gt;' )
+		end
+
+	end # Escaping
 
 end # module Inversion
 
