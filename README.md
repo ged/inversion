@@ -75,8 +75,10 @@ Loading this object
 
 * <?export «attr» ?>
 * <?import «attr» ?>
-* <?render «attr/methodchain» USING «template path» ?>
+* <?render «attr/methodchain» AS «identifier» IN «template path» ?>
 * <?yield ?>
+* <?begin ?>…<?rescue ?>…<?end?>
+
 
 * <?set  ?>
 
