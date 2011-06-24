@@ -30,22 +30,30 @@ class Inversion::Template::ForTag < Inversion::Template::CodeTag
 			Inversion::Template::ContainerTag
 
 	# <?for var in attribute ?>
-	tag_pattern 'kw sp $(ident) sp $(kw) sp $( .+ )' do |tag, match|
+	# <?for var in attribute.methodchain ?>
+	tag_pattern 'kw sp $(ident) sp $(kw) sp $(ident) $( .* )' do |tag, match|
 		raise Inversion::ParseError, "invalid keyword: expected 'in', got %p for %p" %
 			[ match.string(2), tag.body ] unless match.string(2) == 'in'
 
 		tag.block_args << match.string( 1 ).untaint.to_sym
+		tag.identifiers << match.string( 3 ).untaint.to_sym
+
 		tag.enumerator = match.string( 3 )
+		tag.enumerator << match.string( 4 ) if match.string( 4 )
 	end
 
 
+	# <?for var1, var2, var3 in attribute ?>
 	# <?for var1, var2, var3 in attribute.methodchain ?>
-	tag_pattern 'kw sp $(ident (comma sp? ident)+) sp $(kw) sp $( .+ )' do |tag, match|
+	tag_pattern 'kw sp $(ident (comma sp? ident)+) sp $(kw) sp $(ident) $( .* )' do |tag, match|
 		raise Inversion::ParseError, "invalid keyword: expected 'in', got %p for %p" %
 			[ match.string(2), tag.body ] unless match.string(2) == 'in'
 
 		tag.block_args += match.string( 1 ).untaint.split(/,\s?/).map( &:to_sym )
+		tag.identifiers << match.string( 3 ).untaint.to_sym
+
 		tag.enumerator = match.string( 3 )
+		tag.enumerator << match.string( 4 ) if match.string( 4 )
 	end
 
 

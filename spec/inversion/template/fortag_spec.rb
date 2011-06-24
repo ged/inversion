@@ -28,6 +28,11 @@ describe Inversion::Template::ForTag do
 	end
 
 
+	it "knows which identifiers should be added to the template" do
+		tag = Inversion::Template::ForTag.new( 'foo in bar' )
+		tag.identifiers.should == [ :bar ]
+	end
+
 	it "can iterate over single items of a collection attribute" do
 		tag = Inversion::Template::ForTag.new( 'foo in bar' )
 
