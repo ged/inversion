@@ -87,7 +87,7 @@ class Inversion::Template::AttrTag < Inversion::Template::CodeTag
 			value = attribute
 		end
 
-		return nil unless value
+		return value unless value
 
 		# Apply the format if there is one
 		if self.format
