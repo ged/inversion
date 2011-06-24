@@ -93,7 +93,7 @@ class Inversion::Template::AttrTag < Inversion::Template::CodeTag
 		if self.format
 			return self.format % value
 		else
-			return value.to_s
+			return value
 		end
 	end
 

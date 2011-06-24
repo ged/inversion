@@ -53,7 +53,7 @@ describe Inversion::Template::AttrTag do
 
 		it "renders as the stringified contents of the template attribute with the same name" do
 			template = stub( "template object", :attributes => {:foo => %w[floppy the turtle]} )
-			@tag.render( template ).should == %{["floppy", "the", "turtle"]}
+			@tag.render( template ).should == ["floppy", "the", "turtle"]
 		end
 
 		it "doesn't error if the attribute isn't set on the template" do
