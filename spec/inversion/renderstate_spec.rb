@@ -100,14 +100,14 @@ describe Inversion::RenderState do
 		}
 		state = Inversion::RenderState.new( {}, opts )
 
-		state.make_node_comment( node ).should == '/* Attr "foo" */'
+		state.make_node_comment( node ).should == '/* Attr: { template.attributes[ :foo ] } */'
 	end
 
 	it "can make a debugging comment from a node" do
 		node = Inversion::Template::AttrTag.new( 'foo' )
 		state = Inversion::RenderState.new( {}, :debugging_comments => true )
 
-		state.make_node_comment( node ).should == '<!-- Attr "foo" -->'
+		state.make_node_comment( node ).should == '<!-- Attr: { template.attributes[ :foo ] } -->'
 	end
 
 	it "returns an empty string for a debugging comment if debugging comments are disabled" do

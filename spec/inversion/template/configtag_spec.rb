@@ -62,7 +62,7 @@ describe Inversion::Template::ConfigTag do
 
 	it "renders invisibly" do
 		tag = Inversion::Template::ConfigTag.new( 'comment_start: /*' )
-		tag.render.should == ''
+		tag.render.should == nil
 	end
 
 	it "raises an error on an empty body" do

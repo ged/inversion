@@ -66,11 +66,11 @@ describe Inversion::Template::AttrTag do
 
 			attributes.should_receive( :[] ).with( :foo ).and_return( nil )
 
-			@tag.render( template ).should == ''
+			@tag.render( template ).should == nil
 		end
 
 		it "can render itself as a comment for template debugging" do
-			@tag.as_comment_body.should == %{Attr "foo"}
+			@tag.as_comment_body.should == 'Attr: { template.attributes[ :foo ] }'
 		end
 
 	end
@@ -97,13 +97,107 @@ describe Inversion::Template::AttrTag do
 
 			attributes.should_receive( :[] ).with( :foo ).and_return( nil )
 
-			@tag.render( template ).should == ''
+			@tag.render( template ).should == nil
 		end
 
 		it "can render itself as a comment for template debugging" do
-			@tag.as_comment_body.should == %Q{Attr "foo" with format: "%0.2f"}
+			@tag.as_comment_body.
+				should == 'Attr: { template.attributes[ :foo ] } with format: "%0.2f"'
 		end
 
+	end
+
+	it "supports simple <identifier>.<methodname> syntax" do
+		tag = Inversion::Template::AttrTag.new( 'foo.bar' )
+
+		tag.name.should == :foo
+		tag.methodchain.should == '.bar'
+	end
+
+	it "supports index operator (<identifier>.methodname[ <arguments> ]) syntax" do
+		tag = Inversion::Template::AttrTag.new( 'foo.bar[8]' )
+
+		tag.name.should == :foo
+		tag.methodchain.should == '.bar[8]'
+	end
+
+	it "supports index operator (<identifier>[ <arguments> ]) syntax" do
+		tag = Inversion::Template::AttrTag.new( 'foo[8]' )
+
+		tag.name.should == :foo
+		tag.methodchain.should == '[8]'
+	end
+
+	it "supports <identifier>.<methodname>( <arguments> ) syntax" do
+		tag = Inversion::Template::AttrTag.new( 'foo.bar( 8, :baz )' )
+
+		tag.name.should == :foo
+		tag.methodchain.should == '.bar( 8, :baz )'
+	end
+
+
+	describe "renders as the results of calling the tag's method chain on a template attribute" do
+
+		before( :each ) do
+			@attribute_object = mock( "template attribute" )
+		end
+
+		it "renders a single method call with no arguments" do
+			template = Inversion::Template.new( 'this is <?attr foo.bar ?>' )
+			template.foo = @attribute_object
+			@attribute_object.should_receive( :bar ).with( no_args() ).and_return( "the result" )
+
+			template.render.should == "this is the result"
+		end
+
+		it "renders a single method call with one argument" do
+			template = Inversion::Template.new( 'this is <?attr foo.bar(8) ?>' )
+			template.foo = @attribute_object
+			@attribute_object.should_receive( :bar ).with( 8 ).and_return( "the result" )
+
+			template.render.should == "this is the result"
+		end
+
+		it "renders a call with a single index operator" do
+			template = Inversion::Template.new( 'lines end with <?attr config[:line_ending] ?>' )
+			template.config = { :line_ending => 'newline' }
+
+			template.render.should == "lines end with newline"
+		end
+
+		it "renders a single method call with multiple arguments" do
+			template = Inversion::Template.new( 'this is <?attr foo.bar(8, :woo) ?>' )
+			template.foo = @attribute_object
+			@attribute_object.should_receive( :bar ).with( 8, :woo ).and_return( "the result" )
+
+			template.render.should == "this is the result"
+		end
+
+		it "renders multiple method calls with no arguments" do
+			additional_object = mock( 'additional template attribute' )
+			template = Inversion::Template.new( 'this is <?attr foo.bar.baz ?>' )
+			template.foo = @attribute_object
+			template.foo.should_receive( :bar ).and_return( additional_object )
+			additional_object.should_receive( :baz ).with( no_args() ).and_return( "the result" )
+
+			template.render.should == "this is the result"
+		end
+
+		it "renders multiple method calls with arguments" do
+			additional_object = mock( 'additional template attribute' )
+			template = Inversion::Template.new( 'this is <?attr foo.bar( 8 ).baz( :woo ) ?>' )
+			template.foo = @attribute_object
+			template.foo.should_receive( :bar ).with( 8 ).and_return( additional_object )
+			additional_object.should_receive( :baz ).with( :woo ).and_return( "the result" )
+
+			template.render.should == "this is the result"
+		end
+	end
+
+
+	it "can render itself as a comment for template debugging" do
+		tag = Inversion::Template::AttrTag.new( 'foo.bar( 8, :baz )' )
+		tag.as_comment_body.should == "Attr: { template.attributes[ :foo ].bar( 8, :baz ) }"
 	end
 
 end

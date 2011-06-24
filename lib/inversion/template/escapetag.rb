@@ -1,7 +1,7 @@
 #!/usr/bin/env ruby
 # vim: set noet nosta sw=4 ts=4 :
 
-require 'inversion/template/calltag'
+require 'inversion/template/attrtag'
 
 # Inversion escaping tag.
 #
@@ -13,7 +13,7 @@ require 'inversion/template/calltag'
 #   <?escape foo.bar ?>
 #   <?escape "Got <%d> items at <$%0.2f>" % [ line_item.count, line_item.price ] ?>
 #
-class Inversion::Template::EscapeTag < Inversion::Template::CallTag
+class Inversion::Template::EscapeTag < Inversion::Template::AttrTag
 	include Inversion::Escaping
 
 	### Render the method chains against the attributes of the specified +render_state+

@@ -2,7 +2,7 @@
 # vim: set noet nosta sw=4 ts=4 :
 
 require 'uri'
-require 'inversion/template/calltag'
+require 'inversion/template/attrtag'
 
 # Inversion URL encoding tag.
 #
@@ -13,7 +13,7 @@ require 'inversion/template/calltag'
 #
 #   <?uriencode foo.bar ?>
 #
-class Inversion::Template::UriencodeTag < Inversion::Template::CallTag
+class Inversion::Template::UriencodeTag < Inversion::Template::AttrTag
 
 	# Unreserved characters from section 2.3 of RFC 3986
  	# ALPHA / DIGIT / "-" / "." / "_" / "~"
