@@ -141,5 +141,16 @@ describe Inversion::RenderState do
 		}.to raise_error( error )
 	end
 
+	it "provides accessor methods for its attributes" do
+		state = Inversion::RenderState.new( :bar => :the_attribute_value )
+		state.bar.should == :the_attribute_value
+	end
+
+	it "doesn't error if an accessor for a non-existant attribute is called" do
+		state = Inversion::RenderState.new( :bar => :the_attribute_value )
+		state.foo.should be_nil()
+	end
+
+
 end
 

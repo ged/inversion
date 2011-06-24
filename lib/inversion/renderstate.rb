@@ -116,7 +116,7 @@ class Inversion::RenderState
 
 	### Handle attribute methods.
 	def method_missing( sym, *args, &block )
-		return super unless self.attributes.key?( sym )
+		self.log.debug "mapping missing method call to attribute: %p" % [ sym ]
 		return self.attributes[ sym ]
 	end
 
