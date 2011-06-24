@@ -101,7 +101,7 @@ class Inversion::Template::AttrTag < Inversion::Template::CodeTag
 	### Render the tag as the body of a comment, suitable for template debugging.
 	### @return [String]  the tag as the body of a comment
 	def as_comment_body
-		comment = "%s: { template.attributes[ :%s ]" % [ self.tagname, self.name ]
+		comment = "%s: { template.%s" % [ self.tagname, self.name ]
 		comment << self.methodchain if self.methodchain
 		comment << " }"
 		comment << " with format: %p" % [ self.format ] if self.format

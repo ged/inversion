@@ -108,5 +108,18 @@ class Inversion::Template::ForTag < Inversion::Template::CodeTag
 		return result.join
 	end
 
+
+	### Render the tag as the body of a comment, suitable for template debugging.
+	### @return [String]  the tag as the body of a comment
+	def as_comment_body
+		comment = "%s: { %s IN template.%s }" % [
+			self.tagname,
+			self.block_args.join(', '),
+			self.enumerator
+		]
+
+		return comment
+	end
+
 end # class Inversion::Template::ForTag
 

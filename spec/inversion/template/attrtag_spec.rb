@@ -67,7 +67,7 @@ describe Inversion::Template::AttrTag do
 		end
 
 		it "can render itself as a comment for template debugging" do
-			@tag.as_comment_body.should == 'Attr: { template.attributes[ :foo ] }'
+			@tag.as_comment_body.should == 'Attr: { template.foo }'
 		end
 
 	end
@@ -99,7 +99,7 @@ describe Inversion::Template::AttrTag do
 
 		it "can render itself as a comment for template debugging" do
 			@tag.as_comment_body.
-				should == 'Attr: { template.attributes[ :foo ] } with format: "%0.2f"'
+				should == 'Attr: { template.foo } with format: "%0.2f"'
 		end
 
 	end
@@ -194,7 +194,7 @@ describe Inversion::Template::AttrTag do
 
 	it "can render itself as a comment for template debugging" do
 		tag = Inversion::Template::AttrTag.new( 'foo.bar( 8, :baz )' )
-		tag.as_comment_body.should == "Attr: { template.attributes[ :foo ].bar( 8, :baz ) }"
+		tag.as_comment_body.should == "Attr: { template.foo.bar( 8, :baz ) }"
 	end
 
 end
