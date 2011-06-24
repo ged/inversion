@@ -87,11 +87,11 @@ class Inversion::Template::ForTag < Inversion::Template::CodeTag
 	### @param [Inversion::RenderState] state  the current rendering state
 	def render( state )
 		result = []
-		enum = state.eval( self.enumerator ).each
+		lvalue = state.eval( self.enumerator ) or return nil
 
-		self.log.debug "Rendering %p via block args: %p" % [ enum, self.block_args ]
+		self.log.debug "Rendering %p via block args: %p" % [ lvalue, self.block_args ]
 
-		enum.each do |*args|
+		lvalue.each do |*args|
 			# Turn the block arguments into an overrides hash by zipping up
 			# the arguments names and values
 			overrides = Hash[ self.block_args.zip(args) ]
