@@ -174,7 +174,7 @@ class Inversion::Template
 			output << state.make_node_comment( node )
 
 			begin
-				output << node.render( state )
+				output << node.render( state ).to_s
 			rescue => err
 				output << state.handle_render_error( node, err )
 			end
