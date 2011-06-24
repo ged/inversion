@@ -52,21 +52,18 @@ describe Inversion::Template::AttrTag do
 		end
 
 		it "renders as the stringified contents of the template attribute with the same name" do
-			attributes = double( "template object attributes" )
-			template = stub( "template object", :attributes => attributes )
-
-			attributes.should_receive( :[] ).with( :foo ).and_return([ "floppy", "the", "turtle" ])
-
+			template = stub( "template object", :attributes => {:foo => %w[floppy the turtle]} )
 			@tag.render( template ).should == %{["floppy", "the", "turtle"]}
 		end
 
 		it "doesn't error if the attribute isn't set on the template" do
-			attributes = double( "template object attributes" )
-			template = stub( "template object", :attributes => attributes )
-
-			attributes.should_receive( :[] ).with( :foo ).and_return( nil )
-
+			template = stub( "template object", :attributes => { :foo => nil } )
 			@tag.render( template ).should == nil
+		end
+
+		it "returns false when the rendered value is false" do
+			template = stub( "template object", :attributes => { :foo => false } )
+			@tag.render( template ).should equal( false )
 		end
 
 		it "can render itself as a comment for template debugging" do
