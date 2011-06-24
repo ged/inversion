@@ -40,6 +40,20 @@ describe Inversion::Template::ForTag do
 		tag.enumerator.should == 'bar'
 	end
 
+	it "should render as nothing if the corresponding attribute in the template is unset" do
+		render_state = Inversion::RenderState.new( :bar => nil )
+
+		# <?for foo in bar ?>
+		tag = Inversion::Template::ForTag.new( 'foo in bar' )
+
+		# [<?attr foo?>]
+		tag << Inversion::Template::TextNode.new( '[' )
+		tag << Inversion::Template::AttrTag.new( 'foo' )
+		tag << Inversion::Template::TextNode.new( ']' )
+
+		tag.render( render_state ).should be_nil()
+	end
+
 	it "renders each of its subnodes for each iteration, replacing its " +
 	   "block arguments with the yielded values" do
 		render_state = Inversion::RenderState.new( :bar => %w[monkey goat] )
