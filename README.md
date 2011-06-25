@@ -67,13 +67,10 @@ Loading this object
 
 ### Tags To Implement
 
-* <?if «conditional expression» ?>…<?elsif «conditional expression» ?>…<?else?>…<?end?>
-
 * <?prettyprint «attr/methodchain» ?>
 * <?timedelta «attr/methodchain» ?>
-* <?unless «conditional expression» ?>
 
-* <?export «attr» ?>
+* <?export «attr» ?>...<?end ?>
 * <?import «attr» ?>
 * <?render «attr/methodchain» AS «identifier» IN «template path» ?>
 * <?yield ?>
@@ -98,6 +95,8 @@ Loading this object
 * <?escape «attr/methodchain» ?>
 * <?urlencode «attr/methodchain» ?>
 * <?pp «attr/methodchain» ?>
+* <?if «conditional expression» ?>…<?elsif «conditional expression» ?>…<?else?>…<?end?>
+* <?unless «conditional expression» ?>..<?end ?>
 
 
 ## References

@@ -164,30 +164,41 @@ class Inversion::Template::Parser
 		# The stack of templates that have been loaded for this state; for loop detection.
 		attr_reader :include_stack
 
+		# The stack of containers
+		attr_reader :node_stack
+
 
 		### Append operator: add nodes to the correct part of the parse tree.
 		### @param [Inversion::Template::Node] node  the parsed node
 		def <<( node )
 			node.before_append( self )
 
+			# TODO: Factor these out into #before_append and #after_append on EndTag and 
+			# ContainerTag instead of special-casing them here.
 			if node.is_a?( Inversion::Template::EndTag )
 				self.log.debug "End tag for %s" %
 					[ node.body ? "#{node.body} tag" : "unnamed tag" ]
 
 				closed_node = @node_stack.pop
+
 				if @node_stack.empty?
 					raise Inversion::ParseError, "unbalanced end: no open tag in stack at" % [
 						node.location
 					]
 				end
 
-				if node.body && node.body.downcase != closed_node.tagname.downcase
+				if node.body &&
+				   !node.body.empty? &&
+				   node.body.downcase != closed_node.tagname.downcase
 					raise Inversion::ParseError, "unbalanced end: expected %p, got %p at %s" % [
 						closed_node.tagname.downcase,
 						node.body.downcase,
 						node.location
 					]
 				end
+
+				@node_stack.last << node
+
 			else
 				self.log.debug "Appending %p" % [ node ]
 				@node_stack.last << node
@@ -222,6 +233,13 @@ class Inversion::Template::Parser
 			return @node_stack.length == 1
 		end
 		alias_method :well_formed?, :is_well_formed?
+
+
+		### Return the node that is currently being appended to, or +nil+ if there aren't any
+		### opened container nodes.
+		def current_node
+			return @node_stack.last
+		end
 
 	end # class Inversion::Template::Parser::State
 

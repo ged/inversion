@@ -93,10 +93,11 @@ describe Inversion::Template::Parser do
 
 		it "returns the node tree if it's well-formed" do
 			open_tag = Inversion::Template::ForTag.new( 'foo in bar' )
-			@state << open_tag
-			@state << Inversion::Template::EndTag.new( 'for' )
+			end_tag  = Inversion::Template::EndTag.new( 'for' )
 
-			@state.tree.should == [ open_tag ]
+			@state << open_tag << end_tag
+
+			@state.tree.should == [ open_tag, end_tag ]
 		end
 
 		it "knows it is well-formed if there are no open tags" do
@@ -115,8 +116,8 @@ describe Inversion::Template::Parser do
 
 		it "raises an error on the addition of a unbalanced end tag" do
 			expect {
-				@state << Inversion::Template::EndTag.new( 'for' )
-			}.to raise_exception( Inversion::ParseError, /unbalanced/i )
+				@state << Inversion::Template::EndTag.new
+			}.to raise_exception( Inversion::ParseError, /unbalanced end: no open tag/i )
 		end
 
 		it "raises an error on the addition of a mismatched end tag" do

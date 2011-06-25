@@ -7,17 +7,17 @@ require 'inversion/template/containertag'
 require 'inversion/template/conditionaltag'
 
 
-# Inversion 'if' tag.
+# Inversion 'unless' tag.
 #
 # This tag causes a section of the template to be rendered only if its methodchain or attribute
-# is a true value.
+# is a *false* value.
 #
 # == Syntax
 #
-#   <?if attr ?>...<?end?>
-#   <?if obj.method ?>...<?end?>
+#   <?unless attr ?>...<?end?>
+#   <?unless obj.method ?>...<?end?>
 #
-class Inversion::Template::IfTag < Inversion::Template::AttrTag
+class Inversion::Template::UnlessTag < Inversion::Template::AttrTag
 	include Inversion::Loggable,
 	        Inversion::Template::ContainerTag,
 	        Inversion::Template::ConditionalTag
@@ -27,15 +27,9 @@ class Inversion::Template::IfTag < Inversion::Template::AttrTag
 	### Render the tag's contents if the condition is true, or any else or elsif sections
 	### if the condition isn't true.
 	def render( state )
-		self.enable_rendering if super
+		self.enable_rendering unless super
 		return self.render_subnodes( state )
 	end
 
-	### Render the tag as the body of a comment, suitable for template 
-	### debugging.
-	### @return [String]  the tag as the body of a comment
-	# def as_comment_body
-	# end
-
-end # class Inversion::Template::IfTag
+end # class Inversion::Template::UnlessTag
 
