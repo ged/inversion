@@ -77,6 +77,7 @@ class Inversion::Template::AttrTag < Inversion::Template::CodeTag
 
 		value     = nil
 		attribute = render_state.attributes[ self.name.to_sym ]
+		attribute.before_rendering( render_state ) if attribute.respond_to?( :before_rendering )
 
 		# Evaluate the method chain (if there is one) against the attribute
 		if self.methodchain
@@ -95,6 +96,9 @@ class Inversion::Template::AttrTag < Inversion::Template::CodeTag
 		else
 			return value
 		end
+	ensure
+		attribute.after_rendering( render_state ) if
+			defined?( attribute ) && attribute.respond_to?( :after_rendering )
 	end
 
 
