@@ -30,12 +30,17 @@ describe Inversion::Template do
 		Inversion::Template.new( "a template" ).render.should == 'a template'
 	end
 
+	it "renders when stringified" do
+		Inversion::Template.new( "a template" ).to_s.should == 'a template'
+	end
+
 	it "untaints template content loaded from a file" do
 		content = 'file contents'.taint
 		IO.should_receive( :read ).with( '/tmp/hooowat' ).and_return( content )
 
 		Inversion::Template.load( '/tmp/hooowat' ).source.should_not be_tainted()
 	end
+
 
 	context "without template paths set" do
 

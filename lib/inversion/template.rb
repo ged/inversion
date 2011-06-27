@@ -182,6 +182,7 @@ class Inversion::Template
 
 		return output
 	end
+	alias_method :to_s, :render
 
 
 	#########
