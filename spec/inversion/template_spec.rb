@@ -41,6 +41,29 @@ describe Inversion::Template do
 		Inversion::Template.load( '/tmp/hooowat' ).source.should_not be_tainted()
 	end
 
+	it "merges the render state passed to #before_rendering with its own attributes" do
+		renderstate = Inversion::RenderState.new( :foo => 'the merged stuff' )
+		tmpl = Inversion::Template.new( '<?attr foo ?>' )
+
+		tmpl.before_rendering( renderstate )
+		tmpl.render.should == 'the merged stuff'
+	end
+
+	it "can make an human-readable string version of itself suitable for debugging" do
+		IO.should_receive( :read ).with( '/tmp/inspect.tmpl' ).and_return( '<?attr foo ?>' )
+		tmpl = Inversion::Template.load( '/tmp/inspect.tmpl' )
+		tmpl.inspect.should =~ /Inversion::Template/
+		tmpl.inspect.should =~ %r{/tmp/inspect.tmpl}
+		tmpl.inspect.should =~ /attributes/
+		tmpl.inspect.should =~ /node_tree/
+	end
+
+	it "provides accessors for attributes that aren't identifiers in the template" do
+		tmpl = Inversion::Template.new( '' )
+		tmpl.foo = :bar
+		tmpl.foo.should == :bar
+	end
+
 
 	context "without template paths set" do
 

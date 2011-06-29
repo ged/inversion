@@ -166,28 +166,76 @@ class Inversion::Template
 	### Render the template.
 	### @return [String] the rendered template content
 	def render
+		self.log.info "rendering template 0x%08x" % [ self.object_id/2 ]
 		output = ''
 		state = Inversion::RenderState.new( self.attributes, self.options )
 
-		self.log.debug "Rendering node tree: %p" % [ @node_tree ]
+		self.log.debug "  rendering node tree: %p" % [ @node_tree ]
 		self.walk_tree do |node|
 			output << state.make_node_comment( node )
 
 			begin
+				self.log.debug "    rendering node: %p" % [ node ]
 				output << node.render( state ).to_s
 			rescue => err
 				output << state.handle_render_error( node, err )
 			end
 		end
 
+		self.log.info "  done rendering template 0x%08x" % [ self.object_id/2 ]
 		return output
 	end
 	alias_method :to_s, :render
 
 
+	### Rendering callback -- called if the template is nested in another template
+	### and rendered via an +attr+ tag.
+	def before_rendering( renderstate )
+		self.log.debug "Before rendering: calling node before_rendering hooks"
+		self.walk_tree do |node|
+			self.log.debug "  before_rendering %p" % [ node ]
+			node.before_rendering( renderstate ) if node.respond_to?( :before_rendering )
+		end
+	end
+
+
+	### Return a human-readable representation of the template object suitable
+	### for debugging.
+	def inspect
+		return "#<%s:%08x (loaded from %s) attributes: %p, node_tree: %p, options: %p>" % [
+			self.class.name,
+			self.object_id / 2,
+			self.source_file ? self.source_file : "memory",
+			self.attributes,
+			self.node_tree.map(&:as_comment_body),
+			self.options,
+		]
+	end
+
+
 	#########
 	protected
 	#########
+
+	### Proxy method: handle attribute readers/writers for attributes that aren't yet
+	### defined.
+	def method_missing( sym, *args, &block )
+		return super unless sym.to_s =~ /^([a-z]\w+)=?$/i
+		attribute = $1
+		self.install_accessors( attribute )
+
+		# Call the new method via #method to avoid a method_missing loop.
+		return self.method( sym ).call( *args, &block )
+	end
+
+
+	### Walk the template's node tree, yielding each node in turn to the given block.
+	def walk_tree( nodes=@node_tree, &block )
+		nodes.each do |node|
+			yield( node )
+		end
+	end
+
 
 	### Search for identifiers in the template's node tree and declare an accessor
 	### for each one that's found.
@@ -197,10 +245,7 @@ class Inversion::Template
 		end
 
 		self.attributes.each do |key, _|
-			reader, writer = self.make_attribute_accessors( key )
-
-			self.singleton_class.send( :define_method, key, &reader )
-			self.singleton_class.send( :define_method, "#{key}=", &writer )
+			self.install_accessors( key )
 		end
 	end
 
@@ -216,16 +261,18 @@ class Inversion::Template
 	end
 
 
-	### Walk the template's node tree, yielding each node in turn to the given block.
-	def walk_tree( nodes=@node_tree, &block )
-		nodes.each do |node|
-			yield( node )
-		end
+	### Install reader and writer methods for the attribute associated with the specified +key+.
+	def install_accessors( key )
+		reader, writer = self.make_attribute_accessors( key )
+
+		self.singleton_class.send( :define_method, key, &reader )
+		self.singleton_class.send( :define_method, "#{key}=", &writer )
 	end
 
 
 	### Make method bodies
 	def make_attribute_accessors( key )
+		key = key.to_sym
 		reader = lambda { self.attributes[key] }
 		writer = lambda {|newval| self.attributes[key] = newval }
 
