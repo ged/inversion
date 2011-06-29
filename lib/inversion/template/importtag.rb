@@ -53,7 +53,7 @@ class Inversion::Template::ImportTag < Inversion::Template::Tag
 	### Merge the inherited renderstate into the current template's +renderstate+.
 	def render( renderstate )
 		if @inherited_attributes
-			self.log.error "Importing inherited attributes: %p" % [ @attributes ]
+			self.log.debug "Importing inherited attributes: %p" % [ @attributes ]
 
 			# Merge, but overwrite unset values with inherited ones
 			renderstate.attributes.merge!( @inherited_attributes ) do |key, oldval, newval|
@@ -67,7 +67,7 @@ class Inversion::Template::ImportTag < Inversion::Template::Tag
 			end
 
 		else
-			self.log.error "No-op import: no parent attributes set."
+			self.log.debug "No-op import: no parent attributes set."
 		end
 
 		return nil
