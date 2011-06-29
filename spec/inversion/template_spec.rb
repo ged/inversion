@@ -41,12 +41,15 @@ describe Inversion::Template do
 		Inversion::Template.load( '/tmp/hooowat' ).source.should_not be_tainted()
 	end
 
-	it "merges the render state passed to #before_rendering with its own attributes" do
+	it "before_renders all of its nodes when #before_rendering is called" do
+		node = double( "fake node" )
 		renderstate = Inversion::RenderState.new( :foo => 'the merged stuff' )
-		tmpl = Inversion::Template.new( '<?attr foo ?>' )
+		tmpl = Inversion::Template.new( '' )
+		tmpl.node_tree << node
+
+		node.should_receive( :before_rendering ).with( renderstate )
 
 		tmpl.before_rendering( renderstate )
-		tmpl.render.should == 'the merged stuff'
 	end
 
 	it "can make an human-readable string version of itself suitable for debugging" do
