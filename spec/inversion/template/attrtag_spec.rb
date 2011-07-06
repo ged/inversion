@@ -82,32 +82,6 @@ describe Inversion::Template::AttrTag do
 			tag.as_comment_body.should == "Attr: { template.foo.bar( 8, :baz ) }"
 		end
 
-		it "calls #before_rendering on attribute values that respond to it" do
-			attribute = mock( "template attribute" )
-			renderstate = Inversion::RenderState.new( :foo => attribute )
-			tag = Inversion::Template::AttrTag.new( 'foo' )
-
-			attribute.should_receive( :respond_to? ).with( :before_rendering ).
-				and_return( true )
-			attribute.stub( :respond_to? ).with( :after_rendering ).and_return( false )
-			attribute.should_receive( :before_rendering ).with( renderstate )
-
-			tag.render( renderstate )
-		end
-
-		it "calls #after_rendering on attribute values that respond to it" do
-			attribute = mock( "template attribute" )
-			renderstate = Inversion::RenderState.new( :foo => attribute )
-			tag = Inversion::Template::AttrTag.new( 'foo' )
-
-			attribute.stub( :respond_to? ).with( :before_rendering ).and_return( false )
-			attribute.should_receive( :respond_to? ).with( :after_rendering ).
-				and_return( true )
-			attribute.should_receive( :after_rendering ).with( renderstate )
-
-			tag.render( renderstate )
-		end
-
 		context "without a format" do
 
 			before( :each ) do

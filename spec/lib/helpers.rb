@@ -11,12 +11,23 @@ BEGIN {
 }
 
 require 'rspec'
+
+begin
+	require 'simplecov'
+	SimpleCov.start do
+		add_filter 'spec'
+	end
+rescue LoadError => err
+	warn "Coverage disabled: %p: %s" % [ err.class, err.message ]
+end
+
 require 'inversion'
 require 'spec/lib/constants'
 
 ### IRb.start_session, courtesy of Joel VanderWerf in [ruby-talk:42437].
 require 'irb'
 require 'irb/completion'
+
 
 module IRB # :nodoc:
 	def self.start_session( obj )

@@ -25,9 +25,23 @@ class Inversion::Template::EndTag < Inversion::Template::Tag
 	attr_reader :opener
 
 
-	### Remember what the current node of the +state+ is for the comment body later.
-	def before_append( state )
-		@opener = state.current_node
+	### Parser callback -- close the given +state+'s currently-open container node.
+	def before_appending( state )
+		@opener = state.pop
+		self.log.debug "End tag for %s at %s" % [ @opener.tagname, @opener.location ]
+
+		# If the end tag has a body, it should match the container that's just
+		# been popped.
+		if self.body &&
+			!self.body.empty? &&
+			self.body.downcase != @opener.tagname.downcase
+
+			raise Inversion::ParseError, "unbalanced end: expected %p, got %p" % [
+				@opener.tagname.downcase,
+				self.body.downcase,
+			]
+		end
+
 		super
 	end
 

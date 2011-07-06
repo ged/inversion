@@ -61,20 +61,40 @@ class Inversion::Template::Node
 	end
 
 
-	### Default (no-op) implementation of the before_append callback. This exists so defining
+	### Default (no-op) implementation of the before_appending callback. This exists so defining
 	### the append callbacks are optional for Node's subclasses.
-	def before_append( state )
+	def before_appending( state )
 		# Nothing to do
 		return nil
 	end
+	alias_method :before_append, :before_appending
 
 
-	### Default (no-op) implementation of the after_append callback. This exists so defining
+	### Default (no-op) implementation of the after_appending callback. This exists so defining
 	### the append callbacks are optional for Node's subclasses.
-	def after_append( state )
+	def after_appending( state )
 		# Nothing to do
 		return nil
 	end
+	alias_method :after_append, :after_appending
+
+
+	### Default (no-op) implementation of the before_rendering callback. This exists so defining
+	### the rendering callbacks are optional for Node's subclasses.
+	def before_rendering( state=nil )
+		# Nothing to do
+		return nil
+	end
+	alias_method :before_render, :before_rendering
+
+
+	### Default (no-op) implementation of the after_rendering callback. This exists so defining
+	### the rendering callbacks are optional for Node's subclasses.
+	def after_rendering( state=nil )
+		# Nothing to do
+		return nil
+	end
+	alias_method :after_render, :after_rendering
 
 end # class Inversion::Template::Node
 

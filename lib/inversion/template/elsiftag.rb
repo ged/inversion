@@ -28,21 +28,20 @@ class Inversion::Template::ElsifTag < Inversion::Template::AttrTag
 
 	### Parsing callback -- check to be sure the node tree can have the
 	### 'else' tag appended to it.
-	def before_append( parsestate )
+	def before_appending( parsestate )
 		condtag = parsestate.node_stack.reverse.find do |node|
 			case node
 			when Inversion::Template::IfTag,
 			     Inversion::Template::CommentTag
 				break node
 			when Inversion::Template::ContainerTag
-				raise Inversion::ParseError, "'%s' tags can't have '%s' clauses at %s" %
-					[ node.tagname.downcase, self.tagname.downcase, self.location ]
+				raise Inversion::ParseError, "'%s' tags can't have '%s' clauses" %
+					[ node.tagname.downcase, self.tagname.downcase ]
 			end
 		end
 
 		unless condtag
-			raise Inversion::ParseError, "orphaned '%s' tag at %s" %
-				[ self.tagname.downcase, self.location ]
+			raise Inversion::ParseError, "orphaned '%s' tag" % [ self.tagname.downcase ]
 		end
 	end
 

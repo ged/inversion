@@ -15,7 +15,9 @@ module Inversion::Template::ContainerTag
 	def initialize( * )
 		@subnodes = []
 		super
+		yield( self ) if block_given?
 	end
+
 
 	# @return [Array<Inversion::Template::Node>] the nodes the tag contains
 	attr_reader :subnodes
@@ -34,6 +36,14 @@ module Inversion::Template::ContainerTag
 		return true
 	end
 	alias_method :container?, :is_container?
+
+
+	### Append the container's subnodes to the +renderstate+.
+	def render_subnodes( renderstate )
+		self.subnodes.each do |node|
+			renderstate << node
+		end
+	end
 
 end # module Inversion::Template::ContainerTag
 

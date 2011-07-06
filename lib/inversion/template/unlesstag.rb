@@ -5,6 +5,7 @@ require 'inversion/mixins'
 require 'inversion/template/attrtag'
 require 'inversion/template/containertag'
 require 'inversion/template/conditionaltag'
+require 'inversion/template/elsetag'
 
 
 # Inversion 'unless' tag.
@@ -28,7 +29,31 @@ class Inversion::Template::UnlessTag < Inversion::Template::AttrTag
 	### if the condition isn't true.
 	def render( state )
 		self.enable_rendering unless super
-		return self.render_subnodes( state )
+		self.render_subnodes( state )
+
+		return state
+	end
+
+	### Render the tag's subnodes according to the tag's logical state.
+	def render_subnodes( renderstate )
+		self.log.debug "Rendering subnodes. Rendering initially %s" %
+			[ self.rendering_enabled? ? "enabled" : "disabled" ]
+
+		# walk the subtree, modifying the logic flags for else and elsif tags,
+		# and rendering nodes if rendering is enabled
+		self.subnodes.each do |node|
+			if node.is_a?( Inversion::Template::ElseTag )
+				self.log.debug "  logic switch: %p..." % [ node ]
+				if !self.rendering_was_enabled?
+					self.enable_rendering
+				else
+					self.disable_rendering
+				end
+
+			else
+				renderstate << node if self.rendering_enabled?
+			end
+		end
 	end
 
 end # class Inversion::Template::UnlessTag

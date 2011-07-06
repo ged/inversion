@@ -41,15 +41,17 @@ describe Inversion::Template do
 		Inversion::Template.load( '/tmp/hooowat' ).source.should_not be_tainted()
 	end
 
-	it "before_renders all of its nodes when #before_rendering is called" do
+	it "calls before and after rendering hooks on all of its nodes when rendered" do
 		node = double( "fake node" )
-		renderstate = Inversion::RenderState.new( :foo => 'the merged stuff' )
+		parentstate = Inversion::RenderState.new( :foo => 'the merged stuff' )
 		tmpl = Inversion::Template.new( '' )
 		tmpl.node_tree << node
 
-		node.should_receive( :before_rendering ).with( renderstate )
+		node.should_receive( :before_rendering ).with( an_instance_of(Inversion::RenderState) )
+		node.should_receive( :render ).with( an_instance_of(Inversion::RenderState) )
+		node.should_receive( :after_rendering ).with( an_instance_of(Inversion::RenderState) )
 
-		tmpl.before_rendering( renderstate )
+		tmpl.render( parentstate )
 	end
 
 	it "can make an human-readable string version of itself suitable for debugging" do
@@ -138,7 +140,83 @@ describe Inversion::Template do
 	end
 
 
-	context "exception-handling" do
+	context "with an attribute PI" do
+
+		let( :template ) { Inversion::Template.new("<h1><?attr foo ?></h1>") }
+
+
+		it "has a reader for getting the attribute's value" do
+			template.should respond_to( :foo )
+		end
+
+		it "has an accessor for setting the attribute's value" do
+			template.should respond_to( :foo= )
+		end
+
+		it "renders scalar values set for the attribute" do
+			template.foo = "a lion"
+			template.render.should == "<h1>a lion</h1>"
+		end
+
+		it "renders an non-String value set for the attribute using #to_s" do
+			template.foo = [ 'a lion', 'a little guy', 'a bad mousie', 'one birdy' ]
+			template.render.should == %{<h1>["a lion", "a little guy", "a bad mousie", "one birdy"]</h1>}
+		end
+	end
+
+
+	context "with several attribute PIs" do
+
+		let( :template ) { Inversion::Template.new("<h1><?attr foo ?> <?attr foo?> RUN!</h1>") }
+
+		it "has a reader for getting the attribute's value" do
+			template.should respond_to( :foo )
+		end
+
+		it "has an accessor for setting the attribute's value" do
+			template.should respond_to( :foo= )
+		end
+
+		it "renders scalar values set for the attribute(s)" do
+			template.foo = "lions!!"
+			template.render.should == "<h1>lions!! lions!! RUN!</h1>"
+		end
+	end
+
+
+	describe "Configurability support", :if => defined?( Configurability ) do
+
+		after( :each ) do
+			Inversion::Template.config = Inversion::Template::DEFAULT_CONFIG
+		end
+
+		it "is included in the list of configurable objects" do
+			Configurability.configurable_objects.should include( Inversion::Template )
+		end
+
+		it "can be configured using a Configurability::Config object" do
+			config = Configurability::Config.new( %{
+			---
+			templates:
+			  ignore_unknown_tags: false
+			  debugging_comments: true
+			  comment_start: "#"
+			  comment_end: ""
+			}.gsub(/^\t{3}/, '') )
+
+			Inversion::Template.configure( config.templates )
+
+			Inversion::Template.config[:ignore_unknown_tags].should be_false()
+			Inversion::Template.config[:debugging_comments].should be_true()
+			Inversion::Template.config[:comment_start].should == '#'
+			Inversion::Template.config[:comment_end].should == ''
+
+		end
+
+	end
+
+
+	describe "exception-handling:" do
 
 		before( :each ) do
 			@source = "Some stuff\n<?call obj.raise_exception ?>\nMore stuff"
@@ -172,81 +250,6 @@ describe Inversion::Template do
 
 	end
 
-
-	context "with an attribute PI" do
-
-		let( :template ) { Inversion::Template.new("<h1><?attr foo ?></h1>") }
-
-
-		it "has a reader for getting the tag's value" do
-			template.should respond_to( :foo )
-		end
-
-		it "has an accessor for setting the tag's value" do
-			template.should respond_to( :foo= )
-		end
-
-		it "renders scalar values set for the tag" do
-			template.foo = "a lion"
-			template.render.should == "<h1>a lion</h1>"
-		end
-
-		it "renders an non-String value set for the tag using #to_s" do
-			template.foo = [ 'a lion', 'a little guy', 'a bad mousie', 'one birdy' ]
-			template.render.should == %{<h1>["a lion", "a little guy", "a bad mousie", "one birdy"]</h1>}
-		end
-	end
-
-
-	context "with numerous attribute PIs" do
-
-		let( :template ) { Inversion::Template.new("<h1><?attr foo ?> <?attr foo?> RUN!</h1>") }
-
-		it "has a reader for getting the tag's value" do
-			template.should respond_to( :foo )
-		end
-
-		it "has an accessor for setting the tag's value" do
-			template.should respond_to( :foo= )
-		end
-
-		it "renders scalar values set for the tag(s)" do
-			template.foo = "lions!!"
-			template.render.should == "<h1>lions!! lions!! RUN!</h1>"
-		end
-	end
-
-
-	context "if Configurability is installed", :if => defined?( Configurability ) do
-
-		after( :each ) do
-			Inversion::Template.config = Inversion::Template::DEFAULT_CONFIG
-		end
-
-		it "is included in the list of configurable objects" do
-			Configurability.configurable_objects.should include( Inversion::Template )
-		end
-
-		it "can be configured using a Configurability::Config object" do
-			config = Configurability::Config.new( %{
-			---
-			templates:
-			  ignore_unknown_tags: false
-			  debugging_comments: true
-			  comment_start: "#"
-			  comment_end: ""
-			}.gsub(/^\t{3}/, '') )
-
-			Inversion::Template.configure( config.templates )
-
-			Inversion::Template.config[:ignore_unknown_tags].should be_false()
-			Inversion::Template.config[:debugging_comments].should be_true()
-			Inversion::Template.config[:comment_start].should == '#'
-			Inversion::Template.config[:comment_end].should == ''
-
-		end
-
-	end
 
 end
 

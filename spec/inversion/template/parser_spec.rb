@@ -114,18 +114,24 @@ describe Inversion::Template::Parser do
 			@state.should be_well_formed
 		end
 
-		it "raises an error on the addition of a unbalanced end tag" do
-			expect {
-				@state << Inversion::Template::EndTag.new
-			}.to raise_exception( Inversion::ParseError, /unbalanced end: no open tag/i )
+		it "can pop a container tag off of the current context" do
+			container = Inversion::Template::ForTag.new( 'foo in bar' )
+			@state << container
+			@state.pop.should == container
 		end
 
-		it "raises an error on the addition of a mismatched end tag" do
-			@state << Inversion::Template::ForTag.new( 'foo in bar' )
+		it "calls the #after_appending hook of container nodes when they're popped" do
+			container = mock( "container tag", :before_appending => false, :is_container? => true )
+			@state << container
 
+			container.should_receive( :after_appending ).with( @state )
+			@state.pop
+		end
+
+		it "raises an error when popping if there is no container tag" do
 			expect {
-				@state << Inversion::Template::EndTag.new( 'if' )
-			}.to raise_exception( Inversion::ParseError, /unbalanced/i )
+				@state.pop
+			}.to raise_exception( Inversion::ParseError, /unbalanced end: no open tag/i )
 		end
 
 		it "raises an error when the tree is fetched if it isn't well-formed" do
@@ -137,16 +143,16 @@ describe Inversion::Template::Parser do
 			}.to raise_exception( Inversion::ParseError, /unclosed/i )
 		end
 
-		it "calls the #before_append callback on nodes that are appended to it" do
-			node = mock( "node", :is_container? => false, :after_append => nil )
-			node.should_receive( :before_append ).with( @state )
+		it "calls the #before_appending callback on nodes that are appended to it" do
+			node = mock( "node", :is_container? => false, :after_appending => nil )
+			node.should_receive( :before_appending ).with( @state )
 
 			@state << node
 		end
 
-		it "calls the #after_append callback on nodes that are appended to it" do
-			node = mock( "node", :is_container? => false, :before_append => nil )
-			node.should_receive( :after_append ).with( @state )
+		it "calls the #after_appending callback on nodes that are appended to it" do
+			node = mock( "node", :is_container? => false, :before_appending => nil )
+			node.should_receive( :after_appending ).with( @state )
 
 			@state << node
 		end

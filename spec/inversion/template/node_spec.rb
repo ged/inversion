@@ -44,19 +44,35 @@ describe Inversion::Template::Node do
 		node.location.should == 'line ??, column ??'
 	end
 
-	it "doesn't raise an exception when the before_append event callback is called" do
+	it "doesn't raise an exception when the before_appending event callback is called" do
 		state = double( "parser state" )
 		node = concrete_subclass.new( '' )
 		expect {
-			node.before_append( state )
+			node.before_appending( state )
 		}.to_not raise_error()
 	end
 
-	it "doesn't raise an exception when the after_append event callback is called" do
+	it "doesn't raise an exception when the after_appending event callback is called" do
 		state = double( "parser state" )
 		node = concrete_subclass.new( '' )
 		expect {
-			node.after_append( state )
+			node.after_appending( state )
+		}.to_not raise_error()
+	end
+
+	it "doesn't raise an exception when the before_rendering event callback is called" do
+		state = double( "render state" )
+		node = concrete_subclass.new( '' )
+		expect {
+			node.before_rendering( state )
+		}.to_not raise_error()
+	end
+
+	it "doesn't raise an exception when the after_rendering event callback is called" do
+		state = double( "render state" )
+		node = concrete_subclass.new( '' )
+		expect {
+			node.after_rendering( state )
 		}.to_not raise_error()
 	end
 end

@@ -25,7 +25,6 @@ class Inversion::Template::ImportTag < Inversion::Template::Tag
 	def initialize( body, linenum=nil, colnum=nil )
 		super
 		@attributes = body.split( /\s*,\s*/ ).collect {|name| name.untaint.strip.to_sym }
-		@inherited_attributes = nil
 	end
 
 
@@ -37,26 +36,19 @@ class Inversion::Template::ImportTag < Inversion::Template::Tag
 	attr_reader :attributes
 
 
-	### Rendering hook -- called with the parent template's +renderstate+ when this
-	### tag's template is rendered.
-	def before_rendering( renderstate )
-		@inherited_attributes = self.attributes.inject( {} ) do |hash,attrname|
-			hash[ attrname ] = renderstate.attributes[ attrname ]
-			hash
-		end
-
-		self.log.debug "Before rendering: Inheriting parent template's attributes: %p" %
-			[ @inherited_attributes ]
-	end
-
-
 	### Merge the inherited renderstate into the current template's +renderstate+.
 	def render( renderstate )
-		if @inherited_attributes
-			self.log.debug "Importing inherited attributes: %p" % [ @attributes ]
+		if (( cstate = renderstate.containerstate ))
+			self.log.debug "Importing inherited attributes: %p from %p" % [ @attributes, cstate.attributes ]
+
+			# Pick out the attributes that are being imported
+			inherited_attrs = @attributes.inject( {} ) do |attrs, key|
+				attrs[ key ] = cstate.attributes[ key ]
+				attrs
+			end
 
 			# Merge, but overwrite unset values with inherited ones
-			renderstate.attributes.merge!( @inherited_attributes ) do |key, oldval, newval|
+			renderstate.attributes.merge!( inherited_attrs ) do |key, oldval, newval|
 				if oldval.nil?
 					self.log.debug "Importing attribute %p: %p" % [ key, newval ]
 					newval

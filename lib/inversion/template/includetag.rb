@@ -41,30 +41,14 @@ class Inversion::Template::IncludeTag < Inversion::Template::Tag
 
 
 	### Parser callback -- Load the included template and check for recursive includes.
-	def before_append( parsestate )
-		if parsestate.include_stack.include?( self.path )
-			stack_desc = parsestate.include_stack.join( ' --> ' )
-			msg = "Recursive include of %p detected at %s: from %s" % [
-				@path,
-				self.location,
-				stack_desc,
-			]
-
-			self.log.error( msg )
-			raise Inversion::StackError, msg
-		end
-
-		self.log.debug "Include stack is: %p" % [ parsestate.include_stack ]
-
-		newstate = parsestate.dup
-		newstate.include_stack.push( self.path )
-		@included_template = Inversion::Template.load( @path, newstate, parsestate.options )
+	def before_appending( parsestate )
+		@included_template = parsestate.load_subtemplate( self.path )
 	end
 
 
 	### Add nodes from the template @path into the current +parsestate+.
 	### @param [Inversion::Template::Parser::State] parsestate  the parse state
-	def after_append( parsestate )
+	def after_appending( parsestate )
 		parsestate.append_tree( @included_template.node_tree )
 	end
 
