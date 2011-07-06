@@ -60,15 +60,15 @@ class Inversion::Template::Tag < Inversion::Template::Node
 			self.load( tagfile )
 
 			Inversion.log.debug "Looking for class for %p tag" % [ tagname ]
-			tagclass = self.derivatives.find do |tagclass|
-				if tagclass.name.nil? || tagclass.name.empty?
-					Inversion.log.debug "  skipping anonymous class %p" % [ tagclass ]
+			tagclass = self.derivatives.find do |derivclass|
+				if derivclass.name.nil? || derivclass.name.empty?
+					Inversion.log.debug "  skipping anonymous class %p" % [ derivclass ]
 					nil
-				elsif !tagclass.respond_to?( :new )
-					Inversion.log.debug "  skipping abstract class %p" % [ tagclass ]
+				elsif !derivclass.respond_to?( :new )
+					Inversion.log.debug "  skipping abstract class %p" % [ derivclass ]
 					nil
 				else
-					tagclass.name.downcase =~ /\b#{tagname}tag$/
+					derivclass.name.downcase =~ /\b#{tagname}tag$/
 				end
 			end
 
