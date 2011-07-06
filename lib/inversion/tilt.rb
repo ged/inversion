@@ -1,10 +1,6 @@
 #!/usr/bin/env ruby
 
-begin
-	require 'tilt'
-rescue LoadError => err
-	warn "Couldn't load Inversion tilt support: %s: %s" % [ err.class.name, err.message ]
-end
+require 'tilt'
 
 # Add support for Tilt (https://github.com/rtomayko/tilt) if it's already been loaded.
 if defined?( ::Tilt )

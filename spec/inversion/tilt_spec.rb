@@ -12,9 +12,16 @@ BEGIN {
 
 require 'rspec'
 require 'spec/lib/helpers'
-require 'inversion/tilt'
 
-describe "Tilt support", :if => defined?( ::Tilt ) do
+begin
+	require 'inversion/tilt'
+	$tilt_support = true
+rescue LoadError => err
+	warn "Tilt support testing disabled: %p: %s" % [ err.class, err.message ]
+	$tilt_support = false
+end
+
+describe "Tilt support", :if => $tilt_support do
 
 	before( :all ) do
 		setup_logging( :fatal )
