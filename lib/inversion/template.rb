@@ -96,8 +96,8 @@ class Inversion::Template
 		# Template files searched under paths specified in 'template_paths', then
 		# the current working directory. First match wins.
 		else
-			tmpl = template_paths.collect {|dir| Pathname(dir) + path }.find do |tmpl|
-				tmpl.exist?
+			tmpl = template_paths.collect {|dir| Pathname(dir) + path }.find do |fullpath|
+				fullpath.exist?
 			end
 
 			raise RuntimeError, "Unable to find template %p within configured paths %p" %
