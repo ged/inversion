@@ -67,7 +67,7 @@ describe Inversion::Template::Tag do
 			}
 		result = Inversion::Template::Tag.load_all
 		result.should be_a( Hash )
-		result.should be_empty()
+		result.should == {}
 	end
 
 

@@ -80,7 +80,7 @@ describe Inversion::Template::IncludeTag do
 
 		expect {
 			Inversion::Template.new( "hi <?include included.tmpl ?> handsome!" )
-		}.to raise_error( Inversion::StackError, /Recursive include .+"included.tmpl"/ )
+		}.to raise_error( Inversion::StackError, /Recursive load .+"included.tmpl"/ )
 	end
 
 
@@ -100,7 +100,7 @@ describe Inversion::Template::IncludeTag do
 
 		expect {
 			Inversion::Template.new( "hi <?include top.tmpl ?> handsome!" )
-		}.to raise_error( Inversion::StackError, /Recursive include .+"top.tmpl"/ )
+		}.to raise_error( Inversion::StackError, /Recursive load .+"top.tmpl"/ )
 	end
 end
 

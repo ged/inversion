@@ -7,7 +7,6 @@ rescue LoadError
 end
 
 Hoe.plugin :mercurial
-Hoe.plugin :yard
 Hoe.plugin :signing
 Hoe.plugin :manualgen
 
@@ -24,6 +23,8 @@ hoespec = Hoe.spec 'inversion' do
 	self.dependency 'rspec', '~> 2.6.0', :development
 	self.dependency 'tilt', '~> 1.3.2', :development
 	self.dependency 'sinatra', '~> 1.2.6', :development
+	self.dependency 'rack-test', '~> 0.6.0', :development
+	self.dependency 'simplecov', '~> 0.4.2', :development
 
 	self.spec_extras[:licenses] = ["BSD"]
 	self.require_ruby_version( '>=1.9.2' )

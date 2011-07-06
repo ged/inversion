@@ -62,7 +62,7 @@ describe Inversion::RenderState do
 
 		state = Inversion::RenderState.new( :foo => obj )
 
-		state.attributes[:foo].singleton_methods.should include( :foo )
+		state.attributes[:foo].singleton_methods.map( &:to_sym ).should include( :foo )
 	end
 
 
@@ -83,7 +83,25 @@ describe Inversion::RenderState do
 			state.foot.should == 'ball'
 			state.bear.should == 'in woods'
 		end
+
+		state.attributes[:foot].should == 'in mouth'
 	end
+
+
+	it "restores the original attributes if the block raises an exception" do
+		attributes = { :foot => "in mouth", :bear => "in woods" }
+
+		state = Inversion::RenderState.new( attributes )
+
+		expect {
+			state.with_attributes( {} ) do
+				raise "Charlie dooo!"
+			end
+		}.to raise_error()
+
+		state.attributes[:foot].should == 'in mouth'
+	end
+
 
 	it "raises an error if #with_attributes is called without a block" do
 		expect {
@@ -91,54 +109,85 @@ describe Inversion::RenderState do
 		}.to raise_error( LocalJumpError, /no block/i )
 	end
 
-	it "can make a debugging comment from a node" do
-		node  = Inversion::Template::AttrTag.new( 'foo' )
-		opts  = {
-			:debugging_comments => true,
-			:comment_start      => '/* ',
-			:comment_end        => ' */'
-		}
-		state = Inversion::RenderState.new( {}, opts )
 
-		state.make_node_comment( node ).should == '/* Attr: { template.foo } */'
+	it "can override the render destination for the duration of a block" do
+		state = Inversion::RenderState.new
+
+		original_dest = state.destination
+		newdest = []
+		node = Inversion::Template::TextNode.new( "New!" )
+		state.with_destination( newdest ) do
+			state << node
+		end
+
+		newdest.should have( 1 ).member
+		newdest.should include( 'New!' )
+		state.destination.should equal( original_dest )
 	end
 
-	it "can make a debugging comment from a node" do
+	it "restores the original destination if the block raises an exception" do
+		state = Inversion::RenderState.new
+
+		original_dest = state.destination
+
+		expect {
+			state.with_destination( [] ) do
+				raise "New!"
+			end
+		}.to raise_error()
+
+		state.destination.should equal( original_dest )
+	end
+
+	it "raises an error if #with_destination is called without a block" do
+		expect {
+			Inversion::RenderState.new.with_destination( [] )
+		}.to raise_error( LocalJumpError, /no block/i )
+	end
+
+	it "adds a debugging comment when appending a node if debugging comments are enabled" do
 		node = Inversion::Template::AttrTag.new( 'foo' )
 		state = Inversion::RenderState.new( {}, :debugging_comments => true )
 
-		state.make_node_comment( node ).should == '<!-- Attr: { template.foo } -->'
+		state << node
+
+		state.to_s.should == '<!-- Attr: { template.foo } -->'
 	end
 
-	it "returns an empty string for a debugging comment if debugging comments are disabled" do
+	it "doesn't add a debugging comment when appending a node if debugging comments are disabled" do
 		node = Inversion::Template::AttrTag.new( 'foo' )
 		state = Inversion::RenderState.new( {}, :debugging_comments => false )
 
-		state.make_node_comment( node ).should == ''
+		state << node
+
+		state.to_s.should == ''
 	end
 
-	it "returns a comment for render errors in 'ignore' mode" do
-		node  = Inversion::Template::AttrTag.new( 'boom' )
+	it "ignores errors while rendering appended nodes in 'ignore' mode" do
+		node  = Inversion::Template::AttrTag.new( 'boom.klang' )
 		state = Inversion::RenderState.new( {}, :on_render_error => :ignore )
-		error = RuntimeError.new( "Ahooooonahooooo!" )
-		state.handle_render_error( node, error ).should == ''
+
+		state << node
+
+		state.to_s.should == ''
 	end
 
-	it "returns a comment for render errors in 'comment' mode" do
-		node  = Inversion::Template::AttrTag.new( 'boom' )
+	it "adds a comment for errors while rendering appended nodes in 'comment' mode" do
+		node  = Inversion::Template::AttrTag.new( 'boom.klang' )
 		state = Inversion::RenderState.new( {}, :on_render_error => :comment )
-		error = RuntimeError.new( "Ahooooonahooooo!" )
-		state.handle_render_error( node, error ).should == '<!-- RuntimeError: Ahooooonahooooo! -->'
+
+		state << node
+
+		state.to_s.should == "<!-- NoMethodError: undefined method `klang' for nil:NilClass -->"
 	end
 
-	it "re-raises render errors in 'propagate' mode" do
-		node  = Inversion::Template::AttrTag.new( 'boom' )
+	it "re-raises errors while rendering appended nodes in 'propagate' mode" do
+		node  = Inversion::Template::AttrTag.new( 'boom.klang' )
 		state = Inversion::RenderState.new( {}, :on_render_error => :propagate )
-		error = RuntimeError.new( "Ahooooonahooooo!" )
 
 		expect {
-			state.handle_render_error( node, error )
-		}.to raise_error( error )
+			state << node
+		}.to raise_error( NoMethodError, /undefined method/ )
 	end
 
 	it "provides accessor methods for its attributes" do
@@ -151,6 +200,49 @@ describe Inversion::RenderState do
 		state.foo.should be_nil()
 	end
 
+
+	it "can be merged with another RenderState" do
+		state = Inversion::RenderState.new(
+			{:bar => :the_bar_value},
+			{:debugging_comments => false} )
+		anotherstate = Inversion::RenderState.new(
+			{:foo => :the_foo_value},
+			{:debugging_comments => true, :on_render_error => :propagate} )
+
+		thirdstate = state.merge( anotherstate )
+
+		thirdstate.attributes.should == {
+			:bar => :the_bar_value,
+			:foo => :the_foo_value
+		}
+		thirdstate.options.should include(
+			:debugging_comments => true,
+			:on_render_error => :propagate
+		)
+
+	end
+
+
+	describe "publish/subscribe:" do
+
+		before( :each ) do
+			@state = Inversion::RenderState.new
+		end
+
+		it "doesn't have any subscriptions by default" do
+			@state.subscriptions.should == {}
+		end
+
+		it "allows an object to subscribe to node publications" do
+			subscriber = Object.new
+
+			@state.subscribe( :the_key, subscriber )
+
+			@state.subscriptions.should have( 1 ).member
+			@state.subscriptions[ :the_key ].should == [ subscriber ]
+		end
+
+	end
 
 end
 

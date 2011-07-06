@@ -139,11 +139,12 @@ class Inversion::Template::CodeTag < Inversion::Template::Tag
 
 		valid_patterns = self.class.tag_patterns.map( &:first ).map( &:source ).join( "\n  ")
 		tokenized_src = Ripper.lex( body ).collect do |tok|
-			"%s<%s>" % [ tok[1][3..-1], tok[2] ]
+			self.log.debug "  lexed token: #{tok.inspect}"
+			"%s<%s>" % [ tok[1].to_s[3..-1], tok[2] ]
 		end.join(' ')
 
-		raise Inversion::ParseError, "malformed %s at %s: expected one of:\n  %s\ngot:\n  %s" %
-			[ self.tagname, self.location, valid_patterns, tokenized_src ]
+		raise Inversion::ParseError, "malformed %s: expected one of:\n  %s\ngot:\n  %s" %
+			[ self.tagname, valid_patterns, tokenized_src ]
 	end
 
 end # class Inversion::Template::CodeTag

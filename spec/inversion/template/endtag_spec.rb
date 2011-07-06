@@ -45,6 +45,32 @@ describe Inversion::Template::EndTag do
 		template.render.should =~ /<!-- End of For: { foo IN template.bar } -->/
 	end
 
+	it "closes the parse state's currently-open container node before it's appended" do
+		container = double( "container node", :tagname => 'for', :location => nil )
+		parserstate = mock( "parser state" )
+
+		parserstate.should_receive( :pop ).and_return( container )
+
+		@tag.before_appending( parserstate )
+	end
+
+	context "with a body" do
+
+		before( :each ) do
+			@tag = Inversion::Template::EndTag.new( 'if' )
+		end
+
+		it "raises an error on the addition of a mismatched end tag" do
+			state = Inversion::Template::Parser::State.new( :template )
+			opener = Inversion::Template::ForTag.new( 'foo in bar' )
+			state << opener
+
+			expect {
+				@tag.before_appending( state )
+			}.to raise_exception( Inversion::ParseError, /unbalanced/i )
+		end
+
+	end
 
 end
 

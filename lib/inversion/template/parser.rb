@@ -31,7 +31,8 @@ class Inversion::Template::Parser
 	### @param [Inversion::Template] template  The template object this parser was generated for
 	### @param [Hash] options  configuration options that override DEFAULT_OPTIONS
 	def initialize( template, options={} )
-		@options = DEFAULT_OPTIONS.merge( options )
+		@template = template
+		@options  = DEFAULT_OPTIONS.merge( options )
 	end
 
 
@@ -47,9 +48,16 @@ class Inversion::Template::Parser
 	### it as an Array.
 	### @param [String] source  the template source
 	### @return [Array<Inversion::Template::Node>]  the nodes parsed from the +source+.
-	def parse( source, parsestate=nil )
-		state = parsestate || State.new( @template, self.options )
-		self.log.debug "Parsing %d bytes with %p" % [ source.length, parsestate ]
+	def parse( source, inherited_state=nil )
+		state = nil
+
+		if inherited_state
+			inherited_state.template = @template
+			state = inherited_state
+		else
+			state = Inversion::Template::Parser::State.new( @template, self.options )
+		end
+		self.log.debug "Parsing %d bytes with %p" % [ source.length, state ]
 
 		scanner = StringScanner.new( source )
 		self.log.debug "Starting parse of template source (%0.2fK)" % [ source.length/1024.0 ]
@@ -143,9 +151,11 @@ class Inversion::Template::Parser
 		end
 
 
-		### Copy constructor -- duplicate everything but the node tree.
+		### Copy constructor -- duplicate inner structures.
 		def initialize_copy( original )
-			@tree          = []
+			@template      = original.template
+			@options       = original.options.dup
+			@tree          = @tree.map( &:dup )
 			@node_stack    = [ @tree ]
 			@include_stack = original.include_stack.dup
 		end
@@ -159,7 +169,7 @@ class Inversion::Template::Parser
 		attr_reader :options
 
 		# The template object for this parser state
-		attr_reader :template
+		attr_accessor :template
 
 		# The stack of templates that have been loaded for this state; for loop detection.
 		attr_reader :include_stack
@@ -171,49 +181,29 @@ class Inversion::Template::Parser
 		### Append operator: add nodes to the correct part of the parse tree.
 		### @param [Inversion::Template::Node] node  the parsed node
 		def <<( node )
-			node.before_append( self )
+			self.log.debug "Appending %p" % [ node ]
 
-			# TODO: Factor these out into #before_append and #after_append on EndTag and 
-			# ContainerTag instead of special-casing them here.
-			if node.is_a?( Inversion::Template::EndTag )
-				self.log.debug "End tag for %s" %
-					[ node.body ? "#{node.body} tag" : "unnamed tag" ]
+			node.before_appending( self )
+			self.node_stack.last << node
 
-				closed_node = @node_stack.pop
-
-				if @node_stack.empty?
-					raise Inversion::ParseError, "unbalanced end: no open tag in stack at" % [
-						node.location
-					]
-				end
-
-				if node.body &&
-				   !node.body.empty? &&
-				   node.body.downcase != closed_node.tagname.downcase
-					raise Inversion::ParseError, "unbalanced end: expected %p, got %p at %s" % [
-						closed_node.tagname.downcase,
-						node.body.downcase,
-						node.location
-					]
-				end
-
-				@node_stack.last << node
-
+			if node.is_container?
+				# Containers get pushed onto the stack so they get appended to
+				self.node_stack.push( node )
 			else
-				self.log.debug "Appending %p" % [ node ]
-				@node_stack.last << node
-				@node_stack.push( node ) if node.is_container?
+				# Container nodes' #after_appending gets called in #pop
+				node.after_appending( self )
 			end
 
-			node.after_append( self )
-			self
+			return self
+		rescue Inversion::ParseError => err
+			raise err, "%s at %s" % [ err.message, node.location ]
 		end
 
 
 		### Append another Array of nodes onto this state's node tree.
 		def append_tree( newtree )
 			newtree.each do |node|
-				@node_stack.last << node
+				self.node_stack.last << node
 			end
 		end
 
@@ -222,7 +212,7 @@ class Inversion::Template::Parser
 		def tree
 			unless self.is_well_formed?
 				raise Inversion::ParseError, "Unclosed container tag: %s, from %s" %
-					[ @node_stack.last.tagname, @node_stack.last.location ]
+					[ self.node_stack.last.tagname, self.node_stack.last.location ]
 			end
 			return @tree
 		end
@@ -230,15 +220,57 @@ class Inversion::Template::Parser
 
 		### Check to see if all open tags have been closed.
 		def is_well_formed?
-			return @node_stack.length == 1
+			return self.node_stack.length == 1
 		end
 		alias_method :well_formed?, :is_well_formed?
+
+
+		### Pop one level off of the node stack and return it.
+		def pop
+			closed_node = self.node_stack.pop
+
+			# If there's nothing on the node stack, we've popped the top-level
+			# Array, which means there wasn't an opening container.
+			raise Inversion::ParseError, "unbalanced end: no open tag" if
+				self.node_stack.empty?
+
+			closed_node.after_appending( self )
+
+			return closed_node
+		end
 
 
 		### Return the node that is currently being appended to, or +nil+ if there aren't any
 		### opened container nodes.
 		def current_node
-			return @node_stack.last
+			return self.node_stack.last
+		end
+
+
+		### Clear any parsed nodes from the state, leaving the options and include_stack intact.
+		def clear_nodes
+			@tree       = []
+			@node_stack = [ @tree ]
+		end
+
+
+		### Load a subtemplate from the specified +path+, checking for recursive-dependency.
+		def load_subtemplate( path )
+			if self.include_stack.include?( path )
+				stack_desc = ( self.include_stack + [path] ).join( ' --> ' )
+				msg = "Recursive load of %p detected: from %s" % [ path, stack_desc ]
+
+				self.log.error( msg )
+				raise Inversion::StackError, msg
+			end
+
+			self.log.debug "Include stack is: %p" % [ self.include_stack ]
+
+			substate = self.dup
+			substate.clear_nodes
+			substate.include_stack.push( path )
+
+			return Inversion::Template.load( path, substate, self.options )
 		end
 
 	end # class Inversion::Template::Parser::State

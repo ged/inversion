@@ -20,5 +20,3 @@ class Ripper::TokenPattern::MatchData
 	include Inversion::RipperAdditions
 end # class Ripper::TokenPattern::MatchData
 
-
-

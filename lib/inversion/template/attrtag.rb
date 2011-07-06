@@ -73,20 +73,22 @@ class Inversion::Template::AttrTag < Inversion::Template::CodeTag
 
 	### Render the tag attributes of the specified +render_state+ and return them.
 	def render( render_state=nil )
+		self.log.debug "Rendering %p with state: %p" % [ self, render_state ]
 		return nil if render_state.nil?
 
 		value     = nil
 		attribute = render_state.attributes[ self.name.to_sym ]
-		attribute.before_rendering( render_state ) if attribute.respond_to?( :before_rendering )
+		self.log.debug "  initial attribute: %p" % [ attribute ]
 
 		# Evaluate the method chain (if there is one) against the attribute
 		if self.methodchain
 			methodchain = "self" + self.methodchain
-			self.log.debug "Evaling methodchain: %p on: %p" % [ methodchain, attribute ]
+			self.log.debug "  evaling methodchain: %p on: %p" % [ methodchain, attribute ]
 			value = attribute.instance_eval( methodchain )
 		else
 			value = attribute
 		end
+		self.log.debug "  evaluated value: %p" % [ value ]
 
 		return value unless value
 
@@ -96,9 +98,6 @@ class Inversion::Template::AttrTag < Inversion::Template::CodeTag
 		else
 			return value
 		end
-	ensure
-		attribute.after_rendering( render_state ) if
-			defined?( attribute ) && attribute.respond_to?( :after_rendering )
 	end
 
 

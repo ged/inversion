@@ -56,7 +56,7 @@ class Inversion::Template::ConfigTag < Inversion::Template::Tag
 	### Override the options in the +parsestate+ when the config is appended to
 	### tree.
 	### @param [Inversion::Template::Parser::State] parsestate  the parse state
-	def before_append( parsestate )
+	def before_appending( parsestate )
 		parsestate.options.merge!( self.options )
 	end
 

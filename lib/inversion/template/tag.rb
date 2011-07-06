@@ -131,7 +131,7 @@ class Inversion::Template::Tag < Inversion::Template::Node
 	### @return [Inversion::Template::Tag]  the resulting tag object.
 	def initialize( body, linenum=nil, colnum=nil )
 		super
-		@body = body.strip
+		@body = body.to_s.strip
 	end
 
 

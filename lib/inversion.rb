@@ -17,6 +17,7 @@ module Inversion
 	require 'inversion/exceptions'
 	require 'inversion/mixins'
 	require 'inversion/utils'
+	require 'inversion/monkeypatches'
 
 	# Library version constant
 	VERSION = '0.0.1'

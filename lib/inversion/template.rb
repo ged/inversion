@@ -132,12 +132,15 @@ class Inversion::Template
 
 		@source       = source
 		@parser       = Inversion::Template::Parser.new( self, opts )
-		@node_tree    = @parser.parse( source, parsestate )
+		@node_tree    = []
 		@options      = self.class.config.merge( opts )
 
 		@attributes   = {}
 		@source_file  = nil
 
+		# Now parse the template source into a tree of nodes and pre-generate accessors
+		# for any attributes defined by them
+		@node_tree = @parser.parse( source, parsestate )
 		self.define_attribute_accessors
 	end
 
@@ -163,40 +166,27 @@ class Inversion::Template
 	attr_reader :node_tree
 
 
-	### Render the template.
+	### Render the template, optionally passing a render state (if, for example, the
+	### template is being rendered inside another template).
+	### @param [Inversion::RenderState] state  inherited render state
 	### @return [String] the rendered template content
-	def render
+	def render( parentstate=nil )
 		self.log.info "rendering template 0x%08x" % [ self.object_id/2 ]
-		output = ''
-		state = Inversion::RenderState.new( self.attributes, self.options )
+		state = Inversion::RenderState.new( parentstate, self.attributes, self.options )
+
+		# Pre-render hook
+		self.walk_tree {|node| node.before_rendering(state) }
 
 		self.log.debug "  rendering node tree: %p" % [ @node_tree ]
-		self.walk_tree do |node|
-			output << state.make_node_comment( node )
+		self.walk_tree {|node| state << node }
 
-			begin
-				self.log.debug "    rendering node: %p" % [ node ]
-				output << node.render( state ).to_s
-			rescue => err
-				output << state.handle_render_error( node, err )
-			end
-		end
+		# Post-render hook
+		self.walk_tree {|node| node.after_rendering(state) }
 
 		self.log.info "  done rendering template 0x%08x" % [ self.object_id/2 ]
-		return output
+		return state.to_s
 	end
 	alias_method :to_s, :render
-
-
-	### Rendering callback -- called if the template is nested in another template
-	### and rendered via an +attr+ tag.
-	def before_rendering( renderstate )
-		self.log.debug "Before rendering: calling node before_rendering hooks"
-		self.walk_tree do |node|
-			self.log.debug "  before_rendering %p" % [ node ]
-			node.before_rendering( renderstate ) if node.respond_to?( :before_rendering )
-		end
-	end
 
 
 	### Return a human-readable representation of the template object suitable

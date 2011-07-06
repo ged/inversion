@@ -70,12 +70,9 @@ Loading this object
 * <?prettyprint «attr/methodchain» ?>
 * <?timedelta «attr/methodchain» ?>
 
-* <?export «attr» ?>...<?end ?>
-* <?import «attr» ?>
 * <?render «attr/methodchain» AS «identifier» IN «template path» ?>
 * <?yield ?>
 * <?begin ?>…<?rescue ?>…<?end?>
-
 
 * <?set  ?>
 
@@ -97,7 +94,9 @@ Loading this object
 * <?pp «attr/methodchain» ?>
 * <?if «conditional expression» ?>…<?elsif «conditional expression» ?>…<?else?>…<?end?>
 * <?unless «conditional expression» ?>..<?end ?>
-
+* <?import «attr» ?>
+* <?publish «identifier» ?>...<?end publish ?>
+* <?subscribe «identifier» ?>
 
 ## References
 
