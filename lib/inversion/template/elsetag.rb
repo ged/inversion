@@ -23,7 +23,7 @@ class Inversion::Template::ElseTag < Inversion::Template::Tag
 
 	### Overridden to default body to nothing, and raise an error if it has one.
 	def initialize( body='', linenum=nil, colnum=nil ) # :notnew:
-		raise Inversion::ParseError, "else can't have a condition" unless body.strip == ''
+		raise Inversion::ParseError, "else can't have a condition" unless body.to_s.strip == ''
 		super
 	end
 
