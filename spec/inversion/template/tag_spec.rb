@@ -71,6 +71,12 @@ describe Inversion::Template::Tag do
 	end
 
 
+	it "raises an exception if told to create a tag with an invalid name" do
+		expect {
+			Inversion::Template::Tag.create( '', "employee.severance_amount.nonzero? ?>" )
+		}.to raise_error( ArgumentError, /invalid tag name/i )
+	end
+
 	describe "concrete subclass" do
 
 		before( :each ) do
