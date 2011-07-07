@@ -10,16 +10,24 @@ BEGIN {
 	$LOAD_PATH.unshift( libdir.to_s ) unless $LOAD_PATH.include?( libdir.to_s )
 }
 
-require 'rspec'
-
+# SimpleCov test coverage reporting.
 begin
 	require 'simplecov'
 	SimpleCov.start do
 		add_filter 'spec'
+		add_group "Tags" do |file|
+			file.filename =~ /tag.rb$/
+		end
+		add_group "Needing tests" do |file|
+			file.covered_percent < 90
+		end
 	end
 rescue LoadError => err
+	# ain't no thang
 	warn "Coverage disabled: %p: %s" % [ err.class, err.message ]
 end
+
+require 'rspec'
 
 require 'inversion'
 require 'spec/lib/constants'
