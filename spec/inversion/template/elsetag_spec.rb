@@ -29,6 +29,9 @@ describe Inversion::Template::ElseTag do
 		reset_logging()
 	end
 
+	it "handles a non-existant body" do
+		Inversion::Template::ElseTag.new( nil )
+	end
 
 	it "can be appended to an 'if' tag" do
 		template    = double( "template object" )
