@@ -109,7 +109,9 @@ class Inversion::Template::Tag < Inversion::Template::Node
 	### @return [Inversion::Template::Tag]  the resulting tag object, or +nil+ if no tag class
 	###            corresponds to +tagname+.
 	def self::create( tagname, body, linenum=nil, colnum=nil )
-		tagtype = $1.downcase.untaint if tagname =~ /^(\w+)$/i
+		tagname =~ /^(\w+)$/i or raise ArgumentError, "invalid tag name %p" % [ tagname ]
+		tagtype = $1.downcase.untaint
+
 		unless tagclass = self.types[ tagtype.to_sym ]
 			Inversion.log.warn "Unknown tag type %p; registered: %p" %
 				[ tagtype, self.types.keys ]
