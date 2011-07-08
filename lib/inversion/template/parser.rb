@@ -1,4 +1,5 @@
 #!/usr/bin/env ruby
+# encoding: utf-8
 # vim: set noet nosta sw=4 ts=4 :
 
 require 'strscan'
@@ -63,20 +64,22 @@ class Inversion::Template::Parser
 		self.log.debug "Starting parse of template source (%0.2fK)" % [ source.length/1024.0 ]
 		until scanner.eos?
 			startpos = scanner.pos
-			self.log.debug "  scanning from offset: %d" % [ startpos ]
+			self.log.debug "  scanning from offset: %d: %p" %
+				[ startpos, abbrevstring(scanner.string[startpos..-1]) ]
 
 			# Scan for the next directive. When the scanner reaches
 			# the end of the parsed string, just append any plain
 			# text that's left and stop scanning.
 			if scanner.skip_until( TAG_START )
+				self.log.debug "  scanner matched: %p" % [ scanner.matched ]
 				tagstart     = scanner.pos - scanner.matched.length
 				tagbodystart = scanner.pos
 				linenum      = scanner.pre_match.count( "\n" ) + 1
 				line_start   = scanner.pre_match.rindex( "\n" ) || -1
 				colnum       = (scanner.pre_match.length - line_start) - 1
 
-				self.log.debug "  tag start position is (%d) %p (line %d, col %d)" %
-					[ tagstart, scanner.rest, linenum, colnum ]
+				self.log.debug "  found a tag at offset: %d (%p) (line %d, col %d)" %
+					[ tagstart, abbrevstring(scanner.string[tagstart..-1]), linenum, colnum ]
 
 				# If there were characters between the starting position and
 				# the beginning of the tag, create a text node with them
@@ -85,7 +88,7 @@ class Inversion::Template::Parser
 					# extract the string between the end of the last match, and the
 					# beginning of the current match.
 					text = scanner.string[ startpos..(tagstart - 1) ]
-					self.log.debug "  adding literal text node '%s...'" % [ text[0,20] ]
+					self.log.debug "  adding literal text node: %p" % [ abbrevstring(text) ]
 					state << Inversion::Template::TextNode.new( text, linenum, colnum )
 				end
 
@@ -99,10 +102,11 @@ class Inversion::Template::Parser
 				scanner.skip_until( tagclose_re ) or
 					raise Inversion::ParseError, "Unclosed tag at line %d, column %d" %
 						[ linenum, colnum ]
+				self.log.debug "  found the tag close."
 
 				tagcontent = scanner.string[ tagbodystart..(scanner.pos - 3) ]
 				tagname, body = tagcontent.split( /\s+/, 2 )
-				self.log.debug "  found tag: %p, body %p" % [ tagname, body ]
+				self.log.debug "  creating tag with tagname: %p, body: %p" % [ tagname, body ]
 
 				# Handle unclosed (nested) tags
 				if body =~ TAG_START
@@ -134,6 +138,18 @@ class Inversion::Template::Parser
 		return state.tree
 	end
 
+
+	#######
+	private
+	#######
+
+	### Return at most +length+ characters long from the given +string+, appending +ellipsis+
+	### at the end if it was truncated.
+	def abbrevstring( string, length=30, ellipsis='…' )
+		return string if string.length < length
+		length -= ellipsis.length
+		return string[ 0, length ] + ellipsis
+	end
 
 
 	# Parse state object class. State objects keep track of where in the parse tree
