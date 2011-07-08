@@ -27,11 +27,13 @@ describe Inversion::Template::AttrTag do
 	describe "parsing" do
 
 		it "can have a simple attribute name" do
-			Inversion::Template::AttrTag.new( 'foo' ).name.should == 'foo'
+			Inversion::Template::AttrTag.new( 'foo' ).name.should == :foo
 		end
 
 		it "can have an attribute name and a format string" do
-			Inversion::Template::AttrTag.new( '"%0.2f" % foo' ).name.should == 'foo'
+			tag = Inversion::Template::AttrTag.new( '"%0.2f" % foo' )
+			tag.name.should == :foo
+			tag.format.should == '%0.2f'
 		end
 
 		it "raises an exception with an unknown operator" do
@@ -72,6 +74,14 @@ describe Inversion::Template::AttrTag do
 
 			tag.name.should == :foo
 			tag.methodchain.should == '.bar( 8, :baz )'
+		end
+
+		it "can have a format with a methodchain" do
+			tag = Inversion::Template::AttrTag.new( '"%0.02f" % foo.bar( 8 )' )
+
+			tag.name.should == :foo
+			tag.methodchain.should == '.bar( 8 )'
+			tag.format.should == '%0.02f'
 		end
 	end
 

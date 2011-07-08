@@ -17,7 +17,7 @@ class Inversion::Template::AttrTag < Inversion::Template::CodeTag
 	# <?attr foo ?>
 	tag_pattern '$(ident)' do |tag, match|
 		tag.send( :log ).debug "  Identifier is: %p" % [ match.string(1) ]
-		tag.name = match.string( 1 )
+		tag.name = match.string( 1 ).untaint.to_sym
 	end
 
 	# <?attr "%s" % foo ?>
@@ -26,13 +26,23 @@ class Inversion::Template::AttrTag < Inversion::Template::CodeTag
 		raise Inversion::ParseError, "expected '%%', got %p instead" % [ op ] unless op == '%'
 
 		tag.format = match.string( 1 )
-		tag.name   = match.string( 3 )
+		tag.name   = match.string( 3 ).untaint.to_sym
 	end
 
 	# <?attr foo.methodchain ?>
 	tag_pattern '$(ident) $( .+ )' do |tag, match|
 		tag.name = match.string( 1 ).untaint.to_sym
 		tag.methodchain = match.string( 2 )
+	end
+
+	# <?attr "%s" % foo.methodchain ?>
+	tag_pattern 'tstring_beg $(tstring_content) tstring_end sp* $(op) sp* $(ident) $( .+ )' do |tag, match|
+		op = match.string( 2 )
+		raise Inversion::ParseError, "expected '%%', got %p instead" % [ op ] unless op == '%'
+
+		tag.format      = match.string( 1 )
+		tag.name        = match.string( 3 ).untaint.to_sym
+		tag.methodchain = match.string( 4 )
 	end
 
 
