@@ -37,43 +37,11 @@ ENV['VERSION'] ||= hoespec.spec.version.to_s
 # Ensure the specs pass before checking in
 task 'hg:precheckin' => :spec
 
-begin
-	include Hoe::MercurialHelpers
+# Rebuild the ChangeLog immediately before release (hoe hook)
+task :prerelease => 'ChangeLog'
 
-	### Task: prerelease
-	desc "Append the package build number to package versions"
-	task :pre do
-		rev = get_numeric_rev()
-		trace "Current rev is: %p" % [ rev ]
-		hoespec.spec.version.version << "pre#{rev}"
-		Rake::Task[:gem].clear
-
-		Gem::PackageTask.new( hoespec.spec ) do |pkg|
-			pkg.need_zip = true
-			pkg.need_tar = true
-		end
-	end
-
-	### Make the ChangeLog update if the repo has changed since it was last built
-	file '.hg/branch'
-	file 'ChangeLog' => '.hg/branch' do |task|
-		$stderr.puts "Updating the changelog..."
-		content = make_changelog()
-		File.open( task.name, 'w', 0644 ) do |fh|
-			fh.print( content )
-		end
-	end
-
-	# Rebuild the ChangeLog immediately before release
-	task :prerelease => 'ChangeLog'
-
-rescue NameError => err
-	task :no_hg_helpers do
-		fail "Couldn't define mercurial tasks: %s: %s" % [ err.class.name, err.message ]
-	end
-
-	task :pre => :no_hg_helpers
-	task 'ChangeLog' => :no_hg_helpers
-
+desc "Enable spec coverage for any specs that run"
+task :coverage do
+	ENV["COVERAGE"] = 'yes'
 end
 
