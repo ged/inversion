@@ -17,7 +17,7 @@ class Inversion::Template::PpTag < Inversion::Template::CallTag
 
 	### Render the method chains against the attributes of the specified +render_state+
 	### and return them.
-	def render( render_state=nil )
+	def render( render_state )
 		raw = super
 		buf = ''
 		PP.pp( raw, buf )

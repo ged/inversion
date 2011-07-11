@@ -33,7 +33,7 @@ class Inversion::Template::Node
 
 	### Render the node using the given +render_state+. By default, rendering a node
 	### returns +nil+.
-	def render( render_state=nil )
+	def render( render_state )
 		return nil
 	end
 

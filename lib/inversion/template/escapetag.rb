@@ -18,8 +18,7 @@ class Inversion::Template::EscapeTag < Inversion::Template::AttrTag
 
 	### Render the method chains against the attributes of the specified +render_state+
 	### and return them.
-	def render( render_state=nil )
-		return '' if render_state.nil?
+	def render( render_state )
 		result = self.escape( super, render_state )
 	end
 
