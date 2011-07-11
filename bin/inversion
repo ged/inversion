@@ -1,0 +1,250 @@
+#!/usr/bin/env ruby
+
+require 'logger'
+require 'inversion'
+require 'trollop'
+require 'highline'
+require 'sysexits'
+
+class Inversion::Command
+	extend Sysexits
+
+	@prompt = nil
+
+
+	### Run the command
+	def self::run( args )
+		opts, templates = self.parse_options( args )
+		command = self.new( opts, *templates )
+		command.run
+	rescue => err
+		$stderr.puts "%p: %s" % [ err.class, err.message ]
+		$stderr.puts( err.backtrace.join("\n  ") ) if opts && opts.debug
+	end
+
+
+	### Fetch the HighLine instance for the command, creating it if necessary.
+	def self::prompt
+		unless @prompt
+			@prompt = HighLine.new
+			@prompt.page_at = @prompt.output_rows - 5
+			@prompt.wrap_at = @prompt.output_cols - 2
+		end
+
+		@prompt
+	end
+
+
+	### Create an option parser for the command and return it
+	def self::create_option_parser
+		pr = self.prompt
+		progname = pr.color( File.basename($0), :bold, :yellow )
+
+		return Trollop::Parser.new do
+			version Inversion.version_string( true )
+
+			banner (<<-END_BANNER).gsub(/^\t+/, '')
+			#{progname} OPTIONS TEMPLATEFILE [TEMPLATEFILE+]
+	
+			Check an Inversion template's validity, then dump its API and some other 
+			information about it.
+			END_BANNER
+			text ''
+
+			text pr.color('Inversion Config', :bold, :white)
+			opt :ignore_unknown_tags, "Ignore unknown tags instead of displaying an error"
+			opt :path, "Add one or more directories to the template search path",
+				:type => :string, :multi => true
+			text ''
+
+			text pr.color('Output Modes', :bold, :white)
+			opt :api, "Output the template's API (attributes, subscriptions, etc.)",
+				:default => true
+			opt :tree, "Dump the template's node tree"
+			text ''
+
+			conflicts :api, :tree
+
+			text pr.color('Other Options', :bold, :white)
+			opt :debug, "Enable debugging output"
+		end
+	end
+
+
+	### Parse the given command line +args+, returning a populated options struct
+	### and any remaining arguments.
+	def self::parse_options( args )
+		oparser = self.create_option_parser
+		opts = oparser.parse( args )
+
+		if oparser.leftovers.empty?
+			$stderr.puts "No templates given.\nUsage: "
+			oparser.educate( $stderr )
+			exit :usage
+		end
+		args.replace( oparser.leftovers )
+
+		return opts, args
+	rescue Trollop::HelpNeeded
+		oparser.educate( $stderr )
+		exit :ok
+	rescue Trollop::VersionNeeded
+		$stderr.puts( oparser.version )
+		exit :ok
+	end
+
+
+	### Create a new instance of the command that will use the specified +opts+
+	### to parse and dump info about the given +templates+.
+	def initialize( opts, *templates )
+		@opts      = opts
+		@templates = templates
+		@prompt    = self.class.prompt
+
+		# Configure Inversion's strictness and logging
+		Inversion.log.level = opts.debug ? Logger::DEBUG : Logger::ERROR
+		Inversion.log.formatter = Inversion::ColorLogFormatter.new( Inversion.log )
+		Inversion::Template.configure(
+			:ignore_unknown_tags => opts.ignore_unknown_tags,
+			:template_paths      => opts.path,
+		)
+	end
+
+
+	######
+	public
+	######
+
+	# The command-line options
+	attr_reader :opts
+
+	# The command's prompt object (HighLine)
+	attr_reader :prompt
+
+	# The templates the command will describe
+	attr_reader :templates
+
+
+	### Run the command.
+	def run
+		# Parse each template and output information about each one
+		@templates.each do |tmplpath|
+			template = self.load_template( tmplpath )
+			case
+			when self.opts.tree
+				self.dump_node_tree( template )
+			else
+				self.describe_template( template )
+			end
+		end
+	end
+
+
+	### Load the Inversion::Template from the specified +tmplpath+ and return it. If there
+	### is an error loading the template, output the error and return +nil+.
+	def load_template( tmplpath )
+		template = Inversion::Template.load( tmplpath )
+		return template
+	rescue Errno => err
+		self.prompt.say "Failed to load %s: %s" % [ tmplpath, err.message ]
+	rescue Inversion::ParseError => err
+		self.prompt.say "%s: Invalid template: %p: %s" %
+			[ tmplpath, err.class, err.message ]
+		self.prompt.say( err.backtrace.join("\n  ") ) if self.opts.debug
+	end
+
+
+	### Dump the given +template+'s node tree.
+	def dump_node_tree( template )
+		self.output_blank_line
+		self.output_template_header( template )
+		self.output_template_nodes( template.node_tree )
+	end
+
+
+	### Output the given +tree+ of nodes at the specified +indent+ level.
+	def output_template_nodes( tree, indent=0 )
+		indenttxt = ' ' * indent
+		tree.each do |node|
+			self.prompt.say( indenttxt + node.as_comment_body )
+			self.output_template_nodes( node.subnodes, indent+4 ) if node.is_container?
+		end
+	end
+
+
+	### Output a description of the template at the specified +tmplpath+.
+	def describe_template( template )
+		self.output_blank_line
+		self.output_template_header( template )
+		self.describe_template_api( template )
+		self.describe_publications( template )
+		self.describe_subscriptions( template )
+	end
+
+
+	### Output a header between each template.
+	def output_template_header( template )
+		header_info = "%s (%0.2fK, %s)" %
+			[ template.source_file, template.source.bytesize/1024.0, template.source.encoding ]
+		header_line = "-- %s" % [ header_info ]
+		self.prompt.say( self.prompt.color(header_line, :bold, :white) )
+	end
+
+
+	### Output a description of the +template+'s attributes, subscriptions, etc.
+	def describe_template_api( template )
+		attrs = template.attributes.keys.map( &:to_s )
+		return if attrs.empty?
+
+		self.output_subheader "%d Attribute/s" % [ attrs.length ]
+		self.output_list( attrs.sort )
+		self.output_blank_line
+	end
+
+
+	### Output a list of sections the template publishes.
+	def describe_publications( template )
+		ptags = template.node_tree.find_all {|node| node.is_a?(Inversion::Template::PublishTag) }
+		return if ptags.empty?
+
+		pubnames = ptags.map( &:key ).map( &:to_s ).uniq.sort
+		self.output_subheader "%d Publication/s" % [ pubnames.length ]
+		self.output_list( pubnames )
+		self.output_blank_line
+	end
+
+
+	### Output a list of sections the template subscribes to.
+	def describe_subscriptions( template )
+		stags = template.node_tree.find_all {|node| node.is_a?(Inversion::Template::SubscribeTag) }
+		return if stags.empty?
+
+		subnames = stags.map( &:key ).map( &:to_s ).uniq.sort
+		self.output_subheader "%d Subscription/s" % [ subnames.length ]
+		self.output_list( subnames )
+		self.output_blank_line
+	end
+
+
+	### Display a columnar list.
+	def output_list( columns )
+		self.prompt.say( self.prompt.list(columns, :columns_down) )
+	end
+
+
+	### Output a subheader with the given +caption+.
+	def output_subheader( caption )
+		self.prompt.say( self.prompt.color(caption, :cyan) )
+	end
+
+
+	### Output a blank line
+	def output_blank_line
+		self.prompt.say( "\n" )
+	end
+
+end # class Inversion::Command
+
+Inversion::Command.run( ARGV )
+
+
