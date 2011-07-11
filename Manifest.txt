@@ -3,6 +3,7 @@ History.md
 Manifest.txt
 README.md
 Rakefile
+bin/inversion
 lib/inversion.rb
 lib/inversion/exceptions.rb
 lib/inversion/mixins.rb
