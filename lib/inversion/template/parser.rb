@@ -2,8 +2,6 @@
 # encoding: utf-8
 # vim: set noet nosta sw=4 ts=4 :
 
-require 'strscan'
-
 require 'inversion/template' unless defined?( Inversion::Template )
 require 'inversion/mixins'
 require 'inversion/template/textnode'
@@ -19,8 +17,25 @@ require 'inversion/template/endtag'
 class Inversion::Template::Parser
 	include Inversion::Loggable
 
-	# The pattern for matching the beginning of a tag.
-	TAG_START = /[<\[]\?/
+	# The pattern for matching a tag opening
+	TAG_OPEN = /[\[<]\?/
+
+	# The pattern for matching a tag.
+	TAG_PATTERN = %r{
+		(?<tagstart>#{TAG_OPEN})    # Tag opening: either <? or [?
+		(?<tagname>[a-z]\w*)        # The name of the tag
+		(?:\s+                      # At least once whitespace character between the tagname and body
+		    (?<body>.+?)            # The body of the tag
+		)?
+		\s*
+		(?<tagend>\?[\]>])          # Tag closing: either ?] or ?>
+	}x
+
+	# Valid tagends by tagstart
+	MATCHING_BRACKETS = {
+		'<?' => '?>',
+		'[?' => '?]',
+	}
 
 	# Default values for parser configuration options.
 	DEFAULT_OPTIONS = {
@@ -58,81 +73,76 @@ class Inversion::Template::Parser
 		else
 			state = Inversion::Template::Parser::State.new( @template, self.options )
 		end
-		self.log.debug "Parsing %d bytes with %p" % [ source.length, state ]
 
-		scanner = StringScanner.new( source )
-		self.log.debug "Starting parse of template source (%0.2fK)" % [ source.length/1024.0 ]
-		until scanner.eos?
-			startpos = scanner.pos
-			self.log.debug "  scanning from offset: %d: %p" %
-				[ startpos, abbrevstring(scanner.string[startpos..-1]) ]
+		self.log.debug "Starting parse of template source (%0.2fK, %s)" %
+			[ source.bytesize/1024.0, source.encoding ]
 
-			# Scan for the next directive. When the scanner reaches
-			# the end of the parsed string, just append any plain
-			# text that's left and stop scanning.
-			if scanner.skip_until( TAG_START )
-				self.log.debug "  scanner matched: %p" % [ scanner.matched ]
-				tagstart     = scanner.pos - scanner.matched.length
-				tagbodystart = scanner.pos
-				linenum      = scanner.pre_match.count( "\n" ) + 1
-				line_start   = scanner.pre_match.rindex( "\n" ) || -1
-				colnum       = (scanner.pre_match.length - line_start) - 1
+		last_pos = last_linenum = last_colnum = 0
+		source.scan( TAG_PATTERN ) do |*|
+			match = Regexp.last_match
+			start_pos, end_pos = match.offset( 0 )
+			linenum            = match.pre_match.count( "\n" ) + 1
+			colnum             = match.pre_match.length - (match.pre_match.rindex("\n") || -1)
 
-				self.log.debug "  found a tag at offset: %d (%p) (line %d, col %d)" %
-					[ tagstart, abbrevstring(scanner.string[tagstart..-1]), linenum, colnum ]
-
-				# If there were characters between the starting position and
-				# the beginning of the tag, create a text node with them
-				unless tagstart == startpos
-					self.log.debug "  extracting text from %d to %d" % [ startpos, tagstart ]
-					# extract the string between the end of the last match, and the
-					# beginning of the current match.
-					text = scanner.string[ startpos..(tagstart - 1) ]
-					self.log.debug "  adding literal text node: %p" % [ abbrevstring(text) ]
-					state << Inversion::Template::TextNode.new( text, linenum, colnum )
-				end
-
-				# Look for the end of the tag based on what its opening characters were
-				tagopen     = scanner.matched
-				tagclose    = tagopen.reverse.tr( '<[', '>]' )
-				tagclose_re = Regexp.new( Regexp.escape(tagclose) )
-				self.log.debug "  looking for tag close: %p" % [ tagclose ]
-
-				# Handle unclosed (eof) tags
-				scanner.skip_until( tagclose_re ) or
-					raise Inversion::ParseError, "Unclosed tag at line %d, column %d" %
-						[ linenum, colnum ]
-				self.log.debug "  found the tag close."
-
-				tagcontent = scanner.string[ tagbodystart..(scanner.pos - 3) ]
-				tagname, body = tagcontent.split( /\s+/, 2 )
-				self.log.debug "  creating tag with tagname: %p, body: %p" % [ tagname, body ]
-
-				# Handle unclosed (nested) tags
-				if body =~ TAG_START
-					raise Inversion::ParseError, "Unclosed tag at line %d, column %d" %
-						[ linenum, colnum ]
-				end
-
-				tag = Inversion::Template::Tag.create( tagname, body, linenum, colnum )
-				if tag.nil?
-					unless state.options[ :ignore_unknown_tags ]
-						raise Inversion::ParseError, "Unknown tag %p at line %d, column %d" %
-							[ tagname , linenum, colnum ]
-					end
-
-					body = tagopen + tagcontent + tagclose
-				    tag = Inversion::Template::TextNode.new( body, linenum, colnum )
-				end
-
-				self.log.debug "  created tag node: %p" % [ tag ]
-				state << tag
-			else
-				self.log.debug "  adding a text node for the rest of the template"
-				state << Inversion::Template::TextNode.new( scanner.rest, linenum, colnum )
-				self.log.debug "  finished parsing."
-				scanner.terminate
+			# Error on <?...?] and vice-versa.
+			unless match[:tagend] == MATCHING_BRACKETS[match[:tagstart]]
+				raise Inversion::ParseError,
+					"malformed tag %p: mismatched start and end brackets at line %d, column %d" %
+					[ match[0], linenum, colnum ]
 			end
+
+			# Check for nested tags
+			if match[0].index( TAG_OPEN, 2 ) 
+				raise Inversion::ParseError, "unclosed or nested tag %p at line %d, column %d" %
+					[ match[0], linenum, colnum ]
+			end
+
+			self.log.debug "  found a tag at offset: %d (%p) (line %d, col %d)" %
+				[ start_pos, abbrevstring(match[0]), linenum, colnum ]
+
+			# If there were characters between the end of the last match and
+			# the beginning of the tag, create a text node with them
+			unless last_pos == start_pos
+				text = match.pre_match[ last_pos..-1 ]
+				self.log.debug "  adding literal text node: %p" % [ abbrevstring(text) ]
+				state << Inversion::Template::TextNode.new( text, last_linenum, last_colnum )
+			end
+
+			self.log.debug "  creating tag with tagname: %p, body: %p" %
+				[ match[:tagname], match[:body] ]
+
+			tag = Inversion::Template::Tag.create( match[:tagname], match[:body], linenum, colnum )
+			if tag.nil?
+				unless state.options[ :ignore_unknown_tags ]
+					raise Inversion::ParseError, "Unknown tag %p at line %d, column %d" %
+						[ match[:tagname], linenum, colnum ]
+				end
+
+			    tag = Inversion::Template::TextNode.new( match[0], linenum, colnum )
+			end
+
+			self.log.debug "  created tag: %p" % [ tag ]
+			state << tag
+
+			# Keep offsets for the next match
+			last_pos     = end_pos
+			last_linenum = linenum + match[0].count( "\n" )
+			last_colnum  = match[0].length - ( match[0].rindex("\n") || -1 )
+		end
+
+		# If there are any characters left over after the last tag
+		remainder = source[ last_pos..-1 ]
+		if remainder && !remainder.empty?
+			self.log.debug "Remainder after last tag: %p" % [ abbrevstring(remainder) ]
+
+			# Detect unclosed tags
+			if remainder.index( "<?" ) || remainder.index( "[?" )
+				raise Inversion::ParseError,
+					"unclosed tag after line %d, column %d" % [ last_linenum, last_colnum ]
+			end
+
+			# Add any remaining text as a text node
+			state << Inversion::Template::TextNode.new( remainder, last_linenum, last_colnum )
 		end
 
 		return state.tree

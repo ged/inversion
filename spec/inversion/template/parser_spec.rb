@@ -38,6 +38,12 @@ describe Inversion::Template::Parser do
 		result.should be_empty
 	end
 
+	it "raises a ParseError on mismatched tag brackets" do
+		expect {
+			Inversion::Template::Parser.new( @template ).parse( '[?foo bar ?>' )
+		}.to raise_error( Inversion::ParseError, /mismatched start and end brackets/i )
+	end
+
 	it "parses a string with a single 'attr' tag as a single AttrTag node" do
 		result = Inversion::Template::Parser.new( @template ).parse( "<?attr foo ?>" )
 
@@ -75,7 +81,7 @@ describe Inversion::Template::Parser do
 	it "can raise exceptions on unclosed (nested) tags" do
 		expect {
 			Inversion::Template::Parser.new( @template ).parse( "Text <?attr something <?attr something_else ?>" )
-		}.to raise_exception( Inversion::ParseError, /unclosed tag/i )
+		}.to raise_exception( Inversion::ParseError, /unclosed or nested tag/i )
 	end
 
 	it "can raise exceptions on unclosed (eof) tags" do
