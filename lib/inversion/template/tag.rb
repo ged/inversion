@@ -148,7 +148,7 @@ class Inversion::Template::Tag < Inversion::Template::Node
 	### Render the tag as the body of a comment, suitable for template debugging.
 	### @return [String]  the tag as the body of a comment
 	def as_comment_body
-		return "%s %s at %s" % [ self.tagname, self.body.dump, self.location ]
+		return "%s %s at %s" % [ self.tagname, self.body.to_s.dump, self.location ]
 	end
 
 
