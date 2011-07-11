@@ -38,4 +38,12 @@ describe Inversion::Template::UriencodeTag do
 		template.render.should == "this is%2025%25%20Sparta%21"
 	end
 
+	it "stringifies its content before encoding" do
+		template = Inversion::Template.new( '<?uriencode foo.bar ?> bottles of beer on the wall' )
+		template.foo = @attribute_object
+		@attribute_object.should_receive( :bar ).with( no_args() ).
+			and_return( 99.999 )
+
+		template.render.should == "99.999 bottles of beer on the wall"
+	end
 end
