@@ -232,13 +232,13 @@ describe Inversion::Template do
 
 		it "can be configured to completely ignore exceptions raised while rendering" do
 			@tmpl.options[:on_render_error] = :ignore
-			@tmpl.render.should == "Some stuff\n\nMore stuff"
+			@tmpl.render.should == "Some stuff\nMore stuff"
 		end
 
 		it "can be configured to insert debugging comments for exceptions raised while rendering" do
 			@tmpl.options[:on_render_error] = :comment
 			@tmpl.render.should ==
-				"Some stuff\n<!-- RuntimeError: Okay, here's an exception! -->\nMore stuff"
+				"Some stuff\n<!-- RuntimeError: Okay, here's an exception! -->More stuff"
 		end
 
 		it "can be configured to propagate exceptions raised while rendering" do

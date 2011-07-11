@@ -16,17 +16,47 @@ require 'inversion/template/textnode'
 
 describe Inversion::Template::TextNode do
 
+	before( :all ) do
+		setup_logging( :fatal )
+	end
+
 	before( :each ) do
+		@state = Inversion::RenderState.new
 		@node = Inversion::Template::TextNode.new( "unto thee" )
 	end
 
+	after( :all ) do
+		reset_logging()
+	end
+
+
 	it "renders itself unchanged" do
-		@node.render.should == "unto thee"
+		@node.render( @state ).should == "unto thee"
 	end
 
 	it "renders a brief description when rendered as a comment" do
 		@node.as_comment_body.should == %{Text (9 bytes): "unto thee"}
 	end
+
+
+	context "beginning with a newline and containing only whitespace" do
+		before( :each ) do
+			@text = "\n\tSome stuff\nAnd some other stuff.\n  "
+			@node.instance_variable_set( :@body, @text )
+		end
+
+		it "strips the leading newline if :strip_tag_lines is set" do
+			@state.options[:strip_tag_lines] = true
+			@node.render( @state ).should == "\tSome stuff\nAnd some other stuff.\n  "
+		end
+
+		it "renders as-is if :strip_tag_lines is not set" do
+			@state.options[:strip_tag_lines] = false
+			@node.render( @state ).should == @text
+		end
+
+	end
+
 
 	context "with more than 40 bytes of content" do
 
@@ -36,7 +66,7 @@ describe Inversion::Template::TextNode do
         laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in
         voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat
         cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
-		 END_CONTENT
+		END_CONTENT
 
 		before( :each ) do
 			@node.instance_variable_set( :@body, LONGER_CONTENT )
