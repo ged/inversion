@@ -82,9 +82,8 @@ class Inversion::Template::AttrTag < Inversion::Template::CodeTag
 
 
 	### Render the tag attributes of the specified +render_state+ and return them.
-	def render( render_state=nil )
+	def render( render_state )
 		self.log.debug "Rendering %p with state: %p" % [ self, render_state ]
-		return nil if render_state.nil?
 
 		value     = nil
 		attribute = render_state.attributes[ self.name.to_sym ]

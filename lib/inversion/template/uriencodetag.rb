@@ -21,7 +21,7 @@ class Inversion::Template::UriencodeTag < Inversion::Template::AttrTag
 
 	### Render the method chains against the attributes of the specified +render_state+
 	### and return them.
-	def render( render_state=nil )
+	def render( render_state )
 		raw = super
 		return URI.encode( raw.to_s, DEFAULT_ENCODED_CHARACTERS )
 	end
