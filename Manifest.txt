@@ -3,7 +3,6 @@ History.md
 Manifest.txt
 README.md
 Rakefile
-bin/inversion
 lib/inversion.rb
 lib/inversion/exceptions.rb
 lib/inversion/mixins.rb
@@ -35,7 +34,6 @@ lib/inversion/template/tag.rb
 lib/inversion/template/textnode.rb
 lib/inversion/template/unlesstag.rb
 lib/inversion/template/uriencodetag.rb
-lib/inversion/template/yieldtag.rb
 lib/inversion/tilt.rb
 lib/inversion/utils.rb
 spec/data/sinatra/hello.inversion
@@ -66,7 +64,6 @@ spec/inversion/template/tag_spec.rb
 spec/inversion/template/textnode_spec.rb
 spec/inversion/template/unlesstag_spec.rb
 spec/inversion/template/uriencodetag_spec.rb
-spec/inversion/template/yieldtag_spec.rb
 spec/inversion/template_spec.rb
 spec/inversion/tilt_spec.rb
 spec/inversion_spec.rb
