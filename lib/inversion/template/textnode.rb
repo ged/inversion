@@ -5,6 +5,7 @@ require 'inversion/template/node'
 
 # Inversion template textnode base class.
 class Inversion::Template::TextNode < Inversion::Template::Node
+	include Inversion::Loggable
 
 	### Create a new TextNode with the specified +source+.
 	### @param [String] source  the text source to wrap in the node object
@@ -26,8 +27,11 @@ class Inversion::Template::TextNode < Inversion::Template::Node
 
 	### Render the node.
 	### @return [String]  the rendered text
-	def render( unused=nil )
-		return @body.dup
+	def render( renderstate )
+		body = self.body.dup
+		body.sub!( /\A\r?\n/, '' ) if renderstate && renderstate.options[:strip_tag_lines]
+
+		return body
 	end
 
 

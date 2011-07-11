@@ -53,6 +53,7 @@ class Inversion::Template
 		:comment_end         => ' -->',
 		:template_paths      => [],
 		:escape_format       => :html,
+		:strip_tag_lines     => true,
 	}
 
 
