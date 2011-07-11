@@ -23,7 +23,7 @@ class Inversion::Template::UriencodeTag < Inversion::Template::AttrTag
 	### and return them.
 	def render( render_state=nil )
 		raw = super
-		return URI.encode( raw, DEFAULT_ENCODED_CHARACTERS )
+		return URI.encode( raw.to_s, DEFAULT_ENCODED_CHARACTERS )
 	end
 
 end # class Inversion::Template::UriencodeTag
