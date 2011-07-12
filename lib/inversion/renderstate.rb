@@ -142,7 +142,7 @@ class Inversion::RenderState
 				node = node.render( self )
 			end
 
-			self.log.debug "  adding %p to the destination (%p)" % [ node, self.destination.last ]
+			self.log.debug "  adding %p to the destination (%p)" % [ node, self.destination ]
 			self.destination << node
 		rescue => err
 			self.destination << self.handle_render_error( original_node, err )
@@ -174,6 +174,18 @@ class Inversion::RenderState
 	def subscribe( key, node )
 		key = key.to_sym
 		self.subscriptions[ key ] << node
+	end
+
+
+	### Return a human-readable representation of the object.
+	def inspect
+		return "#<%p:0x%08x containerstate: %s, attributes: %s, destination: %p>" % [
+			self.class,
+			self.object_id / 2,
+			self.containerstate ? "0x%08x" % [ self.containerstate.object_id ] : "nil",
+			self.attributes.keys.sort.join(', '),
+			self.destination,
+		]
 	end
 
 
