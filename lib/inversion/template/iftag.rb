@@ -30,8 +30,6 @@ class Inversion::Template::IfTag < Inversion::Template::AttrTag
 	def render( state )
 		self.enable_rendering if super
 		self.render_subnodes( state )
-
-		return state
 	end
 
 
