@@ -129,7 +129,7 @@ class Inversion::RenderState
 	### as an object that itself responds to the #render method, it will be called and the return 
 	### value will be appended instead.
 	def <<( node )
-		self.log.debug "Appending node %p to %p" % [ node, self ]
+		self.log.debug "Appending a %p to %p" % [ node.class, self ]
 		self.destination << self.make_node_comment( node ) if self.options[:debugging_comments]
 		original_node = node
 		previous_node = nil
@@ -142,7 +142,8 @@ class Inversion::RenderState
 				node = node.render( self )
 			end
 
-			self.log.debug "  adding %p to the destination (%p)" % [ node, self.destination ]
+			self.log.debug "  adding a %p to the destination (%p)" %
+				[ node.class, self.destination.class ]
 			self.destination << node
 		rescue => err
 			self.destination << self.handle_render_error( original_node, err )
@@ -184,7 +185,7 @@ class Inversion::RenderState
 			self.object_id / 2,
 			self.containerstate ? "0x%08x" % [ self.containerstate.object_id ] : "nil",
 			self.attributes.keys.sort.join(', '),
-			self.destination,
+			self.destination.class,
 		]
 	end
 
