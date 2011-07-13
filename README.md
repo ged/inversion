@@ -68,7 +68,6 @@ Loading this object
 ### Tags To Implement
 
 * <?prettyprint «attr/methodchain» ?>
-* <?timedelta «attr/methodchain» ?>
 
 * <?render «attr/methodchain» AS «identifier» IN «template path» ?>
 * <?yield ?>
@@ -97,6 +96,8 @@ Loading this object
 * <?import «attr» ?>
 * <?publish «identifier» ?>...<?end publish ?>
 * <?subscribe «identifier» ?>
+* <?timedelta «attr/methodchain» ?>
+
 
 ## References
 
