@@ -18,7 +18,13 @@ describe Inversion::Template::TimedeltaTag do
 
 	before( :all ) do
 		@real_tz = ENV['TZ']
+
+        # Make the timezone consistent for testing, using modern zone and
+        # falling back to old-style zones if the modern one doesn't seem to
+        # work.
 		ENV['TZ'] = 'US/Pacific'
+        ENV['TZ'] = 'PST8PDT' if Time.now.utc_offset.zero?
+
 		setup_logging( :fatal )
 	end
 
