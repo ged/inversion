@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<!--
+
+	Spime-Thorpe!
+	$Id$
+
+  -->
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+	<title>Spime-Thorpe: <?subscribe subtitle || Untitled ?></title>
+
+	<link rel="stylesheet" src="/css/base.css" type="text/css" />
+	<?subscribe stylesheets ?>
+
+	<script type="text/javascript" src="/js/jquery-latest.min.js"></script>
+	<?subscribe scripts ?>
+
+</head>
+<body>
+
+	<header>
+		<hgroup>
+			<h1>Spime-Thorpe</h1>
+			<h2><?subscribe subtitle ?></h2>
+		</hgroup>
+	</header>
+
+	<section id="content"><?attr content ?></section>
+
+	<footer>
+		<section id="copyright">Copyright © 2011, Spime-Thorpe</section>
+	</footer>
+
+</body>
+</html>

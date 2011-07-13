@@ -1,0 +1,37 @@
+<p>Dear <?call employee.fullname ?>,</p>
+
+<p>Congratulations! You have been selected by <?call failed_company.name ?>'s
+elite management team as one of the many lucky individuals that will
+enjoy the exciting challenge of pursuing other rewarding employment
+opportunities!</p>
+
+<p><em>Kudos!</em></p>
+
+<p>You will find your accounts have been disabled, your desk has been helpfully 
+cleared out for you, and all of your personal effects packaged up and
+delivered to your address of record approximately 
+<?timedelta tracking_info.delivery_date ?>:</p>
+
+<?for line in employee.address ?>
+<?attr line ?><br />
+<?end for ?>
+
+<p>Please visit your <a href="[?call config.overboard_url ?]/[?uriencode 
+	failed_company.id ?]/[?uriencode employee.id ?]">customized Man OverBoard™ 
+	transition site</a> immediately:</p>
+
+<p>This will acknowledge that you have received this message, and automatically 
+disable your email account.  Be sure and save this message!</p>
+
+<?if employee.severance_amount.nonzero? ?>
+<p>Failure to acknowledge this message could result in delay of your final 
+severance pay, in the amount of <?call "$%0.2f" % employee.severance_amount ?>.</p>
+<?else?>
+<p>Failure to acknowledge this message within 30 days will result in automatic forfeiture of your
+numerous Man Overboard™ package benefits.</p>
+<?end?>
+	
+<p>Good Luck,<br />
+Your friends at Spime-Thorpe, Inc!<br />
+<a href="http://www.spime-thorpe.com/">http://www.spime-thorpe.com/</a></p>
+
