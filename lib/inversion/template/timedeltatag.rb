@@ -3,6 +3,7 @@
 
 require 'uri'
 require 'time'
+require 'date'
 require 'inversion/template/attrtag'
 
 # Inversion time delta tag.
