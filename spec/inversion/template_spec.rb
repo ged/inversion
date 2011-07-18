@@ -54,6 +54,20 @@ describe Inversion::Template do
 		tmpl.render( parentstate )
 	end
 
+
+	it "passes the block it was rendered with to its RenderState" do
+		node = double( "fake node", :before_rendering => nil, :after_rendering => nil )
+		tmpl = Inversion::Template.new( '' )
+		tmpl.node_tree << node
+
+		renderblock = Proc.new {}
+		node.should_receive( :render ).and_return do |renderstate|
+			renderstate.block.should equal( renderblock )
+		end
+
+		tmpl.render( &renderblock )
+	end
+
 	it "can make an human-readable string version of itself suitable for debugging" do
 		IO.should_receive( :read ).with( '/tmp/inspect.tmpl' ).and_return( '<?attr foo ?>' )
 		tmpl = Inversion::Template.load( '/tmp/inspect.tmpl' )

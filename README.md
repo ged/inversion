@@ -70,7 +70,6 @@ Loading this object
 * <?prettyprint «attr/methodchain» ?>
 
 * <?render «attr/methodchain» AS «identifier» IN «template path» ?>
-* <?yield ?>
 * <?begin ?>…<?rescue ?>…<?end?>
 
 * <?set  ?>
@@ -97,6 +96,7 @@ Loading this object
 * <?publish «identifier» ?>...<?end publish ?>
 * <?subscribe «identifier» ?>
 * <?timedelta «attr/methodchain» ?>
+* <?yield ?>
 
 
 ## References

@@ -14,7 +14,7 @@ class Inversion::RenderState
 
 	### Create a new RenderState with the given +containerstate+, +initial_attributes+ and
 	### +options+.
-	def initialize( containerstate=nil, initial_attributes={}, options={} )
+	def initialize( containerstate=nil, initial_attributes={}, options={}, &block )
 
 		# Shift hash arguments if created without a parent state
 		if containerstate.is_a?( Hash )
@@ -29,6 +29,7 @@ class Inversion::RenderState
 		@containerstate = containerstate
 		@options        = Inversion::Template::DEFAULT_CONFIG.merge( options )
 		@attributes     = [ deep_copy(initial_attributes) ]
+		@block          = block
 
 		# The rendered output Array, and the stack of render destinations
 		@output         = []
@@ -49,6 +50,9 @@ class Inversion::RenderState
 
 	# The config options passed in from the template
 	attr_reader :options
+
+	# The block passed to the template's #render method, if there was one
+	attr_reader :block
 
 	# Subscribe placeholders for publish/subscribe
 	attr_reader :subscriptions
@@ -96,8 +100,11 @@ class Inversion::RenderState
 			@destinations.push( new_destination )
 			yield
 		ensure
+			self.log.debug "  removing overridden render destination: %p" % [ @destinations.last ]
 			@destinations.pop
 		end
+
+		return new_destination
 	end
 
 

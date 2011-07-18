@@ -171,9 +171,9 @@ class Inversion::Template
 	### template is being rendered inside another template).
 	### @param [Inversion::RenderState] state  inherited render state
 	### @return [String] the rendered template content
-	def render( parentstate=nil )
+	def render( parentstate=nil, &block )
 		self.log.info "rendering template 0x%08x" % [ self.object_id/2 ]
-		state = Inversion::RenderState.new( parentstate, self.attributes, self.options )
+		state = Inversion::RenderState.new( parentstate, self.attributes, self.options, &block )
 
 		# Pre-render hook
 		self.walk_tree {|node| node.before_rendering(state) }

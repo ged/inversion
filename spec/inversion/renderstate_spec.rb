@@ -66,6 +66,13 @@ describe Inversion::RenderState do
 	end
 
 
+	it "provides access to the block it was constructed with if there was one" do
+		block = Proc.new {}
+		state = Inversion::RenderState.new( &block )
+		state.block.should equal( block )
+	end
+
+
 	it "can evaluate code in the context of itself" do
 		attributes = { :foot => "in mouth", :bear => "in woods" }
 
@@ -116,9 +123,10 @@ describe Inversion::RenderState do
 		original_dest = state.destination
 		newdest = []
 		node = Inversion::Template::TextNode.new( "New!" )
-		state.with_destination( newdest ) do
+		rval = state.with_destination( newdest ) do
 			state << node
 		end
+		rval.should equal( newdest )
 
 		newdest.should have( 1 ).member
 		newdest.should include( 'New!' )
