@@ -57,7 +57,6 @@ class Inversion::Template::AttrTag < Inversion::Template::CodeTag
 		@name        = nil
 		@format      = nil
 		@methodchain = nil
-		@format      = nil
 
 		super
 

@@ -1,3 +1,5 @@
+<?default grace_period to "7 days" ?>
+
 <p>Dear <?call employee.fullname ?>,</p>
 
 <p>Congratulations! You have been selected by <?call failed_company.name ?>'s
@@ -24,11 +26,12 @@ delivered to your address of record approximately
 disable your email account.  Be sure and save this message!</p>
 
 <?if employee.severance_amount.nonzero? ?>
-<p>Failure to acknowledge this message could result in delay of your final 
-severance pay, in the amount of <?call "$%0.2f" % employee.severance_amount ?>.</p>
+<p>Failure to acknowledge this message within <?attr grace_period ?> could result 
+in delay of your final severance pay, in the amount of 
+<?call "$%0.2f" % employee.severance_amount ?>.</p>
 <?else?>
-<p>Failure to acknowledge this message within 30 days will result in automatic forfeiture of your
-numerous Man Overboard™ package benefits.</p>
+<p>Failure to acknowledge this message within <?attr grace_period ?> will 
+result in automatic forfeiture of your numerous Man Overboard™ package benefits.</p>
 <?end?>
 	
 <p>Good Luck,<br />

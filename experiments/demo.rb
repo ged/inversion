@@ -37,6 +37,7 @@ content.failed_company = company
 content.employee = employee
 content.config = config
 content.tracking_info = tracking
+content.grace_period = "11 days"
 
 layout.content = content
 puts layout.render

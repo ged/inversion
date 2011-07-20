@@ -71,6 +71,7 @@ class Inversion::RenderState
 	### Evaluate the specified +code+ in the context of itself and
 	### return the result.
 	def eval( code )
+		self.log.debug "Evaling: %p" [ code ]
 		return self.instance_eval( code )
 	end
 
