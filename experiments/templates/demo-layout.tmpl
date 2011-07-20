@@ -28,7 +28,8 @@
 	<section id="content"><?attr content ?></section>
 
 	<footer>
-		<section id="copyright">Copyright © 2011, Spime-Thorpe</section>
+		<?default copyright_year to Time.now.year ?>
+		<section id="copyright">Copyright © <?attr copyright_year ?>, Spime-Thorpe</section>
 	</footer>
 
 </body>
