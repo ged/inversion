@@ -200,7 +200,7 @@ describe Inversion::RenderState do
 
 	it "calls the provided handler if an exception is raised while the error handler has been " +
 	   "overridden" do
-		handler    = Proc.new do |node, err|
+		handler    = Proc.new do |state, node, err|
 			"Yum, I eat %p from %p! Tasting good!" % [err.class, node.class]
 		end
 		node       = Inversion::Template::AttrTag.new( 'boom.klang' )
