@@ -174,7 +174,7 @@ describe Inversion::Template do
 
 		it "renders an non-String value set for the attribute using #to_s" do
 			template.foo = [ 'a lion', 'a little guy', 'a bad mousie', 'one birdy' ]
-			template.render.should == %{<h1>["a lion", "a little guy", "a bad mousie", "one birdy"]</h1>}
+			template.render.should == %{<h1>a liona little guya bad mousieone birdy</h1>}
 		end
 	end
 
