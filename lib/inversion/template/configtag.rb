@@ -31,9 +31,6 @@ class Inversion::Template::ConfigTag < Inversion::Template::Tag
 
 
 	### Create a new ConfigTag with the specified +body+.
-	### @param [String]  body  the config tag content
-	### @param [Integer] linenum the line number the tag was parsed from
-	### @param [Integer] colnum  the column number the tag was parsed from
 	def initialize( body, linenum=nil, colnum=nil )
 		raise Inversion::ParseError, 'Empty config settings' if
 			body.nil? || body.strip.empty?
@@ -55,7 +52,6 @@ class Inversion::Template::ConfigTag < Inversion::Template::Tag
 
 	### Override the options in the +parsestate+ when the config is appended to
 	### tree.
-	### @param [Inversion::Template::Parser::State] parsestate  the parse state
 	def before_appending( parsestate )
 		parsestate.options.merge!( self.options )
 	end

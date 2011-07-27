@@ -6,7 +6,7 @@ require 'inversion/template/attrtag'
 
 # Inversion URL encoding tag.
 #
-# This tag is a derivative of the 'call' tag that encodes the results of its method call
+# This tag is a derivative of the 'attr' tag that encodes the results of its method call
 # according to RFC 3986.
 #
 # == Syntax

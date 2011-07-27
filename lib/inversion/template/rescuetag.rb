@@ -13,15 +13,15 @@ require 'inversion/template/tag'
 # == Syntax
 #
 #   <?begin ?>
-#		<?for employee in employees.all ?>
-#			<?attr employee.name ?> --> <?attr employee.title ?>
-#		<?end for?>
+#       <?for employee in employees.all ?>
+#           <?attr employee.name ?> --> <?attr employee.title ?>
+#       <?end for?>
 #   <?rescue DatabaseError => err ?>
-#		Oh no!! I can't talk to the database for some reason.  The
-#		error was as follows:
-#		<pre>
-#			<?attr err.message ?>
-#		</pre>
+#       Oh no!! I can't talk to the database for some reason.  The
+#       error was as follows:
+#       
+#           <?attr err.message ?>
+#       
 #   <?end?>
 #
 class Inversion::Template::RescueTag < Inversion::Template::Tag

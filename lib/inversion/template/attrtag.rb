@@ -48,11 +48,8 @@ class Inversion::Template::AttrTag < Inversion::Template::CodeTag
 
 
 	### Create a new AttrTag with the given +name+, which should be a valid
-	### Ruby identifier.
-	### @param [String] name  the name of the attribute to declare in the template
-	### @param [Integer] linenum the line number the tag was parsed from
-	### @param [Integer] colnum  the column number the tag was parsed from
-	### @return [Inversion::Template::AttrTag]  the resulting tag object.
+	### Ruby identifier. The +linenum+ and +colnum+ should be the line and column of
+	### the tag in the template source, if available.
 	def initialize( body, linenum=nil, colnum=nil )
 		@name        = nil
 		@format      = nil
@@ -69,14 +66,14 @@ class Inversion::Template::AttrTag < Inversion::Template::CodeTag
 	public
 	######
 
-	# @return [String]  the name of the attribute
+	# the name of the attribute
 	attr_accessor :name
 
-	# @return [String]  the format string used to format the attribute in the template (if
+	# the format string used to format the attribute in the template (if
 	# one was declared)
 	attr_accessor :format
 
-	# @return [String]  the chain of methods that should be called (if any).
+	# the chain of methods that should be called (if any).
 	attr_accessor :methodchain
 
 
@@ -110,7 +107,6 @@ class Inversion::Template::AttrTag < Inversion::Template::CodeTag
 
 
 	### Render the tag as the body of a comment, suitable for template debugging.
-	### @return [String]  the tag as the body of a comment
 	def as_comment_body
 		comment = "%s: { template.%s" % [ self.tagname, self.name ]
 		comment << self.methodchain if self.methodchain

@@ -1,0 +1,140 @@
+= inversion
+
+* http://deveiate.org/projects/Inversion
+
+
+== Description
+
+Inversion is a templating system for Ruby. It uses the "Inversion of Control" principle to decouple
+the contents and structure of the template from the code that uses it, making it easier to use,
+test-friendly, and clean.
+
+
+=== Details
+
+Inversion, like most other templating systems, works by giving you a way of defining the static
+parts of your output, and then letting you combine that at a later point with the dynamic parts:
+
+Create the template and use it to render an exciting message:
+
+	tmpl = Inversion::Template.new( "Hello, <?attr name ?>!" )
+	tmpl.name = "World"
+	puts tmpl.render
+
+The <tt><?attr name ?></tt> tag defines the _name_ accessor on the template object, the value of
+which is substituted for any occurrences of +name+ in the template:
+
+    Hello, World!
+
+This by itself isn't fantastically useful, but it does illustrate one of the ways in which Inversion
+is different: the program and the template share data through an API, instead of through a complex
+data structure, which establishes a clear delineation between what responsibility is the program's
+and which is the template's. The program doesn't have to know how the view uses the data it's given,
+and tests of the controller can substitute a Mock Object for the template to test the interaction
+between the two instead of having to match patterns in the eventual output like an integration test.
+
+You can also interact with the values set in the template:
+
+    Name: <?attr employee.full_name ?>
+
+This will call the +#full_name+ method on whatever is set as the +employee+ attribute when 
+rendered, and the result will take the place of the tag.
+
+Inversion also comes with a collection of other tags that provide flow control, exception-handling,
+etc.
+
+
+=== Tags To Implement
+
+* <?prettyprint «attr/methodchain» ?>
+
+* <?render «attr/methodchain» AS «identifier» IN «template path» ?>
+
+
+=== Tags Implemented
+
+* <?attr?>
+* <?call?>
+* <?comment?>…<?end?>
+* <?for obj, i in attr.each_with_index ?>
+  <?end?>
+* <?config
+	  escaping: 'html'
+	  ignore_unknown_tags: false
+  ?>
+* <?include other_template.tmpl ?>
+* <?escape obj.some_method ?>
+* <?urlencode obj.some_method ?>
+* <?pp obj ?>
+* <?if obj.some_method ?>…<?elsif otherobj.some_method ?>…<?else?>…<?end?>
+* <?unless obj.some_method ?>..<?end ?>
+* <?import attrname ?>
+* <?publish identifier ?>...<?end publish ?>
+* <?subscribe identifier ?>
+* <?timedelta obj.time_method ?>
+* <?yield ?>
+* <?default attribute to value ?>
+* <?begin ?>…<?rescue ?>…<?end?>
+
+
+== References
+
+* Inversion of Control: http://en.wikipedia.org/wiki/Inversion_of_control
+* Passive View: http://martinfowler.com/eaaDev/PassiveScreen.html
+* Supervising Controller: http://martinfowler.com/eaaDev/SupervisingPresenter.html
+
+
+== Installation
+
+    gem install inversion
+
+
+== Contributing
+
+You can check out the current development source
+{with Mercurial}[http://repo.deveiate.org/Inversion], or if you prefer Git, via the
+project's {Github mirror}[https://github.com/ged/Inversion].
+
+You can submit bug reports, suggestions, and read more about future plans at
+{the project page}[http://deveiate.org/projects/Inversion].
+
+After checking out the source, run:
+
+	$ rake newb
+
+This task will install any missing dependencies, run the tests/specs,
+and generate the API documentation.
+
+
+== License
+
+Copyright © 2011, Michael Granger and Mahlon E. Smith
+All rights reserved.
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions are met:
+
+* Redistributions of source code must retain the above copyright notice,
+  this list of conditions and the following disclaimer.
+
+* Redistributions in binary form must reproduce the above copyright notice,
+  this list of conditions and the following disclaimer in the documentation
+  and/or other materials provided with the distribution.
+
+* Neither the name of the author/s, nor the names of the project's
+  contributors may be used to endorse or promote products derived from this
+  software without specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE
+FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+
+

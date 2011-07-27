@@ -8,7 +8,7 @@ require 'inversion/template/attrtag'
 
 # Inversion time delta tag.
 #
-# This tag is a derivative of the 'call' tag that transforms the results of its method call
+# This tag is a derivative of the 'attr' tag that transforms the results of its method call
 # to a Time object (if it isn't already), and then generates an English description of
 # the different between it and the current time.
 #
@@ -16,7 +16,7 @@ require 'inversion/template/attrtag'
 #
 #   Updated <?timedelta entry.update_date ?>.
 #
-class Inversion::Template::TimedeltaTag < Inversion::Template::AttrTag
+class Inversion::Template::TimeDeltaTag < Inversion::Template::AttrTag
 
 	# Approximate Time Constants (in seconds)
 	MINUTES = 60
@@ -88,5 +88,5 @@ class Inversion::Template::TimedeltaTag < Inversion::Template::AttrTag
 			end
 	end
 
-end # class Inversion::Template::UriencodeTag
+end # class Inversion::Template::TimeDeltaTag
 

@@ -4,16 +4,15 @@
 require 'inversion' unless defined?( Inversion )
 
 
-# An object that tracks the progress of rendering an Inversion::Template.
-#
-# @author Michael Granger <ged@FaerieMUD.org>
-# @author Mahlon E. Smith <mahlon@martini.nu>
-#
+# An object that provides an encapsulation of the template's state while it is rendering.
 class Inversion::RenderState
 	include Inversion::Loggable
 
-	### Create a new RenderState with the given +containerstate+, +initial_attributes+ and
-	### +options+.
+	### Create a new RenderState. If the template is being rendered inside another one, the
+	### containing template's RenderState will be passed as the +containerstate+. The 
+	### +initial_attributes+ will be deep-copied, and the +options+ will be merged with
+	### Inversion::Template::DEFAULT_CONFIG. The +block+ is stored for use by
+	### template nodes.
 	def initialize( containerstate=nil, initial_attributes={}, options={}, &block )
 
 		# Shift hash arguments if created without a parent state
@@ -59,7 +58,7 @@ class Inversion::RenderState
 	# Subscribe placeholders for publish/subscribe
 	attr_reader :subscriptions
 
-	# The stack of rendered output destinations.
+	# The stack of rendered output destinations, most-recent last.
 	attr_reader :destinations
 
 	# The callable object that handles exceptions raised when a node is appended
@@ -158,8 +157,9 @@ class Inversion::RenderState
 
 
 	### Append operator -- add an node to the final rendered output. If the +node+ renders 
-	### as an object that itself responds to the #render method, it will be called and the return 
-	### value will be appended instead.
+	### as an object that itself responds to the #render method, #render will be called and 
+	### the return value will be appended instead. This will continue until the returned
+	### object either doesn't respond to #render or #renders as itself.
 	def <<( node )
 		self.log.debug "Appending a %p to %p" % [ node.class, self ]
 		self.destination << self.make_node_comment( node ) if self.options[:debugging_comments]

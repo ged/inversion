@@ -17,11 +17,6 @@ class Inversion::Template::ImportTag < Inversion::Template::Tag
 
 	### Create a new ImportTag with the given +name+, which should be a valid
 	### Ruby identifier.
-	### @param [String] body  the name of the attribute(s) to declare in the template, separated
-	###                       by commas.
-	### @param [Integer] linenum the line number the tag was parsed from
-	### @param [Integer] colnum  the column number the tag was parsed from
-	### @return [Inversion::Template::ImportTag]  the resulting tag object.
 	def initialize( body, linenum=nil, colnum=nil )
 		super
 		@attributes = body.split( /\s*,\s*/ ).collect {|name| name.untaint.strip.to_sym }
@@ -32,7 +27,7 @@ class Inversion::Template::ImportTag < Inversion::Template::Tag
 	public
 	######
 
-	# @return [Array<String>]  the names of the attributes to import
+	# the names of the attributes to import
 	attr_reader :attributes
 
 
@@ -67,7 +62,6 @@ class Inversion::Template::ImportTag < Inversion::Template::Tag
 
 
 	### Render the tag as the body of a comment, suitable for template debugging.
-	### @return [String]  the tag as the body of a comment
 	def as_comment_body
 		return "Import %s" % [ self.attributes.join(', ') ]
 	end

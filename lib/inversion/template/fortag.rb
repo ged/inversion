@@ -59,9 +59,6 @@ class Inversion::Template::ForTag < Inversion::Template::CodeTag
 
 
 	### Create a new ForTag with the specified +body+.
-	### @param [String]  body  the for tag content
-	### @param [Integer] linenum the line number the tag was parsed from
-	### @param [Integer] colnum  the column number the tag was parsed from
 	def initialize( body, linenum=nil, colnum=nil )
 		@block_args = []
 		@enumerator = nil
@@ -84,7 +81,6 @@ class Inversion::Template::ForTag < Inversion::Template::CodeTag
 
 	### Iterate over the enumerator in +state+ and render the tag's
 	### contents for each iteration.
-	### @param [Inversion::RenderState] state  the current rendering state
 	def render( state )
 		result = []
 		lvalue = state.eval( self.enumerator ) or return nil
@@ -110,7 +106,6 @@ class Inversion::Template::ForTag < Inversion::Template::CodeTag
 
 
 	### Render the tag as the body of a comment, suitable for template debugging.
-	### @return [String]  the tag as the body of a comment
 	def as_comment_body
 		comment = "%s: { %s IN template.%s }" % [
 			self.tagname,

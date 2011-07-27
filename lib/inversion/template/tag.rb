@@ -8,7 +8,11 @@ require 'inversion/template/node'
 require 'inversion/mixins'
 
 # Inversion template tag node base class. Represents a directive in a template
-# that defines behavior and/or state. Also adds pluggability via Rubygems.
+# that defines behavior and/or state.
+# 
+# This class supports the RubyGems plugin API: to provide one or more Inversion tags
+# in a gem of your own, put them into a directory named 'inversion/template' and
+# name the files <tt><tagname>tag.rb</tt> and the classes <tagname.capitalize>Tag.
 class Inversion::Template::Tag < Inversion::Template::Node
 	include Inversion::Loggable,
 	        Inversion::AbstractClass
@@ -41,7 +45,6 @@ class Inversion::Template::Tag < Inversion::Template::Node
 
 
 	### Return a Hash of all loaded tag types, loading them if they haven't been loaded already.
-	### @return [Hash<Symbol => Inversion::Template::Tag>] the hash of tags
 	def self::types
         self.load_all unless @types
         return @types
@@ -49,7 +52,6 @@ class Inversion::Template::Tag < Inversion::Template::Node
 
 
 	### Load all available template tags and return them as a Hash keyed by their name.
-	### @return [Hash<Symbol => Inversion::Template::Tag]  the tags hash
 	def self::load_all
 		tags = {}
 
@@ -89,8 +91,6 @@ class Inversion::Template::Tag < Inversion::Template::Node
 
 
 	### Safely load the specified +tagfile+.
-	### @param [String] tagfile  the name of the file to require
-	### @return [Boolean]  the result of the require, or false on any error
 	def self::load( tagfile )
 		require( tagfile )
 	rescue => err
@@ -102,12 +102,6 @@ class Inversion::Template::Tag < Inversion::Template::Node
 
 
 	### Create a new Inversion::Template::Tag from the specified +tagname+ and +body+.
-	### @param [String] tagname  the name of the processing instruction
-	### @param [String] body     the body of the processing instruction
-	### @param [Integer] linenum the line number the tag was parsed from
-	### @param [Integer] colnum  the column number the tag was parsed from
-	### @return [Inversion::Template::Tag]  the resulting tag object, or +nil+ if no tag class
-	###            corresponds to +tagname+.
 	def self::create( tagname, body, linenum=nil, colnum=nil )
 		tagname =~ /^(\w+)$/i or raise ArgumentError, "invalid tag name %p" % [ tagname ]
 		tagtype = $1.downcase.untaint
@@ -127,10 +121,6 @@ class Inversion::Template::Tag < Inversion::Template::Node
 	########################################################################
 
 	### Create a new Inversion::Template::Tag with the specified +body+.
-	### @param [String] body     the body of the processing instruction
-	### @param [Integer] linenum the line number the tag was parsed from
-	### @param [Integer] colnum  the column number the tag was parsed from
-	### @return [Inversion::Template::Tag]  the resulting tag object.
 	def initialize( body, linenum=nil, colnum=nil )
 		super
 		@body = body.to_s.strip
@@ -141,12 +131,11 @@ class Inversion::Template::Tag < Inversion::Template::Node
 	public
 	######
 
-	# @return [String] the body of the tag
+	# the body of the tag
 	attr_reader :body
 
 
 	### Render the tag as the body of a comment, suitable for template debugging.
-	### @return [String]  the tag as the body of a comment
 	def as_comment_body
 		return "%s %s at %s" % [ self.tagname, self.body.to_s.dump, self.location ]
 	end

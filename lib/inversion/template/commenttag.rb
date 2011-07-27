@@ -25,7 +25,6 @@ class Inversion::Template::CommentTag < Inversion::Template::Tag
 	######
 
 	### Render (or don't render, actually) the comment's subnodes.
-	### @param [Inversion::RenderState] state  the current rendering state
 	def render( state )
 		return ''
 	end
@@ -33,7 +32,6 @@ class Inversion::Template::CommentTag < Inversion::Template::Tag
 
 	### Render the tag as the body of a comment, suitable for template 
 	### debugging.
-	### @return [String]  the tag as the body of a comment
 	def as_comment_body
 		firstnode, lastnode = self.subnodes.first, self.subnodes.last
 		nodecount = self.subnodes.length

@@ -7,10 +7,14 @@ require 'logger'
 # The Inversion templating system. This module provides the namespace for all the other
 # classes and modules, and contains the logging subsystem. A good place to start for 
 # documentation would be to check out the examples in the README, and then 
-# {Inversion::Template} for a list of tags, configuration options, etc.
+# Inversion::Template for a list of tags, configuration options, etc.
 #
-# @author Michael Granger <ged@FaerieMUD.org>
-# @author Mahlon E. Smith <mahlon@martini.nu>
+# == Authors
+#
+# * Michael Granger <ged@FaerieMUD.org>
+# * Mahlon E. Smith <mahlon@martini.nu>
+#
+# :main: README.rdoc
 #
 module Inversion
 
@@ -25,7 +29,10 @@ module Inversion
 	# Version-control revision constant
 	REVISION = %q$Revision$
 
-	### Logging
+	#
+	# Logging
+	#
+
 	# Log levels
 	LOG_LEVELS = {
 		'debug' => Logger::DEBUG,
@@ -34,6 +41,8 @@ module Inversion
 		'error' => Logger::ERROR,
 		'fatal' => Logger::FATAL,
 	}.freeze
+
+	# Log levels keyed by level
 	LOG_LEVEL_NAMES = LOG_LEVELS.invert.freeze
 
 	@default_logger = Logger.new( $stderr )
@@ -46,14 +55,13 @@ module Inversion
 
 
 	class << self
-		# @return [Logger::Formatter] the log formatter that will be used when the logging 
-		#    subsystem is reset
+		# the log formatter that will be used when the logging subsystem is reset
 		attr_accessor :default_log_formatter
 
-		# @return [Logger] the logger that will be used when the logging subsystem is reset
+		# the logger that will be used when the logging subsystem is reset
 		attr_accessor :default_logger
 
-		# @return [Logger] the logger that's currently in effect
+		# the logger that's currently in effect
 		attr_accessor :logger
 		alias_method :log, :logger
 		alias_method :log=, :logger=
@@ -61,7 +69,6 @@ module Inversion
 
 
 	### Reset the global logger object to the default
-	### @return [void]
 	def self::reset_logger
 		self.logger = self.default_logger
 		self.logger.level = Logger::WARN
@@ -77,7 +84,6 @@ module Inversion
 
 
 	### Get the Inversion version.
-	### @return [String] the library's version
 	def self::version_string( include_buildnum=false )
 		vstring = "%s %s" % [ self.name, VERSION ]
 		vstring << " (build %s)" % [ REVISION[/: ([[:xdigit:]]+)/, 1] || '0' ] if include_buildnum

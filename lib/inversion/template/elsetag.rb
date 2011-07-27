@@ -33,7 +33,7 @@ class Inversion::Template::ElseTag < Inversion::Template::Tag
 	######
 
 
-	### Parsing callback -- check to be sure the node tree can have the
+	### Parsing callback -- check to be sure the node tree can have an
 	### 'else' tag appended to it.
 	def before_appending( parsestate )
 		condtag = parsestate.node_stack.reverse.find do |node|
@@ -58,5 +58,5 @@ class Inversion::Template::ElseTag < Inversion::Template::Tag
 		raise Inversion::ParseError, "orphaned '%s' tag" % [ self.tagname.downcase ] unless condtag
 	end
 
-end # class Inversion::Template::RescueTag
+end # class Inversion::Template::ElseTag
 

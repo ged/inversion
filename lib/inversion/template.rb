@@ -15,10 +15,6 @@ end
 # The main template class. Instances of this class are created by parsing template
 # source and combining the resulting node tree with a set of attributes that
 # can be used to populate it when rendered.
-#
-# @author Michael Granger <ged@FaerieMUD.org>
-# @author Mahlon E. Smith <mahlon@martini.nu>
-#
 class Inversion::Template
 	include Inversion::Loggable
 
@@ -63,12 +59,6 @@ class Inversion::Template
 
 
 	### Configure the templating system.
-	### @param [#[]] config  the configuration values
-	### @option config [boolean] :raise_on_unknown    (false) Raise an exception on unknown tags.
-	### @option config [boolean] :debugging_comments  (false) Render a comment into output for each 
-	###    node.
-	### @option config [String] :comment_start        ('<!-- ') Characters to use to start a comment.
-	### @option config [String] :comment_end          (' -->') Characters to use to close a comment.
 	def self::configure( config )
 		Inversion.log.debug "Merging config %p with current config %p" % [ config, self.config ]
 		self.config = self.config.merge( config )
@@ -76,8 +66,6 @@ class Inversion::Template
 
 
 	### Read a template object from the specified +path+.
-	### @param [String] path  the path to the template
-	### @return [Inversion::Template]
 	def self::load( path, parsestate=nil, opts={} )
 
 		# Shift the options hash over if there isn't a parse state
@@ -118,10 +106,6 @@ class Inversion::Template
 
 
 	### Create a new Inversion:Template with the given +source+.
-	### @param [String, #read]  source  the template source, which can either be a String or
-	###                                 an object that can be #read from.
-	### @param [#[]] opts               overrides of the global template options; @see ::configure
-	### @return [Inversion::Template]   the new template
 	def initialize( source, parsestate=nil, opts={} )
 		if parsestate.is_a?( Hash )
 			self.log.debug "Shifting template options: %p" % [ parsestate ]
@@ -151,26 +135,19 @@ class Inversion::Template
 	public
 	######
 
-	### @return [String] the raw template source
 	attr_reader :source
 
-	### @return [String] the path to the template's source file (if loaded from a file)
 	attr_accessor :source_file
 
-	### @return [Hash] the hash of attributes added by template directives
 	attr_reader :attributes
 
-	### @return [Hash] the Hash of configuration options
 	attr_reader :options
 
-	### @return [Array] the node tree of the parsed template
 	attr_reader :node_tree
 
 
 	### Render the template, optionally passing a render state (if, for example, the
 	### template is being rendered inside another template).
-	### @param [Inversion::RenderState] state  inherited render state
-	### @return [String] the rendered template content
 	def render( parentstate=nil, &block )
 		self.log.info "rendering template 0x%08x" % [ self.object_id/2 ]
 		state = Inversion::RenderState.new( parentstate, self.attributes, self.options, &block )
