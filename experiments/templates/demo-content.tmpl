@@ -1,6 +1,10 @@
 <?default grace_period to "7 days" ?>
 
+<?begin?>
 <p>Dear <?call employee.fullname ?>,</p>
+<?rescue PGError ?>
+<p>Dear Valued Ex-Employee,</p>
+<?end?>
 
 <p>Congratulations! You have been selected by <?call failed_company.name ?>'s
 elite management team as one of the many lucky individuals that will
@@ -37,4 +41,3 @@ result in automatic forfeiture of your numerous Man Overboard™ package benefit
 <p>Good Luck,<br />
 Your friends at Spime-Thorpe, Inc!<br />
 <a href="http://www.spime-thorpe.com/">http://www.spime-thorpe.com/</a></p>
-

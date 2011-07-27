@@ -198,6 +198,41 @@ describe Inversion::RenderState do
 		}.to raise_error( NoMethodError, /undefined method/ )
 	end
 
+	it "calls the provided handler if an exception is raised while the error handler has been " +
+	   "overridden" do
+		handler    = Proc.new do |node, err|
+			"Yum, I eat %p from %p! Tasting good!" % [err.class, node.class]
+		end
+		node       = Inversion::Template::AttrTag.new( 'boom.klang' )
+		state      = Inversion::RenderState.new( {}, :on_render_error => :propagate )
+		defhandler = state.errhandler
+
+		expect {
+			state.with_error_handler( handler ) do
+				state << node
+			end
+		}.to_not raise_error()
+
+		state.to_s.should =~ /yum, i eat nomethoderror/i
+		state.errhandler.should equal( defhandler )
+	end
+
+	it "raises an exception if the error handler is set to something that doesn't respond to #call" do
+		state = Inversion::RenderState.new
+		expect {
+			state.with_error_handler( :foo )
+		}.to raise_error( ArgumentError, /doesn't respond_to #call/i )
+	end
+
+	it "re-raises errors while rendering appended nodes in 'propagate' mode" do
+		node  = Inversion::Template::AttrTag.new( 'boom.klang' )
+		state = Inversion::RenderState.new( {}, :on_render_error => :propagate )
+
+		expect {
+			state << node
+		}.to raise_error( NoMethodError, /undefined method/ )
+	end
+
 	it "provides accessor methods for its attributes" do
 		state = Inversion::RenderState.new( :bar => :the_attribute_value )
 		state.bar.should == :the_attribute_value

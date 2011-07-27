@@ -70,9 +70,7 @@ Loading this object
 * <?prettyprint «attr/methodchain» ?>
 
 * <?render «attr/methodchain» AS «identifier» IN «template path» ?>
-* <?begin ?>…<?rescue ?>…<?end?>
 
-* <?set  ?>
 
 ### Tags Implemented
 
@@ -97,6 +95,8 @@ Loading this object
 * <?subscribe «identifier» ?>
 * <?timedelta «attr/methodchain» ?>
 * <?yield ?>
+* <?default ?>
+* <?begin ?>…<?rescue ?>…<?end?>
 
 
 ## References
