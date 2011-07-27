@@ -26,17 +26,19 @@ class Inversion::RenderState
 		self.log.debug "Creating a render state with attributes: %p" %
 			[ initial_attributes ]
 
-		@containerstate = containerstate
-		@options        = Inversion::Template::DEFAULT_CONFIG.merge( options )
-		@attributes     = [ deep_copy(initial_attributes) ]
-		@block          = block
+		@containerstate     = containerstate
+		@options            = Inversion::Template::DEFAULT_CONFIG.merge( options )
+		@attributes         = [ deep_copy(initial_attributes) ]
+		@block              = block
+		@default_errhandler = self.method( :default_error_handler )
+		@errhandler         = @default_errhandler
 
 		# The rendered output Array, and the stack of render destinations
-		@output         = []
-		@destinations   = [ @output ]
+		@output             = []
+		@destinations       = [ @output ]
 
 		# Hash of subscribed Nodes, keyed by the subscription key as a Symbol
-		@subscriptions  = Hash.new {|hsh, k| hsh[k] = [] } # Auto-vivify
+		@subscriptions      = Hash.new {|hsh, k| hsh[k] = [] } # Auto-vivify
 
 	end
 
@@ -59,6 +61,12 @@ class Inversion::RenderState
 
 	# The stack of rendered output destinations.
 	attr_reader :destinations
+
+	# The callable object that handles exceptions raised when a node is appended
+	attr_reader :errhandler
+
+	# The default error handler
+	attr_reader :default_errhandler
 
 
 	### Return the hash of attributes that are currently in effect in the
@@ -109,6 +117,22 @@ class Inversion::RenderState
 	end
 
 
+	### Set the state's error handler to +handler+ for the duration of the block, restoring
+	### the previous handler after the block exits. +Handler+ must respond to #call, and will
+	### be called with two arguments: the node that raised the exception, and the exception object
+	### itself.
+	def with_error_handler( handler )
+		original_handler = self.errhandler
+		raise ArgumentError, "%p doesn't respond_to #call" unless handler.respond_to?( :call )
+		@errhandler = handler
+
+		yield
+
+	ensure
+		@errhandler = original_handler
+	end
+
+
 	### Return the current rendered output destination.
 	def destination
 		return self.destinations.last
@@ -153,7 +177,9 @@ class Inversion::RenderState
 			self.log.debug "  adding a %p to the destination (%p)" %
 				[ node.class, self.destination.class ]
 			self.destination << node
-		rescue => err
+			self.log.debug "    just appended %p to %p" % [ node, self.destination ]
+		rescue ::StandardError => err
+			self.log.debug "  handling a %p while rendering: %s" % [ err.class, err.message ]
 			self.destination << self.handle_render_error( original_node, err )
 		end
 
@@ -163,7 +189,7 @@ class Inversion::RenderState
 
 	### Turn the rendered node structure into the final rendered String.
 	def to_s
-		return @output.map( &:to_s ).join
+		return @output.flatten.map( &:to_s ).join
 	end
 
 
@@ -183,6 +209,56 @@ class Inversion::RenderState
 	def subscribe( key, node )
 		key = key.to_sym
 		self.subscriptions[ key ] << node
+	end
+
+
+	### Handle an +exception+ that was raised while appending a node by calling the
+	### #errhandler.
+	def handle_render_error( node, exception )
+		self.log.error "%s while rendering %p: %s" %
+			[ exception.class.name, node.as_comment_body, exception.message ]
+
+		handler = self.errhandler
+		raise ScriptError, "error handler %p isn't #call-able!" % [ handler ] unless
+			handler.respond_to?( :call )
+
+		self.log.debug "Handling %p with handler: %p" % [ exception.class, handler ]
+		return handler.call( self, node, exception )
+
+	rescue ::StandardError => err
+		# Handle exceptions from overridden error handlers (re-raised or errors in
+		# the handler itself) via the default handler.
+		if handler && handler != self.default_errhandler
+			self.log.error "%p (re)raised from custom error handler %p" % [ err.class, handler ]
+			self.default_errhandler.call( self, node, exception )
+		else
+			raise( err )
+		end
+	end
+
+
+	### Default exception handler: Handle an +exception+ while rendering +node+ according to the 
+	### behavior specified by the `on_render_error` option. Returns the string which should be
+	### appended to the output, if any.
+	def default_error_handler( state, node, exception )
+		case self.options[:on_render_error].to_s
+		when 'ignore'
+			self.log.debug "  not rendering anything for the error"
+			return ''
+
+		when 'comment'
+			self.log.debug "  rendering error as a comment"
+			msg = "%s: %s" % [ exception.class.name, exception.message ]
+			return self.make_comment( msg )
+
+		when 'propagate'
+			self.log.debug "  propagating error while rendering"
+			raise( exception )
+
+		else
+			raise Inversion::OptionsError,
+				"unknown exception-handling mode: %p" % [ self.options[:on_render_error] ]
+		end
 	end
 
 
@@ -216,35 +292,6 @@ class Inversion::RenderState
 			content,
 			self.options[:comment_end],
 		].join
-	end
-
-
-	### Handle an error while rendering according to the behavior specified by the
-	### `on_render_error` option.
-	### @param [Inversion::Template::Node] node  the node that caused the exception
-	### @param [RuntimeError] exception  the error that was raised
-	def handle_render_error( node, exception )
-		self.log.error "%s while rendering %p: %s" %
-			[ exception.class.name, node.as_comment_body, exception.message ]
-
-		case self.options[:on_render_error].to_s
-		when 'ignore'
-			self.log.debug "  not rendering anything for the error"
-			return ''
-
-		when 'comment'
-			self.log.debug "  rendering error as a comment"
-			msg = "%s: %s" % [ exception.class.name, exception.message ]
-			return self.make_comment( msg )
-
-		when 'propagate'
-			self.log.debug "  propagating error while rendering"
-			raise( exception )
-
-		else
-			raise Inversion::OptionsError,
-				"unknown exception-handling mode: %p" % [ self.options[:on_render_error] ]
-		end
 	end
 
 

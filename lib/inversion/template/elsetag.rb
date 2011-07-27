@@ -38,25 +38,25 @@ class Inversion::Template::ElseTag < Inversion::Template::Tag
 	def before_appending( parsestate )
 		condtag = parsestate.node_stack.reverse.find do |node|
 			case node
+
+			# If there was a previous 'if' or 'unless', the else belongs to it. Also
+			# allow it to be appended to a 'comment' section so you can comment out an 
+			# else clause
 			when Inversion::Template::IfTag,
 			     Inversion::Template::UnlessTag,
 			     Inversion::Template::CommentTag
 				break node
+
+			# If it's some other kind of container, it's an error
 			when Inversion::Template::ContainerTag
 				raise Inversion::ParseError, "'%s' tags can't have '%s' clauses" %
 					[ node.tagname.downcase, self.tagname.downcase ]
 			end
 		end
 
+		# If there wasn't a valid container, it's an error too
 		raise Inversion::ParseError, "orphaned '%s' tag" % [ self.tagname.downcase ] unless condtag
 	end
 
-
-	### Render the tag as the body of a comment, suitable for template 
-	### debugging.
-	### @return [String]  the tag as the body of a comment
-	# def as_comment_body
-	# end
-
-end # class Inversion::Template::ElseTag
+end # class Inversion::Template::RescueTag
 

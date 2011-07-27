@@ -5,7 +5,7 @@ require 'inversion/template/codetag'
 
 # Inversion 'default' tag.
 #
-# The default tag sets the default value of an attribute to a constant, the value of 
+# The default tag sets the default value of an attribute to a constant, the value of
 # another attribute, or the results of evaluating a methodchain on an attribute.
 #
 # == Syntax
@@ -15,7 +15,7 @@ require 'inversion/template/codetag'
 #
 #   <!-- Default an attribute to the value of a second attribute -->
 #   <?default content to body ?>
-#   
+#
 #   <!-- Set the title to the employee's name if it hasn't been set explicitly -->
 #   <?default title to "%s, %s" % [ employee.lastname, employee.firstname ] ?>
 #
