@@ -18,6 +18,132 @@ require 'inversion/mixins'
 
 describe Inversion, "mixins" do
 
+	describe Inversion::Loggable do
+		before(:each) do
+			@logfile = StringIO.new('')
+			Inversion.logger = Logger.new( @logfile )
+
+			@test_class = Class.new do
+				include Inversion::Loggable
+
+				def log_test_message( level, msg )
+					self.log.send( level, msg )
+				end
+
+				def logdebug_test_message( msg )
+					self.log_debug.debug( msg )
+				end
+			end
+			@obj = @test_class.new
+		end
+
+
+		it "is able to output to the log via its #log method" do
+			@obj.log_test_message( :debug, "debugging message" )
+			@logfile.rewind
+			@logfile.read.should =~ /debugging message/
+		end
+
+		it "is able to output to the log via its #log_debug method" do
+			@obj.logdebug_test_message( "sexydrownwatch" )
+			@logfile.rewind
+			@logfile.read.should =~ /sexydrownwatch/
+		end
+	end
+
+
+	describe Inversion::HashUtilities do
+		it "includes a function for stringifying Hash keys" do
+			testhash = {
+				:foo => 1,
+				:bar => {
+					:klang => 'klong',
+					:barang => { :kerklang => 'dumdumdum' },
+				}
+			}
+
+			result = Inversion::HashUtilities.stringify_keys( testhash )
+
+			result.should be_an_instance_of( Hash )
+			result.should_not be_equal( testhash )
+			result.should == {
+				'foo' => 1,
+				'bar' => {
+					'klang' => 'klong',
+					'barang' => { 'kerklang' => 'dumdumdum' },
+				}
+			}
+		end
+
+
+		it "includes a function for symbolifying Hash keys" do
+			testhash = {
+				'foo' => 1,
+				'bar' => {
+					'klang' => 'klong',
+					'barang' => { 'kerklang' => 'dumdumdum' },
+				}
+			}
+
+			result = Inversion::HashUtilities.symbolify_keys( testhash )
+
+			result.should be_an_instance_of( Hash )
+			result.should_not be_equal( testhash )
+			result.should == {
+				:foo => 1,
+				:bar => {
+					:klang => 'klong',
+					:barang => { :kerklang => 'dumdumdum' },
+				}
+			}
+		end
+
+	end
+
+
+	describe Inversion::AbstractClass do
+
+		context "mixed into a class" do
+			it "will cause the including class to hide its ::new method" do
+				testclass = Class.new { include Inversion::AbstractClass }
+
+				expect {
+					testclass.new
+				}.to raise_error( NoMethodError, /private/ )
+			end
+
+		end
+
+
+		context "mixed into a superclass" do
+
+			before(:each) do
+				testclass = Class.new {
+					include Inversion::AbstractClass
+					pure_virtual :test_method
+				}
+				subclass = Class.new( testclass )
+				@instance = subclass.new
+			end
+
+
+			it "raises a NotImplementedError when unimplemented API methods are called" do
+				expect {
+					@instance.test_method
+				}.to raise_error( NotImplementedError, /does not provide an implementation of/ )
+			end
+
+			it "declares the virtual methods so that they can be used with arguments under Ruby 1.9" do
+				expect {
+					@instance.test_method( :some, :arguments )
+				}.to raise_error( NotImplementedError, /does not provide an implementation of/ )
+			end
+
+		end
+
+	end
+
+
 	describe Inversion::Escaping do
 
 		before( :each ) do
@@ -46,5 +172,6 @@ describe Inversion, "mixins" do
 			@obj.render( render_state ).should == "<something>"
 		end
 	end
+
 end
 

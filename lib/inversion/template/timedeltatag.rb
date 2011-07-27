@@ -62,13 +62,14 @@ class Inversion::Template::TimeDeltaTag < Inversion::Template::AttrTag
 	### Return a string describing +seconds+ as an approximate interval of time.
 	def timeperiod( seconds )
 		return case
-			when seconds < MINUTES
+			when seconds < MINUTES - 5
 				'less than a minute'
 			when seconds < 50 * MINUTES
-				"%d %s" % [
-					(seconds.to_f / MINUTES).ceil,
-					seconds <= 60 ? 'minute' : 'minutes'
-				]
+				if seconds <= 89
+					"a minute"
+				else
+					"%d minutes" % [ (seconds.to_f / MINUTES).ceil ]
+				end
 			when seconds < 90 * MINUTES
 				'about an hour'
 			when seconds < 18 * HOURS
@@ -78,7 +79,7 @@ class Inversion::Template::TimeDeltaTag < Inversion::Template::AttrTag
 			when seconds < WEEKS
 				"%d days" % [ (seconds.to_f / DAYS).ceil ]
 			when seconds < 2 * WEEKS
-				'about one week'
+				'about a week'
 			when seconds < 3 * MONTHS
 				"%d weeks" % [ (seconds.to_f / WEEKS).ceil ]
 			when seconds < 18 * MONTHS

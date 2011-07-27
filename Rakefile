@@ -41,8 +41,9 @@ task 'hg:precheckin' => :spec
 # Rebuild the ChangeLog immediately before release (hoe hook)
 task :prerelease => 'ChangeLog'
 
-desc "Enable spec coverage for any specs that run"
+desc "Build a coverage report"
 task :coverage do
 	ENV["COVERAGE"] = 'yes'
+	Rake::Task[:spec].invoke
 end
 
