@@ -2,21 +2,19 @@
 # vim: set nosta noet ts=4 sw=4:
 
 require 'inversion' unless defined?( Inversion )
-
-# A collection of monkeypatches for various things.
-
 require 'ripper'
 
-# Expose the 'tokens' instance variable of Ripper::TokenPattern::MatchData
+# Monkeypatch mixin to expose the 'tokens' instance variable of 
+# Ripper::TokenPattern::MatchData. Included in Ripper::TokenPattern::MatchData.
 module Inversion::RipperAdditions
 
-	##
-	# :return: [Array<Array<>>] the array of token tuples
+	# the array of token tuples
 	attr_reader :tokens
 
 end
 
+# :stopdoc:
 class Ripper::TokenPattern::MatchData
 	include Inversion::RipperAdditions
-end # class Ripper::TokenPattern::MatchData
+end
 

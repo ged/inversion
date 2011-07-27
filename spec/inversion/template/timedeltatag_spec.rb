@@ -14,7 +14,7 @@ require 'rspec'
 require 'spec/lib/helpers'
 require 'inversion/template/timedeltatag'
 
-describe Inversion::Template::TimedeltaTag do
+describe Inversion::Template::TimeDeltaTag do
 
 	before( :all ) do
 		@real_tz = ENV['TZ']
@@ -50,7 +50,7 @@ describe Inversion::Template::TimedeltaTag do
 
 	it "renders the attribute as an approximate interval of time if it's a future Time object" do
 		Time.stub( :now ).and_return( @now )
-		tag = Inversion::Template::TimedeltaTag.new( "foo" )
+		tag = Inversion::Template::TimeDeltaTag.new( "foo" )
 		renderstate = Inversion::RenderState.new( :foo => @futuretime )
 
 		tag.render( renderstate ).should == "about a day from now"
@@ -58,7 +58,7 @@ describe Inversion::Template::TimedeltaTag do
 
 	it "renders the attribute as an approximate interval of time if it's a past Time object" do
 		Time.stub( :now ).and_return( @now )
-		tag = Inversion::Template::TimedeltaTag.new( "foo" )
+		tag = Inversion::Template::TimeDeltaTag.new( "foo" )
 		renderstate = Inversion::RenderState.new( :foo => @pasttime )
 
 		tag.render( renderstate ).should == "about a day ago"
@@ -66,7 +66,7 @@ describe Inversion::Template::TimedeltaTag do
 
 	it "renders the attribute as an approximate interval of time if it's a future Date object" do
 		Time.stub( :now ).and_return( @now )
-		tag = Inversion::Template::TimedeltaTag.new( "foo" )
+		tag = Inversion::Template::TimeDeltaTag.new( "foo" )
 		renderstate = Inversion::RenderState.new( :foo => @futuredate )
 
 		tag.render( renderstate ).should == "16 hours from now"
@@ -74,7 +74,7 @@ describe Inversion::Template::TimedeltaTag do
 
 	it "renders the attribute as an approximate interval of time if it's a past Date object" do
 		Time.stub( :now ).and_return( @now )
-		tag = Inversion::Template::TimedeltaTag.new( "foo" )
+		tag = Inversion::Template::TimeDeltaTag.new( "foo" )
 		renderstate = Inversion::RenderState.new( :foo => @pastdate )
 
 		tag.render( renderstate ).should == "2 days ago"
@@ -82,7 +82,7 @@ describe Inversion::Template::TimedeltaTag do
 
 	it "renders the attribute as an approximate interval of time if it's a future DateTime object" do
 		Time.stub( :now ).and_return( @now )
-		tag = Inversion::Template::TimedeltaTag.new( "foo" )
+		tag = Inversion::Template::TimeDeltaTag.new( "foo" )
 		renderstate = Inversion::RenderState.new( :foo => @futuredatetime )
 
 		tag.render( renderstate ).should == "about a day from now"
@@ -90,7 +90,7 @@ describe Inversion::Template::TimedeltaTag do
 
 	it "renders the attribute as an approximate interval of time if it's a past DateTime object" do
 		Time.stub( :now ).and_return( @now )
-		tag = Inversion::Template::TimedeltaTag.new( "foo" )
+		tag = Inversion::Template::TimeDeltaTag.new( "foo" )
 		renderstate = Inversion::RenderState.new( :foo => @pastdatetime )
 
 		tag.render( renderstate ).should == "about a day ago"
@@ -98,7 +98,7 @@ describe Inversion::Template::TimedeltaTag do
 
 	it "renders the attribute as an approximate interval of time if it's a future String object" do
 		Time.stub( :now ).and_return( @now )
-		tag = Inversion::Template::TimedeltaTag.new( "foo" )
+		tag = Inversion::Template::TimeDeltaTag.new( "foo" )
 		renderstate = Inversion::RenderState.new( :foo => @future )
 
 		tag.render( renderstate ).should == "about a day from now"
@@ -106,7 +106,7 @@ describe Inversion::Template::TimedeltaTag do
 
 	it "renders the attribute as an approximate interval of time if it's a past String object" do
 		Time.stub( :now ).and_return( @now )
-		tag = Inversion::Template::TimedeltaTag.new( "foo" )
+		tag = Inversion::Template::TimeDeltaTag.new( "foo" )
 		renderstate = Inversion::RenderState.new( :foo => @past )
 
 		tag.render( renderstate ).should == "about a day ago"
@@ -114,7 +114,7 @@ describe Inversion::Template::TimedeltaTag do
 
 	it "renders the attribute as an approximate interval of time if it's a future epoch Numeric" do
 		Time.stub( :now ).and_return( @now )
-		tag = Inversion::Template::TimedeltaTag.new( "foo" )
+		tag = Inversion::Template::TimeDeltaTag.new( "foo" )
 		renderstate = Inversion::RenderState.new( :foo => @futuresecs )
 
 		tag.render( renderstate ).should == "about a day from now"
@@ -122,7 +122,7 @@ describe Inversion::Template::TimedeltaTag do
 
 	it "renders the attribute as an approximate interval of time if it's a past epoch Numeric" do
 		Time.stub( :now ).and_return( @now )
-		tag = Inversion::Template::TimedeltaTag.new( "foo" )
+		tag = Inversion::Template::TimeDeltaTag.new( "foo" )
 		renderstate = Inversion::RenderState.new( :foo => @pastsecs )
 
 		tag.render( renderstate ).should == "about a day ago"

@@ -4,10 +4,6 @@
 require 'inversion/template'
 
 # A mixin for a tag that manages conditional rendering of its subnodes.
-#
-# @author Michael Granger <ged@FaerieMUD.org>
-# @author Mahlon E. Smith <mahlon@martini.nu>
-#
 module Inversion::Template::ConditionalTag
 
 	### Add conditional instance variables.

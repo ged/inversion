@@ -5,7 +5,7 @@ require 'inversion/template/attrtag'
 
 # Inversion escaping tag.
 #
-# This tag is a derivative of the 'call' tag that escapes the results of its method call
+# This tag is a derivative of the 'attr' tag that escapes the results of its method call
 # via the format specified in the template config option 'escape_format'.
 #
 # == Syntax

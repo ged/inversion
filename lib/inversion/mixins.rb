@@ -6,13 +6,22 @@ require 'logger'
 
 module Inversion
 
-	### Add logging to a Inversion class. Including classes get #log and #log_debug methods.
+	# Add logging to a Inversion class. Including classes get #log and 
+	# #log_debug methods.
+	#
+	#   class MyClass
+	#       include Inversion::Loggable
+	#       
+	#       def a_method
+	#           self.log.debug "Doing a_method stuff..."
+	#       end
+	#   end
+	#
 	module Loggable
 
 		### A logging proxy class that wraps calls to the logger into calls that include
 		### the name of the calling class.
-		### @private
-		class ClassNameProxy
+		class ClassNameProxy # :nodoc:
 
 			### Create a new proxy for the given +klass+.
 			def initialize( klass, force_debug=false )
@@ -73,18 +82,18 @@ module Inversion
 	end # module Loggable
 
 
-	### Hides your class's ::new method and adds a method generator called 'pure_virtual' for
-	### defining API methods. If subclasses of your class don't provide implementations of
-	### "pure_virtual" methods, NotImplementedErrors will be raised if they are called.
-	###
-	###   # AbstractClass
-	###   class MyBaseClass
-	###       include Inversion::AbstractClass
-	###
-	###       # Define a method that will raise a NotImplementedError if called
-	###       pure_virtual :api_method
-	###   end
-	###
+	# Hides your class's ::new method and adds a +pure_virtual+ method generator for
+	# defining API methods. If subclasses of your class don't provide implementations of
+	# "pure_virtual" methods, NotImplementedErrors will be raised if they are called.
+	#
+	#   # AbstractClass
+	#   class MyBaseClass
+	#       include Inversion::AbstractClass
+	#
+	#       # Define a method that will raise a NotImplementedError if called
+	#       pure_virtual :api_method
+	#   end
+	#
 	module AbstractClass
 
 		### Methods to be added to including classes
@@ -127,7 +136,7 @@ module Inversion
 	end # module AbstractClass
 
 
-	### A collection of utilities for working with Hashes.
+	# A collection of utilities for working with Hashes.
 	module HashUtilities
 
 		###############
@@ -136,6 +145,9 @@ module Inversion
 
 		### Return a version of the given +hash+ with its keys transformed
 		### into Strings from whatever they were before.
+		###
+		###    stringhash = stringify_keys( symbolhash )
+		###
 		def stringify_keys( hash )
 			newhash = {}
 
@@ -152,7 +164,10 @@ module Inversion
 
 
 		### Return a duplicate of the given +hash+ with its identifier-like keys
-		### transformed into symbols from whatever they were before.
+		### untainted and transformed into symbols from whatever they were before.
+		###
+		###    symbolhash = symbolify_keys( stringhash )
+		###
 		def symbolify_keys( hash )
 			newhash = {}
 
@@ -170,34 +185,22 @@ module Inversion
 		end
 		alias_method :internify_keys, :symbolify_keys
 
-
-		# Recursive hash-merge function
-		def merge_recursively( key, oldval, newval )
-			case oldval
-			when Hash
-				case newval
-				when Hash
-					oldval.merge( newval, &method(:merge_recursively) )
-				else
-					newval
-				end
-
-			when Array
-				case newval
-				when Array
-					oldval | newval
-				else
-					newval
-				end
-
-			else
-				newval
-			end
-		end
-	end # HashUtilities
+	end # module HashUtilities
 
 
-	### A mixin that adds configurable escaping to a tag class.
+	# A mixin that adds configurable escaping to a tag class.
+	# 
+	#   class MyTag < Inversion::Template::Tag
+	#       include Inversion::Escaping
+	#   
+	#       def render( renderstate )
+	#           val = self.get_rendered_value
+	#           return self.escape( val.to_s, renderstate )
+	#       end
+	#   end
+	#
+	# To add a new kind of escaping to Inversion, add a #escape_<formatname> method to this
+	# module similar to #escape_html.
 	module Escaping
 
 		# The fallback escape format

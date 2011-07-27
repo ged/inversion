@@ -5,18 +5,26 @@ require 'inversion'
 require 'trollop'
 require 'highline'
 require 'sysexits'
+require 'shellwords'
 
+# Command class for the 'inversion' command-line tool.
 class Inversion::Command
 	extend Sysexits
 
+	# The list of valid subcommands
+	SUBCOMMANDS = %w[api tagtokens tree]
+
+	# Class-instance variable for the HighLine prompt object
 	@prompt = nil
 
 
 	### Run the command
 	def self::run( args )
-		opts, templates = self.parse_options( args )
-		command = self.new( opts, *templates )
-		command.run
+		opts, args = self.parse_options( args )
+		subcommand = args.shift
+
+		command = self.new( opts )
+		command.run( subcommand, args )
 	rescue => err
 		$stderr.puts "%p: %s" % [ err.class, err.message ]
 		$stderr.puts( err.backtrace.join("\n  ") ) if opts && opts.debug
@@ -44,11 +52,15 @@ class Inversion::Command
 			version Inversion.version_string( true )
 
 			banner (<<-END_BANNER).gsub(/^\t+/, '')
-			#{progname} OPTIONS TEMPLATEFILE [TEMPLATEFILE+]
+			#{progname} OPTIONS SUBCOMMAND ARGS
 	
-			Check an Inversion template's validity, then dump its API and some other 
-			information about it.
+			Run the specified SUBCOMMAND with the given ARGS.
 			END_BANNER
+			text ''
+
+			stop_on( *SUBCOMMANDS )
+			text pr.color('Subcommands', :bold, :white)
+			text pr.list( SUBCOMMANDS, :columns_across )
 			text ''
 
 			text pr.color('Inversion Config', :bold, :white)
@@ -57,13 +69,6 @@ class Inversion::Command
 				:type => :string, :multi => true
 			text ''
 
-			text pr.color('Output Modes', :bold, :white)
-			opt :api, "Output the template's API (attributes, subscriptions, etc.)",
-				:default => true
-			opt :tree, "Dump the template's node tree"
-			text ''
-
-			conflicts :api, :tree
 
 			text pr.color('Other Options', :bold, :white)
 			opt :debug, "Enable debugging output"
@@ -78,7 +83,7 @@ class Inversion::Command
 		opts = oparser.parse( args )
 
 		if oparser.leftovers.empty?
-			$stderr.puts "No templates given.\nUsage: "
+			$stderr.puts "No subcommand given.\nUsage: "
 			oparser.educate( $stderr )
 			exit :usage
 		end
@@ -96,9 +101,8 @@ class Inversion::Command
 
 	### Create a new instance of the command that will use the specified +opts+
 	### to parse and dump info about the given +templates+.
-	def initialize( opts, *templates )
+	def initialize( opts )
 		@opts      = opts
-		@templates = templates
 		@prompt    = self.class.prompt
 
 		# Configure Inversion's strictness and logging
@@ -121,21 +125,18 @@ class Inversion::Command
 	# The command's prompt object (HighLine)
 	attr_reader :prompt
 
-	# The templates the command will describe
-	attr_reader :templates
 
-
-	### Run the command.
-	def run
-		# Parse each template and output information about each one
-		@templates.each do |tmplpath|
-			template = self.load_template( tmplpath )
-			case
-			when self.opts.tree
-				self.dump_node_tree( template )
-			else
-				self.describe_template( template )
-			end
+	### Run the given +subcommand+ with the specified +args+.
+	def run( subcommand, args )
+		case subcommand.to_sym
+		when :tree
+			self.dump_node_trees( args )
+		when :api
+			self.describe_templates( args )
+		when :tagtokens
+			self.dump_tokens( args )
+		else
+			self.output_error( "No such command #{subcommand.dump}" )
 		end
 	end
 
@@ -154,11 +155,14 @@ class Inversion::Command
 	end
 
 
-	### Dump the given +template+'s node tree.
-	def dump_node_tree( template )
-		self.output_blank_line
-		self.output_template_header( template )
-		self.output_template_nodes( template.node_tree )
+	### Dump the node tree of the given +templates+.
+	def dump_node_trees( templates )
+		templates.each do |path|
+			template = self.load_template( path )
+			self.output_blank_line
+			self.output_template_header( template )
+			self.output_template_nodes( template.node_tree )
+		end
 	end
 
 
@@ -172,13 +176,16 @@ class Inversion::Command
 	end
 
 
-	### Output a description of the template at the specified +tmplpath+.
-	def describe_template( template )
-		self.output_blank_line
-		self.output_template_header( template )
-		self.describe_template_api( template )
-		self.describe_publications( template )
-		self.describe_subscriptions( template )
+	### Output a description of the templates.
+	def describe_templates( templates )
+		templates.each do |path|
+			template = self.load_template( path )
+			self.output_blank_line
+			self.output_template_header( template )
+			self.describe_template_api( template )
+			self.describe_publications( template )
+			self.describe_subscriptions( template )
+		end
 	end
 
 
@@ -226,9 +233,28 @@ class Inversion::Command
 	end
 
 
+	### Attempt to parse the given +code+ and dump its tokens as a tagpattern.
+	def dump_tokens( args )
+		code = args.join(' ')
+
+		require 'ripper'
+		tokens = Ripper.lex( code ).collect do |(pos, tok, text)|
+			"%s<%p>" % [ tok.to_s.sub(/^on_/,''), text ]
+		end.join(' ')
+
+		self.prompt.say( tokens )
+	end
+
+
 	### Display a columnar list.
 	def output_list( columns )
 		self.prompt.say( self.prompt.list(columns, :columns_down) )
+	end
+
+
+	### Display an error message.
+	def output_error( message )
+		self.prompt.say( self.prompt.color(message, :red) )
 	end
 
 

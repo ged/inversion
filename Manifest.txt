@@ -1,7 +1,7 @@
 ChangeLog
 History.md
 Manifest.txt
-README.md
+README.rdoc
 Rakefile
 bin/inversion
 lib/inversion.rb

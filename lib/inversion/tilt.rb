@@ -2,9 +2,11 @@
 
 require 'tilt'
 
-# Add support for Tilt (https://github.com/rtomayko/tilt) if it's already been loaded.
+# Only add support if Tilt's already been loaded.
 if defined?( ::Tilt )
 
+	# An adapter class for Tilt (https://github.com/rtomayko/tilt)
+	# :TODO: Add an example or two.
 	class Inversion::TiltWrapper < Tilt::Template
 
 		### Tilt::Template API: returns true if Inversion is loaded.

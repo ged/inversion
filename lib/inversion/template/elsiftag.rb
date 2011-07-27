@@ -26,8 +26,8 @@ class Inversion::Template::ElsifTag < Inversion::Template::AttrTag
 
 	# Inherits AttrTag's tag patterns
 
-	### Parsing callback -- check to be sure the node tree can have the
-	### 'else' tag appended to it.
+	### Parsing callback -- check to be sure the node tree can have an
+	### 'elsif' tag appended to it (i.e., it has an opening 'if' tag).
 	def before_appending( parsestate )
 		condtag = parsestate.node_stack.reverse.find do |node|
 			case node
@@ -44,13 +44,6 @@ class Inversion::Template::ElsifTag < Inversion::Template::AttrTag
 			raise Inversion::ParseError, "orphaned '%s' tag" % [ self.tagname.downcase ]
 		end
 	end
-
-
-	### Render the tag as the body of a comment, suitable for template 
-	### debugging.
-	### @return [String]  the tag as the body of a comment
-	# def as_comment_body
-	# end
 
 end # class Inversion::Template::ElsifTag
 

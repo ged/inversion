@@ -21,9 +21,6 @@ class Inversion::Template::IncludeTag < Inversion::Template::Tag
 
 
 	### Create a new IncludeTag with the specified +path+.
-	### @param [String]  path  the path to the include template
-	### @param [Integer] linenum the line number the tag was parsed from
-	### @param [Integer] colnum  the column number the tag was parsed from
 	def initialize( path, linenum=nil, colnum=nil )
 		super
 		self.log.debug "Body is: %p" % [ @body ]
@@ -46,8 +43,6 @@ class Inversion::Template::IncludeTag < Inversion::Template::Tag
 	end
 
 
-	### Add nodes from the template @path into the current +parsestate+.
-	### @param [Inversion::Template::Parser::State] parsestate  the parse state
 	def after_appending( parsestate )
 		parsestate.append_tree( @included_template.node_tree )
 	end

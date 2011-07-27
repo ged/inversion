@@ -10,10 +10,6 @@ require 'inversion/template/endtag'
 
 # This is the parser for Inversion templates. It takes template source and
 # returns a tree of Inversion::Template::Node objects (if parsing is successful).
-#
-# @author Michael Granger <ged@FaerieMUD.org>
-# @author Mahlon E. Smith <mahlon@martini.nu>
-#
 class Inversion::Template::Parser
 	include Inversion::Loggable
 
@@ -44,8 +40,6 @@ class Inversion::Template::Parser
 
 
 	### Create a new Inversion::Template::Parser with the specified config +options+.
-	### @param [Inversion::Template] template  The template object this parser was generated for
-	### @param [Hash] options  configuration options that override DEFAULT_OPTIONS
 	def initialize( template, options={} )
 		@template = template
 		@options  = DEFAULT_OPTIONS.merge( options )
@@ -62,8 +56,6 @@ class Inversion::Template::Parser
 
 	### Parse the given +source+ into one or more Inversion::Template::Nodes and return
 	### it as an Array.
-	### @param [String] source  the template source
-	### @return [Array<Inversion::Template::Node>]  the nodes parsed from the +source+.
 	def parse( source, inherited_state=nil )
 		state = nil
 
@@ -163,7 +155,7 @@ class Inversion::Template::Parser
 
 
 	# Parse state object class. State objects keep track of where in the parse tree
-	# new nodes should be appended, and matches <?end?> tags with their openers.
+	# new nodes should be appended, and manages inclusion.
 	class State
 		include Inversion::Loggable
 
@@ -205,7 +197,6 @@ class Inversion::Template::Parser
 
 
 		### Append operator: add nodes to the correct part of the parse tree.
-		### @param [Inversion::Template::Node] node  the parsed node
 		def <<( node )
 			self.log.debug "Appending %p" % [ node ]
 

@@ -4,8 +4,32 @@
 require 'ripper'
 require 'inversion/template/tag'
 
-### FIXME: Top-level docs
-###
+# The base class for Inversion tags that parse the body section of the tag using
+# a Ruby parser.
+#
+# It provides a +tag_pattern+ declarative method that is used to specify a pattern of
+# tokens to match, and a block for handling tag instances that match the pattern.
+#
+#    class Inversion::Template::MyTag < Inversion::Template::CodeTag
+#    
+#        # Match a tag that looks like: <?my "string of stuff" ?>
+#        tag_pattern 'tstring_beg $(tstring_content) tstring_end' do |tag, match|
+#            tag.string = match.string( 1 )
+#        end
+#    
+#    end
+#
+# The tokens in the +tag_pattern+ are Ruby token names used by the parser. If you're creating
+# your own tag, you can dump the tokens for a particular snippet using the 'inversion'
+# command-line tool that comes with the gem:
+#
+#   $ inversion tagtokens 'attr.dump! {|thing| thing.length }'
+#   ident<"attr"> period<"."> ident<"dump!"> sp<" "> lbrace<"{"> op<"|"> \
+#     ident<"thing"> op<"|"> sp<" "> ident<"thing"> period<".">          \
+#     ident<"length"> sp<" "> rbrace<"}">
+#
+# :TODO: Finish the tag_pattern docs: placeholders, regex limitations, etc.
+#
 class Inversion::Template::CodeTag < Inversion::Template::Tag
 	include Inversion::Loggable,
 	        Inversion::AbstractClass
@@ -15,7 +39,7 @@ class Inversion::Template::CodeTag < Inversion::Template::Tag
 	### end of the matched string.
 	class TokenPattern < Ripper::TokenPattern
 
-		# @return [String]  the token pattern's source string
+		# the token pattern's source string
 		attr_reader :source
 
 		#########
@@ -23,8 +47,6 @@ class Inversion::Template::CodeTag < Inversion::Template::Tag
 		#########
 
 		### Compile the token pattern into a Regexp
-		### @param [String] pattern  the token pattern to compile
-		### @return [Regexp]
 		def compile( pattern )
 			if m = /[^\w\s$()\[\]{}?*+\.]/.match( pattern )
 				raise Ripper::TokenPattern::CompileError,
@@ -70,9 +92,7 @@ class Inversion::Template::CodeTag < Inversion::Template::Tag
 
 	### Declare a +token_pattern+ for tag bodies along with a +callback+ that will
 	### be called when a tag matching the pattern is instantiated.
-	### @param [String] token_pattern  the Ripper token pattern to use for matching the tag body
-	### @param [Proc, #to_proc] callback  the block to call when the tag is instantiated
-	def self::tag_pattern( token_pattern, &callback )
+	def self::tag_pattern( token_pattern, &callback ) #:yield: 
 		pattern = TokenPattern.compile( token_pattern )
 		@tag_patterns = [] unless defined?( @tag_patterns )
 		@tag_patterns << [ pattern, callback ]
@@ -85,10 +105,6 @@ class Inversion::Template::CodeTag < Inversion::Template::Tag
 
 	### Initialize a new tag that expects Ruby code in its +body+. Calls the
 	### tag's #parse_pi_body method with the specified +body+.
-	### @param [String] body  the Ruby source of the tag body
-	### @param [Integer] linenum the line number the tag was parsed from
-	### @param [Integer] colnum  the column number the tag was parsed from
-	### @return [Inversion::Template::CodeTag]  the resulting tag object.
 	def initialize( body, linenum=nil, colnum=nil ) # :notnew:
 		super
 
@@ -102,15 +118,14 @@ class Inversion::Template::CodeTag < Inversion::Template::Tag
 	public
 	######
 
-	# @return [String] the body of the tag
+	# the body of the tag
 	attr_reader :body
 
-	# @return [Array<Symbol>] the identifiers in the code contained in the tag
+	# the identifiers in the code contained in the tag
 	attr_reader :identifiers
 
 
 	### Render the node as text.
-	### @return [String] the rendered node
 	pure_virtual :render
 
 
@@ -122,8 +137,6 @@ class Inversion::Template::CodeTag < Inversion::Template::Tag
 	### Match the given +body+ against one of the tag's tag patterns, calling the
 	### block associated with the first one that matches and returning the matching
 	### pattern.
-	### @param [String] body  the body of the tag
-	### @return [Inversion::Template::CodeTag::TokenPattern] the matching pattern
 	def match_tag_pattern( body )
 
 		self.class.tag_patterns.each do |tp, callback|

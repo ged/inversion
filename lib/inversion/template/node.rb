@@ -4,15 +4,17 @@
 require 'inversion/mixins'
 require 'inversion/template' unless defined?( Inversion::Template )
 
-# Inversion template node base class
+# Inversion template node base class. Template text is parsed by the
+# Inversion::Template::Parser into nodes, and appended to a tree
+# that is later walked when the template is rendered.
+# 
+# This class is abstract; it just defines the API that other nodes
+# are expected to implement.
 class Inversion::Template::Node
 	include Inversion::AbstractClass
 
 
 	### Create a new TextNode with the specified +source+.
-	### @param [String] source   the text source to wrap in the node object
-	### @param [Integer] linenum the line number the tag was parsed from
-	### @param [Integer] colnum  the column number the tag was parsed from
 	def initialize( body, linenum=nil, colnum=nil )
 		@body    = body
 		@linenum = linenum

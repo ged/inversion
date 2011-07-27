@@ -47,7 +47,6 @@ class Inversion::Template::EndTag < Inversion::Template::Tag
 
 
 	### Render the tag as the body of a comment, suitable for template debugging.
-	### @return [String]  the tag as the body of a comment
 	def as_comment_body
 		return "End of %s" % [ self.opener.as_comment_body ]
 	end

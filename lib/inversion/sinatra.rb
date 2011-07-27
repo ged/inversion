@@ -9,7 +9,7 @@ rescue LoadError => err
 end
 
 # Add support for Tilt (https://github.com/rtomayko/tilt) if it's already been loaded.
-if defined?( ::Sinatra )
+if defined?( ::Sinatra ) # :nodoc:
 
 	# A mixin to add Inversion support to Sinatra::Base
 	module Inversion::SinatraTemplateHelpers
@@ -26,6 +26,7 @@ if defined?( ::Sinatra )
 	end # Inversion::SinatraTemplateHelpers
 
 	# Inject Inversion helpers as a mixin
+	# :stopdoc:
 	class Sinatra::Base
 		include Inversion::SinatraTemplateHelpers
 	end

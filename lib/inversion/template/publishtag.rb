@@ -64,7 +64,6 @@ class Inversion::Template::PublishTag < Inversion::Template::Tag
 
 
 	### Render the tag as the body of a comment, suitable for template debugging.
-	### @return [String]  the tag as the body of a comment
 	def as_comment_body
 		return "Published %d nodes as %s" % [ self.subnodes.length, self.key ]
 	end
