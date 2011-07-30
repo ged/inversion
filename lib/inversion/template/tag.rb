@@ -38,7 +38,7 @@ class Inversion::Template::Tag < Inversion::Template::Node
 
 	### Inheritance hook -- keep track of loaded derivatives.
 	def self::inherited( subclass )
-		Inversion.log.debug "%p inherited from %p" % [ subclass, self ]
+		# Inversion.log.debug "%p inherited from %p" % [ subclass, self ]
 		Inversion::Template::Tag.derivatives << subclass 
 		super
 	end
@@ -61,13 +61,13 @@ class Inversion::Template::Tag < Inversion::Template::Node
 			Inversion.log.debug "Loading tag type %p from %p" % [ tagname, tagfile ]
 			self.load( tagfile )
 
-			Inversion.log.debug "Looking for class for %p tag" % [ tagname ]
+			# Inversion.log.debug "Looking for class for %p tag" % [ tagname ]
 			tagclass = self.derivatives.find do |derivclass|
 				if derivclass.name.nil? || derivclass.name.empty?
-					Inversion.log.debug "  skipping anonymous class %p" % [ derivclass ]
+					# Inversion.log.debug "  skipping anonymous class %p" % [ derivclass ]
 					nil
 				elsif !derivclass.respond_to?( :new )
-					Inversion.log.debug "  skipping abstract class %p" % [ derivclass ]
+					# Inversion.log.debug "  skipping abstract class %p" % [ derivclass ]
 					nil
 				else
 					derivclass.name.downcase =~ /\b#{tagname}tag$/
