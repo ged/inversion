@@ -29,15 +29,53 @@ if defined?( ::Tilt )
 		end
 
 
+		### (Undocumented)
+		def render( *args )
+			$stderr.puts "Rendering!"
+			self.evaluate( *args )
+		end
+
 		### Tilt::Template API: render the template with the given +scope+, +locals+, and +block+.
 		def evaluate( scope, locals, &block )
 			@template.attributes.merge!( scope.to_h ) if scope.respond_to?( :to_h )
 			@template.attributes.merge!( locals )
 
-			return @template.render
+			return @template.render( &block )
 		end
 
 	end # class Inversion::TiltWrapper
+
+	# Also add #each to Inversion::Template so they can be returned from actions directly, too.
+	module Inversion::TemplateTiltAdditions
+
+		# TODO: Factor the common parts of this out in Inversion::Template so there's no
+		# duplication.
+		def each
+			self.log.info "rendering template 0x%08x (Sinatra-style)" % [ self.object_id/2 ]
+			state = Inversion::RenderState.new( nil, self.attributes, self.options )
+
+			# Pre-render hook
+			self.walk_tree {|node| node.before_rendering(state) }
+
+			self.log.debug "  rendering node tree: %p" % [ @node_tree ]
+			self.walk_tree {|node| state << node }
+
+			# Post-render hook
+			self.walk_tree {|node| node.after_rendering(state) }
+
+			self.log.info "  done rendering template 0x%08x" % [ self.object_id/2 ]
+			return state.destination.each do |node|
+				yield( node.to_s )
+			end
+		end
+
+	end # module Inversion::TemplateTiltAdditions
+
+	# Add the mixin to Template
+	class Inversion::Template
+		include Inversion::TemplateTiltAdditions
+	end
+
 
 	Tilt.register( Inversion::TiltWrapper, 'tmpl', 'inversion' )
 
