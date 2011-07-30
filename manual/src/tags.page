@@ -1,0 +1,93 @@
+---
+title: Tags
+layout: default
+index: 1
+filters:
+  - erb
+  - links
+  - examples
+  - textile
+---
+
+h2. <%= page.config['title'] %>
+
+<div id="auto-toc"></div>
+
+h3(#tagsyntax). Tag Syntax
+
+Tags can be in either of two formats:
+
+* XML Pre-processing instruction style: @<?tagname tagdata ?>@
+* or the same thing, but with square brackets instead: @[?tagname tagdata ?]@
+
+The second form is especially useful if you're generating HTML and want to put an Inversion tag inside the attribute of an HTML tag, but still want the template to be well-formed:
+
+<?example { syntax: html, caption: "Using square-bracket tags inside an HTML tag" } ?>
+<a href="[?call article.permalink ?]">Permalink</a>
+<?end ?>
+
+You can mix tag forms in a single document.
+
+h3(#comment). Comment
+
+The comment tag can be used to temporarily stop a section of a document from being rendered:
+
+<?example { syntax: html, caption: "Using square-bracket tags inside an HTML tag" } ?>
+<?comment?>
+This stuff won't be rendered.
+<?end comment ?>
+But this stuff will.
+<?end?>
+
+Note that the tags inside the comment will still be parsed, so the template's interface won't be affected by the comment:
+
+<?example { syntax: html, caption: "Commenting out an attr tag" } ?>
+<?comment?>
+<?attr content ?>
+<?end comment ?>
+<?end?>
+
+
+h3(#config). Config
+
+h3(#placeholders). Placeholders
+
+h4(#attr). Attr
+
+h4(#call). Call
+
+h4(#escape). Escape
+
+h4(#urlencode). Urlencode
+
+h3(#special-placeholders). Special Placeholders
+
+h4(#timedelta). TimeDelta
+
+h3(#import-pubsub). Import and Publish/Subscribe
+
+h4(#import). Import
+
+h4(#publish-subscribe). Publish/Subscribe
+
+h4(#include). Include
+
+h4(#render). Render
+
+h3(#flowcontrol). Flow Control
+
+h4(#for). For
+
+h4(#if). If/Elsif/Else
+
+h4(#unless). Unless
+
+h4(#yield). Yield
+
+h3(#troubleshooting). Troubleshooting/Introspection
+
+h4(#pp). PP
+
+h4(#prettyprint). PrettyPrint
+
+

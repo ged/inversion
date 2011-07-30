@@ -1,0 +1,23 @@
+---
+title: Templates
+layout: default
+index: 1
+filters:
+  - erb
+  - links
+  - examples
+  - textile
+---
+
+h2. <%= page.config['title'] %>
+
+<div id="auto-toc"></div>
+
+h3(#options). Template Options
+
+- raise_on_unknown:= (explanation of the option)
+- on_render_error:= (explanation of the option)
+- debugging_comments:= (explanation of the option)
+- comment_start:= (explanation of the option)
+- comment_end:= (explanation of the option)
+
