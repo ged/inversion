@@ -1,0 +1,19 @@
+---
+title: Getting Started
+layout: default
+index: 1
+filters:
+  - erb
+  - links
+  - examples
+  - textile
+---
+
+h2. <%= page.config['title'] %>
+
+<div id="auto-toc"></div>
+
+h3(#requirements). Requirements
+
+h3(#installation). Installation
+

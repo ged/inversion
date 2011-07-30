@@ -1,0 +1,64 @@
+---
+title: Annotated Examples
+layout: default
+index: 3
+filters:
+  - erb
+  - links
+  - examples
+  - editorial
+  - api
+  - textile
+---
+
+h2. <%= page.config['title'] %>
+
+<div id="auto-toc"></div>
+
+This is a list of template examples with annotations explaining what each group of lines is doing.
+
+h3(#simple-examples). Simple Examples
+
+...
+
+
+h3(#advanced-examples). Advanced Examples
+
+Here's a somewhat more complex example. At our company Spime-Thorpe from above, say we're creating a system that will handle mass layoffs without the need for management to handle all those messy personal interactions. We'll need a mass-mailer for the employees that will be afforded the chance to explore their career opportunities, right? So we create a template called @overboard-mail.tmpl@:
+
+<?example { language: text, caption: "overboard-mail.tmpl" } ?>
+Dear [?call employee.fullname ?],
+
+Congratulations! You have been selected by [?call failed_company.name ?]'s
+elite management team as one of the many lucky individuals that will
+enjoy the exciting challenge of pursuing other rewarding employment
+opportunities!
+
+Kudos!
+
+You will find your accounts have been disabled, your desk has been helpfully 
+cleared out for you, and all of your personal effects packaged up and
+delivered to your address of record:
+
+[?call employee.address ?]
+
+Please visit your customized Man OverBoard™ transition site immediately:
+
+[?call config.overboard_url ?]/[?urlencode failed_company.id ?]/[?urlencode employee.id ?]
+
+This will acknowledge that you have received this message, and automatically 
+disable your email account.  Be sure and save this message!
+
+[?if employee.severance_amount.nonzero? ?]
+Failure to acknowledge this message could result in delay of your final 
+severance pay, in the amount of [?call "$%0.2f" % employee.severance_amount ?].
+[?else?]
+Failure to acknowledge this message within 30 days will result in automatic forfeiture of your
+numerous Man Overboard™ package benefits.
+[?end?]
+        
+Good Luck,
+Your friends at Spime-Thorpe, Inc!
+http://www.spime-thorpe.com/
+<?end ?>
+
