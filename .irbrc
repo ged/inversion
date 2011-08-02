@@ -6,5 +6,9 @@ BEGIN {
 	$LOAD_PATH.unshift( Pathname.new( __FILE__ ).dirname + 'lib' )
 }
 
-require 'inversion'
+begin
+	require 'inversion'
+rescue Exception => err
+	$stderr.puts "Inversion failed to load: %p: %s" % [ err.class, err.message ]
+end
 
