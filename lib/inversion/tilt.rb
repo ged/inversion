@@ -29,9 +29,8 @@ if defined?( ::Tilt )
 		end
 
 
-		### (Undocumented)
+		### Hook the template's render phase.
 		def render( *args )
-			$stderr.puts "Rendering!"
 			self.evaluate( *args )
 		end
 
