@@ -40,7 +40,7 @@ describe "Tilt support", :if => $tilt_support do
 		scope = Object.new
 		def scope.to_h; { :message => "Respek!" }; end
 		File.stub( :binread ).with( 'test.tmpl' ).and_return( '<?attr message ?>' )
-		Tilt.new( 'test.tmpl' ).render( scope ).should == 'Respek!'
+		Tilt.new( 'test.tmpl' ).render( scope, {} ).should == 'Respek!'
 	end
 
 end
