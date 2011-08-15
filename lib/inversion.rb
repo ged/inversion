@@ -18,6 +18,8 @@ require 'logger'
 #
 module Inversion
 
+	warn ">>> Inversion requires Ruby 1.9.2 or later. <<<" if RUBY_VERSION < '1.9.2'
+
 	require 'inversion/exceptions'
 	require 'inversion/mixins'
 	require 'inversion/utils'

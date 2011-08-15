@@ -42,8 +42,8 @@ describe Inversion::Template::ConfigTag do
 		yaml = <<-YAML
             on_render_error: propagate
             debugging_comments: true
-            comment_start: /*
-            comment_end: */
+            comment_start: "/*"
+            comment_end: "*/"
 		YAML
 		tag = Inversion::Template::ConfigTag.new( yaml )
 		tag.options.should == {
