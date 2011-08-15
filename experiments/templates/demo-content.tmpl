@@ -1,8 +1,9 @@
+<?config debugging_comments: true ?>
 <?default grace_period to "7 days" ?>
 
 <?begin?>
 <p>Dear <?call employee.fullname ?>,</p>
-<?rescue PGError ?>
+<?rescue DatabaseError ?>
 <p>Dear Valued Ex-Employee,</p>
 <?end?>
 
@@ -37,7 +38,12 @@ in delay of your final severance pay, in the amount of
 <p>Failure to acknowledge this message within <?attr grace_period ?> will 
 result in automatic forfeiture of your numerous Man Overboard™ package benefits.</p>
 <?end?>
-	
+
+<?comment Disabled at client request ?>
+If you have any questions or concerns, please don't hesitate to contact your
+friendly Spime-Thorpe <a href="mailto:salesteam2@spime-thorpe.com">representative</a>.
+<?end comment ?>
+
 <p>Good Luck,<br />
 Your friends at Spime-Thorpe, Inc!<br />
 <a href="http://www.spime-thorpe.com/">http://www.spime-thorpe.com/</a></p>

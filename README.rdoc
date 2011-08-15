@@ -43,6 +43,37 @@ rendered, and the result will take the place of the tag.
 Inversion also comes with a collection of other tags that provide flow control, exception-handling,
 etc.
 
+Here's a slightly more complex example: Say we have a layout template that contains all the
+boilerplate, navigation, etc. for the site, and then an `<?attr body ?>` somewhere in the content
+area for the content specific to each view:
+
+    layout = Inversion::Template.load( 'templates/layout.tmpl' )
+
+Then there's a view template that displays a bulleted list of article titles:
+ 
+    <!-- articlelist.tmpl -->
+    <section id="articles">
+      <ul>
+      <?for article in articles ?>
+        <li><?call article.title ?></li>
+      <?end for ?>
+      </ul>
+    </section>
+
+Loading this template results in a Ruby object whose API contains one method: `#articles`. To render
+the view, we just call that accessor with instances of an `Article` domain class we defined
+elsewhere, and then drop the 'alist' template into the layout and render them:
+
+    alist = Inversion::Template.load( 'templates/alist.tmpl' )
+    alist.articles = Articles.latest( 10 )
+    
+    layout.body = alist
+    puts layout.render
+
+The `for` tag in the alist will iterate over the enumerable Articles and generate an `<li>` for each
+one. The resulting template object will be set as the body of the layout template, and stringified
+when the enclosing template is rendered. Templates can be nested this way as deeply as you like.
+
 
 === Tags To Implement
 
