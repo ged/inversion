@@ -5,13 +5,18 @@ require 'ostruct'
 require 'inversion'
 require 'configurability/config'
 
-Inversion.log.level = Logger::DEBUG
+class DatabaseError < Exception; end
+
+Encoding.default_external = Encoding::UTF_8
+
+Inversion.log.level = $DEBUG ? Logger::DEBUG : Logger::WARN
 Inversion.log.formatter = Inversion::ColorLogFormatter.new( Inversion.logger )
 Configurability.logger = Inversion.logger
 
 config = Configurability::Config.new
 config.overboard_url = 'http://failedcompany.spime-thorpe.com/overboard'
 config.templates.template_paths = [ File.dirname( __FILE__ ) + '/templates' ]
+config.templates.debugging_comments = $DEBUG
 config.install
 
 employee = OpenStruct.new

@@ -12,6 +12,7 @@ require 'inversion/template/tag'
 #   <!-- Outer template -->
 #   <html>
 #     <head>
+#       <title><?subscribe title || Untitled ?></title>
 #       <?subscribe headers ?>
 #     </head>
 #     <body><?attr body ?></body>

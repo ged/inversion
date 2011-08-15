@@ -1,0 +1,74 @@
+---
+# vim: set et nosta sw=4 ts=4 ft=textile :
+title: Templates
+layout: default
+index: 1
+filters:
+  - erb
+  - links
+  - api
+  - examples
+  - textile
+---
+
+h2. <%= page.config['title'] %>
+
+<div id="auto-toc"></div>
+
+Inversion <?api "templates":Inversion::Template ?> are the primary objects you'll be interacting with. Templates can be created from a string via <?api "Template#new":Inversion::Template.new ?>, or from a file with <?api "Template#load":Inversion::Template.load ?>.
+
+h3(#options). Template Options
+
+You can set Inversion's configuration options in a number of ways. 
+
+To set global options, Inversion supports the "Configurability":https://bitbucket.org/ged/configurability API, and registers itself with the @templates@ key. This means you can either add a 'templates' section to your Configurability config, or call <?api "Inversion::Template.configure":Inversion::Template.configure ?> yourself with an object that can be passed to @Hash#merge@.
+
+To set options on a per-template basis, you can pass an options hash to either @.load@ or @.new@, or set them from within the template itself using the <?link "configure tag":Tags#configure-tag ?>.
+
+The available options are:
+
+<notextile>
+<dl>
+	<dt>:ignore_unknown_tags</dt>
+	<dd>Setting to false causes unknown tags used in templates to raise an <code>Inversion::ParseError</code>.</dd>
+	<dd class="default">Default: true</dd>
+   
+	<dt>:on_render_error</dt>
+	<dd>
+		Dictates the behavior of exceptions during rendering. 
+		<dl>
+		  	<dt>:ignore</dt>
+			<dd>Exceptions are silently ignored.</dd>
+		  	<dt>:comment</dt>
+			<dd>Exceptions are rendered inline as comments.</dd>
+		  	<dt>:propagate</dt>
+			<dd>Exceptions bubble up to the caller of #render.</dd>
+		</dl>
+	</dd>
+    <dd class="default">Default: <code>:comment</code></dd>
+
+    <dt>:debugging_comments</dt>
+    <dd>Insert various Inversion parse and render statements while rendering.</dd>
+    <dd class="default">Default: <code>false</code></dd>
+
+    <dt>:comment_start</dt>
+    <dd>When rendering debugging comments, the comment is started with these characters.</dd>
+    <dd class="default">Default: <code>"&lt;!--"</code></dd>
+
+    <dt>:comment_end</dt>
+    <dd>When rendering debugging comments, the comment is finished with these characters.</dd>
+    <dd class="default">Default: <code>"--&gt;"</code></dd>
+
+    <dt>:template_paths</dt>
+    <dd>An array of filesystem paths to search for templates within, when loaded or included with a relative path.  The current working directory is always the last checked member of this.</dd>
+    <dd class="default">Default: <code>[]</code></dd>
+
+    <dt>:escape_format</dt>
+    <dd>The escaping <?api "strategy":Inversion::Escaping ?> used by tags such as <code>escape</code> and <code>pp</code>.</dd>
+    <dd class="default">Default: <code>:html</code></dd>
+
+    <dt>:strip_tag_lines</dt>
+    <dd>If a tag's presence introduces a blank line into the output, this option removes it.</dd>
+    <dd class="default">Default: <code>true</code></dd>
+</dl>
+</notextile>
