@@ -29,7 +29,7 @@ hoespec = Hoe.spec 'inversion' do
 	self.dependency 'hoe-manualgen', '~> 0.2.0',  :development
 
 	# bin/inversion deps
-	self.dependency 'trollop',       '~> 0.16.2', :development
+	self.dependency 'trollop',       '~> 1.16.2', :development
 	self.dependency 'highline',      '~> 1.6.2',  :development
 	self.dependency 'sysexits',      '~> 1.0.2',  :development
 
