@@ -26,7 +26,7 @@ hoespec = Hoe.spec 'inversion' do
 	self.dependency 'sinatra',       '~> 1.2.6',  :development
 	self.dependency 'rack-test',     '~> 0.6.0',  :development
 	self.dependency 'simplecov',     '~> 0.4.2',  :development
-	self.dependency 'hoe-manualgen', '~> 0.1.1',  :development
+	self.dependency 'hoe-manualgen', '~> 0.2.0',  :development
 
 	# bin/inversion deps
 	self.dependency 'trollop',       '~> 0.16.2', :development

@@ -14,7 +14,13 @@
 ### Links are XML processing instructions. Pages can be referenced as such:
 ###
 ###   <?api Class::Name ?>
+###   <?api Class::Name#instance_method ?>
+###   <?api Class::Name.class_method ?>
+###
+### Link text can be overridden, too:
+###
 ###   <?api "click here":Class::Name ?>
+###   <?api "click here":Class::Name#instance_method ?>
 ###
 class Hoe::ManualGen::APIFilter < Hoe::ManualGen::PageFilter
 
@@ -45,17 +51,17 @@ class Hoe::ManualGen::APIFilter < Hoe::ManualGen::PageFilter
 
 		return source.gsub( ApiPI ) do |match|
 			# Grab the tag values
-			link_text = $1
-			classname = $2
-			anchor    = $3
+			link_text  = $1
+			classname  = $2
+			methodname = $3
 
-			self.generate_link( page, apipath, classname, anchor, link_text )
+			self.generate_link( page, apipath, classname, methodname, link_text )
 		end
 	end
 
 
 	### Create an HTML link fragment from the parsed ApiPI.
-	def generate_link( current_page, apipath, classname, anchor, link_text=nil )
+	def generate_link( current_page, apipath, classname, methodname=nil, link_text=nil )
 
 		classpath = "%s.html" % [ classname.gsub('::', '/') ]
 		classfile = apipath + classpath
@@ -64,8 +70,8 @@ class Hoe::ManualGen::APIFilter < Hoe::ManualGen::PageFilter
 		if classfile.exist?
 			return %{<a href="%s%s">%s</a>} % [
 				classuri,
-				add_anchor( anchor ),
-				link_text || classname
+				make_anchor( methodname ),
+				link_text || (classname + methodname || '')
 			]
 		else
 			link_text ||= classname
@@ -77,13 +83,13 @@ class Hoe::ManualGen::APIFilter < Hoe::ManualGen::PageFilter
 
 
 	### Attach a method anchor.
-	def add_anchor( anchor )
-		return '' unless anchor
+	def make_anchor( methodname )
+		return '' unless methodname
 
-		method_type = anchor.slice!( 0, 1 )
+		method_type = methodname[ 0, 1 ]
 		return "#method-%s-%s" % [
 			( method_type == '#' ? 'i' : 'c' ),
-			anchor
+			methodname[ 1..-1 ]
 		]
 	end
 end

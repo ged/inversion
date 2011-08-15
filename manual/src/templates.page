@@ -21,7 +21,7 @@ h3(#options). Template Options
 
 You can set Inversion's configuration options in a number of ways. 
 
-To set global options, Inversion supports the "Configurability":https://bitbucket.org/ged/configurability API, and registers itself with the @templates@ key. This means you can either add a 'templates' section to your Configurability config, or call <?api "Inversion::Template.configure":Inversion::Template.configure ?> yourself with an object that can be passed to @Hash#merge@.
+To set global options, Inversion supports the "Configurability":https://bitbucket.org/ged/configurability API, and registers itself with the @templates@ key. This means you can either add a 'templates' section to your Configurability config, or call <?api Inversion::Template.configure ?> yourself with an object that can be passed to @Hash#merge@.
 
 To set options on a per-template basis, you can pass an options hash to either @.load@ or @.new@, or set them from within the template itself using the <?link "configure tag":Tags#configure-tag ?>.
 
