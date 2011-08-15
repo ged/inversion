@@ -87,7 +87,7 @@ When wrapped with a layout template, here's what this renders as:
 <!--
 
 	Spime-Thorpe!
-	$Id: demo-layout.tmpl,v f95e6a8167c6 2011/07/20 16:42:32 mahlon $
+	$Id$
 
   -->
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
