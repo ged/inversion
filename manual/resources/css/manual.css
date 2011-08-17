@@ -16,7 +16,7 @@
 @font-face {
 	font-family: Muli;
 	src: local('Muli'),
-		url(../fonts/Muli.otf) format(truetype);
+		url(../fonts/Muli-Regular.ttf) format(truetype);
 }
 
 @font-face {
