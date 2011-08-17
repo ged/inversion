@@ -1,3 +1,5 @@
+/* @override http://deveiate.org/code/Inversion-manual/css/manual.css */
+
 /* 
  * inversion Manual Stylesheet
  *  
@@ -12,14 +14,16 @@
 @import url(reset.css);
 
 @font-face {
-	font-family: GraublauWeb;
-	src: url(../fonts/GraublauWeb.otf) format(truetype);
+	font-family: Muli;
+	src: local('Muli'),
+		url(../fonts/Muli.otf) format(truetype);
 }
 
 @font-face {
-	font-family: GraublauWeb;
-	font-weight: bold;
-	src: url(../fonts/GraublauWebBold.otf) format(truetype);
+	font-family: Muli;
+	font-weight: light;
+	src: local('Muli Light'),
+		url(../fonts/Muli-Light.ttf) format(truetype);
 }
 
 @font-face {
@@ -30,14 +34,17 @@
 
 /* @group Elements */
 html {
-	background-color: #a5a5a5;
+    background: #b5bdc8; /* old browsers */
+    background: -moz-linear-gradient(left, #b5bdc8 0%, #828C95 32%, #6B737A 100%); /* firefox */
+    background: -webkit-gradient(linear, left top, right top, color-stop(0%,#b5bdc8), color-stop(32%,#828C95), color-stop(100%,#6B737A)); /* webkit */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#b5bdc8', endColorstr='#6B737A',GradientType=1 ); /* ie */
 }
 
 body {
 	margin: 0;
 	padding: 0;
 	min-width: 800px;
-	font-family: GraublauWeb, sans-serif;
+	font-family: Muli, sans-serif;
 }
 
 nav ul.index-section {
@@ -48,7 +55,7 @@ nav ul.index-section {
 }
 
 a {
-	color: #4c87cb;
+	color: #66707e;
 	text-decoration: inherit;
 	border-bottom: 1px dotted;
 	border-color: rgba(76,135,203,0.5);
@@ -60,6 +67,7 @@ a:hover {
 }
 
 h1, h2, h3, h4, h5, h6 {
+	font-weight: light;
 	margin-bottom: 0.2em;
 }
 
@@ -111,41 +119,31 @@ code, pre {
 dl {
 	margin: 0.5em 0;
 	padding: 0;
+	border-bottom: 1px solid #333;
 }
 dt {
-	padding: 0 0.75em;
-	border-top-left-radius: 0.5em;
-	border-top-right-radius: 0.5em;
-	background: -webkit-gradient(radial, 
-		20% 0, 0, 
-		20% 0, 800, 
-		color-stop(0.0,#bbb), 
-		color-stop(1.0,#cecece));
-	background: -moz-radial-gradient(
-		20% top, 
-		farthest-side, 
-		#bbb, 
-		#cecece);
+	padding: 5px;
+	border-top: 1px solid #333;
+	clear: both;
+	float: left;
+	width: 220px;
 }
 dd {
-	padding: 0 0.75em;
-	border-bottom-left-radius: 0.5em;
-	border-bottom-right-radius: 0.5em;
-	margin-left: 0;
-	background: -webkit-gradient(radial, 
-		20% 0, 0, 
-		20% 0, 800, 
-		color-stop(0.0,#ddd), 
-		color-stop(1.0,#efefef));
-	background: -moz-radial-gradient(
-		20% top, 
-		farthest-side, 
-		#ddd, 
-		#efefef);
+	margin: 0;
+	margin-left: 230px;
+	padding: 5px;
 }
-dd + dt {
-	margin-top: 0.5em;
+dd {
+	border-top: 1px solid #333;
 }
+dd.default {
+	border: none;
+}
+
+dd dl {
+	margin: 0.5em;
+}
+
 /* @end */
 
 
@@ -156,17 +154,10 @@ dd + dt {
 
 #page > header {
 	position: relative;
-	background-color: #81a7d2;
-	background: -webkit-gradient(radial, 
-		20% 0, 0, 
-		20% 0, 800, 
-		color-stop(0.0,#81a7d2), 
-		color-stop(1.0,#6187b2));
-	background: -moz-radial-gradient(
-		20% top, 
-		farthest-side, 
-		#81a7d2, 
-		#6187b2);
+    background: #b5bdc8; /* old browsers */
+    background: -moz-linear-gradient(left, #b5bdc8 0%, #828C95 32%, #6B737A 100%); /* firefox */
+    background: -webkit-gradient(linear, left top, right top, color-stop(0%,#b5bdc8), color-stop(32%,#828C95), color-stop(100%,#6B737A)); /* webkit */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#b5bdc8', endColorstr='#6B737A',GradientType=1 ); /* ie */
 	color: #fff;
 	padding: 0.2em 1em;
 }
@@ -241,28 +232,13 @@ section#content h4 {
 }
 
 #page > footer {
-	color: #444;
+	color: white;
+	text-shadow: 0 0 3px rga( 25,25,25, 0.2 );
 	clear: both;
 	padding: 2em;
-	background: #a5a5a5;
-	background-image: -moz-linear-gradient(
-		top, 
-		#000000 0%, 
-		#ccc 8%, 
-		#adadad 51%, 
-		#a5a5a5 100%
-	);
-	background-image: -webkit-gradient(
-		linear, 
-		left top, 
-		left bottom, 
-		color-stop(0%,#888), 
-		color-stop(5%,#ccc), 
-		color-stop(51%,#adadad), 
-		color-stop(100%,#a5a5a5)
-	);
 	border-top: 2px solid rgba( 25,25,25, 0.2 );
 	font-size: 0.8em;
+	line-height: 1.5em;
 }
 /* @end */
 
