@@ -106,7 +106,7 @@ class Inversion::Template::BeginTag < Inversion::Template::Tag
 			self.log.debug "  considering rescue clause: %p -> %p" % [ errclasses, nodes ]
 			if errclasses.any? {|eclass| eclass === exception }
 				self.log.debug "  rescued by a clause for %p" % [ errclasses ]
-				nodes.each {|node| state << node }
+				nodes.each {|innernode| state << innernode }
 				throw :stop_rendering
 			end
 		end
