@@ -99,7 +99,7 @@ class Inversion::Template
 
 		# Load the instance and set the path to the source
 		template = self.new( source, parsestate, opts )
-		template.source_file = tmpl.expand_path
+		template.source_file = tmpl
 
 		return template
 	end
