@@ -47,6 +47,13 @@ task 'hg:precheckin' => :spec
 # Rebuild the ChangeLog immediately before release (hoe hook)
 task :prerelease => 'ChangeLog'
 
+if Rake::Task.task_defined?( '.gemtest' )
+	Rake::Task['.gemtest'].clear
+	task '.gemtest' do
+		$stderr.puts "Not including a .gemtest until I'm confident the test suite is idempotent."
+	end
+end
+
 desc "Build a coverage report"
 task :coverage do
 	ENV["COVERAGE"] = 'yes'
