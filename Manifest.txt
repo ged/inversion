@@ -1,5 +1,5 @@
 ChangeLog
-History.md
+History.rdoc
 Manifest.txt
 README.rdoc
 Rakefile
