@@ -16,19 +16,19 @@
 @font-face {
 	font-family: Muli;
 	src: local('Muli'),
-		url(../fonts/Muli-Regular.ttf) format(truetype);
+		url(../fonts/Muli-Regular.ttf) format("truetype");
 }
 
 @font-face {
 	font-family: Muli;
 	font-weight: light;
 	src: local('Muli Light'),
-		url(../fonts/Muli-Light.ttf) format(truetype);
+		url(../fonts/Muli-Light.ttf) format("truetype");
 }
 
 @font-face {
 	font-family: Inconsolata;
-	src: url(../fonts/Inconsolata.otf) format(truetype);
+	src: url(../fonts/Inconsolata.otf) format("opentype");
 }
 
 
