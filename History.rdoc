@@ -1,0 +1,23 @@
+== v0.0.4 [2011-09-21] Michael Granger <ged@FaerieMUD.org>
+
+- Avoid Pathname#expand_path in Inversion::Template.load
+  [optimization]
+- Fix circular require in inversion/template/elsiftag.rb.
+- Fix a shadowed variable in BeginTag#handle_exception.
+- Added a manual
+
+
+== v0.0.3 [2011-08-15] Michael Granger <ged@FaerieMUD.org>
+
+- Dependency fix
+
+
+== v0.0.2 [2011-08-15] Michael Granger <ged@FaerieMUD.org>
+
+- Packaging fix
+
+
+== v0.0.1 [2011-02-02] Michael Granger <ged@FaerieMUD.org>
+
+Initial release.
+

@@ -14,8 +14,8 @@ Hoe.plugins.delete :rubyforge
 
 hoespec = Hoe.spec 'inversion' do
 	self.readme_file = 'README.rdoc'
-	self.history_file = 'History.md'
-	self.extra_rdoc_files = ['README.rdoc']
+	self.history_file = 'History.rdoc'
+	self.extra_rdoc_files << 'README.rdoc' << 'History.rdoc'
 
 	self.developer 'Michael Granger', 'ged@FaerieMUD.org'
 	self.developer 'Mahlon E. Smith', 'mahlon@martini.nu'
