@@ -2,7 +2,7 @@
 # vim: set noet nosta sw=4 ts=4 :
 
 require 'inversion/template/attrtag'
-require 'inversion/template/iftag'
+require 'inversion/template/iftag' unless defined?( Inversion::Template::IfTag )
 require 'inversion/template/commenttag'
 
 
