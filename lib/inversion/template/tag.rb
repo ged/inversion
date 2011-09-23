@@ -17,6 +17,7 @@ class Inversion::Template::Tag < Inversion::Template::Node
 	include Inversion::Loggable,
 	        Inversion::AbstractClass
 
+
 	# The glob pattern for matching template tag plugins
 	TAG_PLUGIN_PATTERN = 'inversion/template/*tag.rb'
 

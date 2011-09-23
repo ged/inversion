@@ -19,12 +19,14 @@ require 'inversion/template/attrtag'
 class Inversion::Template::TimeDeltaTag < Inversion::Template::AttrTag
 
 	# Approximate Time Constants (in seconds)
-	MINUTES = 60
-	HOURS   = 60  * MINUTES
-	DAYS    = 24  * HOURS
-	WEEKS   = 7   * DAYS
-	MONTHS  = 30  * DAYS
-	YEARS   = 365.25 * DAYS
+	unless defined?( MINUTES )
+		MINUTES = 60
+		HOURS   = 60  * MINUTES
+		DAYS    = 24  * HOURS
+		WEEKS   = 7   * DAYS
+		MONTHS  = 30  * DAYS
+		YEARS   = 365.25 * DAYS
+	end
 
 
 	######
