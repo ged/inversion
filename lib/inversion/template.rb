@@ -76,7 +76,7 @@ class Inversion::Template
 
 		tmpl = nil
 		path = Pathname( path )
-		template_paths = self.config[:template_paths] + [ Dir.pwd ]
+		template_paths = Array( self.config[:template_paths] ) + [ Dir.pwd ]
 
 		# Unrestricted template location.
 		if path.absolute?
@@ -117,33 +117,54 @@ class Inversion::Template
 
 		@source       = source
 		@parser       = Inversion::Template::Parser.new( self, opts )
-		@node_tree    = []
-		@options      = self.class.config.merge( opts )
-
+		@node_tree    = [] # Parser expects this to always be an Array
+		@init_options = opts
+		@options      = nil
 		@attributes   = {}
 		@source_file  = nil
+		@created_at   = Time.now
 
-		# Now parse the template source into a tree of nodes and pre-generate accessors
-		# for any attributes defined by them
-		@node_tree = @parser.parse( source, parsestate )
-		self.define_attribute_accessors
+		self.parse( source, parsestate )
 	end
-
 
 
 	######
 	public
 	######
 
+	# The raw template source from which the object was parsed.
 	attr_reader :source
 
+	# The Pathname of the file the source was read from
 	attr_accessor :source_file
 
+	# The Hash of template attributes
 	attr_reader :attributes
 
+	# The Template's configuration options hash
 	attr_reader :options
 
+	# The node tree parsed from the template source
 	attr_reader :node_tree
+
+
+	### If the template was loaded from a file, reload and reparse it from the same file.
+	def reload
+		file = self.source_file or
+			raise Inversion::Error, "template was not loaded from a file" 
+
+		self.log.debug "Reloading from %s" % [ file ]
+		source = file.read
+		self.parse( source )
+	end
+
+
+	### Returns +true+ if the template was loaded from a file and the file's mtime
+	### is after the time the template was created.
+	def changed?
+		return false unless file = self.source_file
+		return ( file.mtime > @created_at )
+	end
 
 
 	### Render the template, optionally passing a render state (if, for example, the
@@ -194,6 +215,17 @@ class Inversion::Template
 
 		# Call the new method via #method to avoid a method_missing loop.
 		return self.method( sym ).call( *args, &block )
+	end
+
+
+	### Parse the given +source+ into the template node tree.
+	def parse( source, parsestate=nil )
+		@options = self.class.config.merge( @init_options )
+		@attributes.clear
+		@node_tree = @parser.parse( source, parsestate )
+		@source = source
+
+		self.define_attribute_accessors
 	end
 
 

@@ -34,13 +34,6 @@ describe Inversion::Template do
 		Inversion::Template.new( "a template" ).to_s.should == 'a template'
 	end
 
-	it "untaints template content loaded from a file" do
-		content = 'file contents'.taint
-		IO.should_receive( :read ).with( '/tmp/hooowat' ).and_return( content )
-
-		Inversion::Template.load( '/tmp/hooowat' ).source.should_not be_tainted()
-	end
-
 	it "calls before and after rendering hooks on all of its nodes when rendered" do
 		node = double( "fake node" )
 		parentstate = Inversion::RenderState.new( :foo => 'the merged stuff' )
@@ -82,6 +75,73 @@ describe Inversion::Template do
 		tmpl.foo = :bar
 		tmpl.foo.should == :bar
 	end
+
+
+	context "loaded from a file" do
+
+		before( :each ) do
+			@timestamp = Time.now
+			content = 'file contents'.taint
+			IO.should_receive( :read ).with( '/tmp/hooowat' ).and_return( content )
+			@template = Inversion::Template.load( '/tmp/hooowat' )
+		end
+
+
+		it "untaints template content loaded from a file" do
+			@template.source.should_not be_tainted()
+		end
+
+		it "can be reloaded" do
+			newcontent = 'changed file contents'.taint
+			IO.should_receive( :read ).with( '/tmp/hooowat' ).and_return( newcontent )
+			@template.reload
+			@template.source.should == newcontent
+		end
+
+		context "that hasn't changed since it was loaded" do
+
+			before( :each ) do
+				@template.source_file.stub!( :mtime ).and_return( @timestamp )
+			end
+
+			it "knows that it hasn't changed" do
+				@template.should_not be_changed()
+			end
+		end
+
+		context "that has changed since it was loaded" do
+
+			before( :each ) do
+				@template.source_file.stub!( :mtime ).and_return( @timestamp + 1 )
+			end
+
+			it "knows that is has changed" do
+				@template.should be_changed()
+			end
+
+		end
+
+	end
+
+
+	context "loaded from a String" do
+
+		before( :each ) do
+			@template = Inversion::Template.new( 'some stuff' )
+		end
+
+		it "never says it has changed" do
+			@template.should_not be_changed()
+		end
+
+		it "raises an exception if reloaded" do
+			expect {
+				@template.reload
+			}.to raise_error( Inversion::Error, /not loaded from a file/i )
+		end
+
+	end
+
 
 
 	context "without template paths set" do
