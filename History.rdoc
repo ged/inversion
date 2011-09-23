@@ -1,3 +1,9 @@
+== v0.1.0 [2011-09-23] Michael Granger <ged@FaerieMUD.org>
+
+- Added template reloading via Inversion::Template#changed?
+  and #reload.
+
+
 == v0.0.4 [2011-09-21] Michael Granger <ged@FaerieMUD.org>
 
 - Avoid Pathname#expand_path in Inversion::Template.load
