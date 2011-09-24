@@ -196,9 +196,12 @@ class Inversion::RenderState
 	### Publish the given +nodes+ to all subscribers to the specified +key+.
 	def publish( key, *nodes )
 		key = key.to_sym
+		self.log.debug "[0x%016x] Publishing %p nodes: %p" % [ self.object_id * 2, key, nodes ]
 
 		self.containerstate.publish( key, *nodes ) if self.containerstate
 		self.subscriptions[ key ].each do |subscriber|
+			self.log.debug "  sending %d nodes to subscriber: %p (a %p)" %
+				[ nodes.length, subscriber, subscriber.class ]
 			subscriber.publish( *nodes )
 		end
 	end

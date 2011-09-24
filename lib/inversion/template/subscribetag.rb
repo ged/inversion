@@ -51,10 +51,17 @@ class Inversion::Template::SubscribeTag < Inversion::Template::Tag
 	# The name of the key the nodes will be published under
 	attr_reader :key
 
+	# The tag's default value if nothing matching its key is published
+	attr_reader :default
+
+	# The content publish to the tag so far during the current render
+	attr_reader :content
+
 
 	### Tell the +renderstate+ that this tag is interested in nodes that are published with
 	### its key.
 	def before_rendering( renderstate )
+		@content.clear
 		renderstate.subscribe( self.key, self )
 	end
 
@@ -68,6 +75,7 @@ class Inversion::Template::SubscribeTag < Inversion::Template::Tag
 	### Pub/sub callback. Called from the RenderState when a PublishTag publishes +nodes+
 	### with the same key as the current tag.
 	def publish( *nodes )
+		self.log.debug "Adding published nodes %p to %p" % [ nodes, @content ]
 		@content.push( *nodes )
 	end
 
@@ -82,6 +90,18 @@ class Inversion::Template::SubscribeTag < Inversion::Template::Tag
 		else
 			return @content.map( &:to_s ).join( '' )
 		end
+	end
+
+
+	### Return a representation of the object in a String suitable for debugging.
+	def inspect
+		return "#<%p:0x%016x key: %s, default: %p, content: %p>" % [
+			self.class,
+			self.object_id * 2,
+			self.key,
+			self.default,
+			self.content,
+		]
 	end
 
 end # class Inversion::Template::SubscribeTag
