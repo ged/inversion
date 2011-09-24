@@ -86,17 +86,15 @@ describe Inversion::Template::ConfigTag do
 		}.to raise_exception( Inversion::ParseError, /unknown tag "what"/i )
 	end
 
-	it "can change the strictness of the parser as it's parsing the template" do
+	it "can turn on debugging comments in rendered output" do
 		source = <<-TEMPLATE
-		<?hooooowhat ?>
-		<?config ignore_unknown_tags: false ?>
+		<?config debugging_comments: true ?>
 		something
-		<?what ?>
+		<?if foo ?>Van!<?end if ?>
 		something else
 		TEMPLATE
-		expect {
-			Inversion::Template.new( source, :ignore_unknown_tags => true )
-		}.to raise_exception( Inversion::ParseError, /unknown tag "what"/i )
+		tmpl = Inversion::Template.new( source )
+		tmpl.render.should include( "<!-- If: { template.foo } -->" )
 	end
 
 end
