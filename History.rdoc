@@ -1,3 +1,8 @@
+== v0.1.1 [2011-09-23] Michael Granger <ged@FaerieMUD.org>
+
+- Bugfix for the Subscribe tag.
+
+
 == v0.1.0 [2011-09-23] Michael Granger <ged@FaerieMUD.org>
 
 - Added template reloading via Inversion::Template#changed?
