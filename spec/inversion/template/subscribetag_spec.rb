@@ -55,6 +55,17 @@ describe Inversion::Template::SubscribeTag do
 		template = Inversion::Template.new( "<?subscribe not_here || default value! ?>" )
 		template.render.should == "default value!"
 	end
+
+	it "doesn't retain published nodes across renders" do
+		template = Inversion::Template.new( '--<?subscribe stylesheets ?>--<?attr subtemplate ?>' )
+		subtemplate = Inversion::Template.new( '<?publish stylesheets ?>a style<?end?>(subtemplate)' )
+
+		template.subtemplate = subtemplate
+
+		template.render.should == '--a style--(subtemplate)'
+		template.render.should == '--a style--(subtemplate)'
+	end
+
 end
 
 
