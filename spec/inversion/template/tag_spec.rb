@@ -35,11 +35,12 @@ describe Inversion::Template::Tag do
 
 
 	it "loads pluggable types via Rubygems" do
+		pluginfile = '/usr/lib/ruby/gems/1.8/gems/inversion-extra-1.0.8/lib/inversion/template/zebratag.rb'
 		Gem.stub( :find_files ).
 			with( Inversion::Template::Tag::TAG_PLUGIN_PATTERN ).
-			and_return([ 'inversion/template/zebratag.rb' ])
+			and_return([ pluginfile ])
 		Inversion::Template::Tag.should_receive( :require ).
-			with( 'inversion/template/zebratag.rb' ).
+			with( 'inversion/template/zebratag' ).
 			and_return {
 				Class.new( Inversion::Template::Tag ) {
 					def self::name; "ZebraTag"; end
@@ -54,11 +55,12 @@ describe Inversion::Template::Tag do
 	end
 
 	it "doesn't include abstract tag types in its loading mechanism" do
+		pluginfile = '/usr/lib/ruby/gems/1.8/gems/inversion-extra-1.0.8/lib/inversion/template/zebratag.rb'
 		Gem.stub( :find_files ).
 			with( Inversion::Template::Tag::TAG_PLUGIN_PATTERN ).
-			and_return([ 'inversion/template/zebratag.rb' ])
+			and_return([ pluginfile ])
 		Inversion::Template::Tag.should_receive( :require ).
-			with( 'inversion/template/zebratag.rb' ).
+			with( 'inversion/template/zebratag' ).
 			and_return {
 				Class.new( Inversion::Template::Tag ) {
 					include Inversion::AbstractClass

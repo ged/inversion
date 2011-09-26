@@ -93,7 +93,9 @@ class Inversion::Template::Tag < Inversion::Template::Node
 
 	### Safely load the specified +tagfile+.
 	def self::load( tagfile )
-		require( tagfile )
+		tagrequire = tagfile[ %r{inversion/template/\w+tag} ] or
+			raise "tag file %p doesn't look like a tag plugin" % [ tagfile ]
+		require( tagrequire )
 	rescue => err
 		Inversion.log.error "%s while loading tag plugin %p: %s" %
 			[ err.class.name, tagfile, err.message ]
