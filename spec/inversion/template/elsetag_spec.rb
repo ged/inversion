@@ -35,7 +35,7 @@ describe Inversion::Template::ElseTag do
 
 	it "can be appended to an 'if' tag" do
 		template    = double( "template object" )
-		parserstate = Inversion::Template::Parser::State.new( template )
+		parserstate = Inversion::Parser::State.new( template )
 		iftag       = Inversion::Template::IfTag.new( 'foo' )
 		elsetag     = Inversion::Template::ElseTag.new
 		endtag      = Inversion::Template::EndTag.new
@@ -47,7 +47,7 @@ describe Inversion::Template::ElseTag do
 
 	it "can be appended to an 'unless' tag" do
 		template    = double( "template object" )
-		parserstate = Inversion::Template::Parser::State.new( template )
+		parserstate = Inversion::Parser::State.new( template )
 		unlesstag   = Inversion::Template::UnlessTag.new( 'foo' )
 		elsetag     = Inversion::Template::ElseTag.new
 		endtag      = Inversion::Template::EndTag.new
@@ -60,7 +60,7 @@ describe Inversion::Template::ElseTag do
 
 	it "can be appended to a 'comment' tag" do
 		template    = double( "template object" )
-		parserstate = Inversion::Template::Parser::State.new( template )
+		parserstate = Inversion::Parser::State.new( template )
 		commenttag  = Inversion::Template::CommentTag.new( 'else section for later' )
 		elsetag     = Inversion::Template::ElseTag.new
 		endtag      = Inversion::Template::EndTag.new
@@ -74,7 +74,7 @@ describe Inversion::Template::ElseTag do
 	it "raises an error if it's about to be appended to anything other than an 'if', 'unless', " +
 	   "or 'comment' tag" do
 		template    = double( "template object" )
-		parserstate = Inversion::Template::Parser::State.new( template )
+		parserstate = Inversion::Parser::State.new( template )
 		parserstate << Inversion::Template::ForTag.new( 'foo in bar' )
 
 		expect {
@@ -85,7 +85,7 @@ describe Inversion::Template::ElseTag do
 
 	it "raises an error if it's about to be appended without an opening 'if' or 'unless'" do
 		template    = double( "template object" )
-		parserstate = Inversion::Template::Parser::State.new( template )
+		parserstate = Inversion::Parser::State.new( template )
 
 		expect {
 			parserstate << Inversion::Template::ElseTag.new

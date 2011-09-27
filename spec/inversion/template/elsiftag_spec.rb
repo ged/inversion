@@ -31,7 +31,7 @@ describe Inversion::Template::ElsifTag do
 
 	it "can be appended to an 'if' tag" do
 		template    = double( "template object" )
-		parserstate = Inversion::Template::Parser::State.new( template )
+		parserstate = Inversion::Parser::State.new( template )
 		iftag       = Inversion::Template::IfTag.new( 'foo' )
 		elsetag     = Inversion::Template::ElsifTag.new( 'bar' )
 		endtag      = Inversion::Template::EndTag.new
@@ -43,7 +43,7 @@ describe Inversion::Template::ElsifTag do
 
 	it "can be appended to a 'comment' tag" do
 		template    = double( "template object" )
-		parserstate = Inversion::Template::Parser::State.new( template )
+		parserstate = Inversion::Parser::State.new( template )
 		commenttag  = Inversion::Template::CommentTag.new( 'else section for later' )
 		elsetag     = Inversion::Template::ElsifTag.new( 'bar' )
 		endtag      = Inversion::Template::EndTag.new
@@ -56,7 +56,7 @@ describe Inversion::Template::ElsifTag do
 
 	it "raises an error if it's about to be appended to anything other than an 'if' or 'comment' tag" do
 		template    = double( "template object" )
-		parserstate = Inversion::Template::Parser::State.new( template )
+		parserstate = Inversion::Parser::State.new( template )
 		parserstate << Inversion::Template::UnlessTag.new( 'foo in bar' )
 
 		expect {
@@ -67,11 +67,18 @@ describe Inversion::Template::ElsifTag do
 
 	it "raises an error if it's about to be appended without an opening 'if'" do
 		template    = double( "template object" )
-		parserstate = Inversion::Template::Parser::State.new( template )
+		parserstate = Inversion::Parser::State.new( template )
 
 		expect {
 			parserstate << Inversion::Template::ElsifTag.new( 'bar' )
 		}.to raise_exception( Inversion::ParseError, /orphaned 'elsif' tag/i )
+	end
+
+
+	it "renders as its attribute value if it's a simple attribute" do
+		renderstate = Inversion::RenderState.new( :bar => :the_attribute_value )
+		tag = Inversion::Template::ElsifTag.new( 'bar' )
+		tag.evaluate( renderstate ).should == :the_attribute_value
 	end
 
 end

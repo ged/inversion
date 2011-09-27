@@ -7,7 +7,7 @@ module Inversion
 	# A generic Inversion exception class
 	class Error < ::RuntimeError; end
 
-	# An exception class raised from the Inversion::Template::Parser when
+	# An exception class raised from the Inversion::Parser when
 	# a problem is encountered while parsing a template.
 	class ParseError < Inversion::Error; end
 

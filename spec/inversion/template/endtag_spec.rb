@@ -61,7 +61,7 @@ describe Inversion::Template::EndTag do
 		end
 
 		it "raises an error on the addition of a mismatched end tag" do
-			state = Inversion::Template::Parser::State.new( :template )
+			state = Inversion::Parser::State.new( :template )
 			opener = Inversion::Template::ForTag.new( 'foo in bar' )
 			state << opener
 

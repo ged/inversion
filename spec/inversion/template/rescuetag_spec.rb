@@ -50,7 +50,7 @@ describe Inversion::Template::RescueTag do
 
 	it "can be appended to a 'begin' tag" do
 		template    = double( "template object" )
-		parserstate = Inversion::Template::Parser::State.new( template )
+		parserstate = Inversion::Parser::State.new( template )
 		begintag    = Inversion::Template::BeginTag.new
 		rescuetag   = Inversion::Template::RescueTag.new
 		textnode    = Inversion::Template::TextNode.new( 'Yeah!' )
@@ -64,7 +64,7 @@ describe Inversion::Template::RescueTag do
 
 	it "can be appended to a 'comment' tag" do
 		template    = double( "template object" )
-		parserstate = Inversion::Template::Parser::State.new( template )
+		parserstate = Inversion::Parser::State.new( template )
 		commenttag  = Inversion::Template::CommentTag.new( 'rescue section for later' )
 		rescuetag   = Inversion::Template::RescueTag.new
 		endtag      = Inversion::Template::EndTag.new
@@ -78,7 +78,7 @@ describe Inversion::Template::RescueTag do
 	it "raises an error if it's about to be appended to anything other than a 'begin' or " +
 	   "'comment' tag" do
 		template    = double( "template object" )
-		parserstate = Inversion::Template::Parser::State.new( template )
+		parserstate = Inversion::Parser::State.new( template )
 		parserstate << Inversion::Template::ForTag.new( 'foo in bar' )
 
 		expect {
@@ -89,7 +89,7 @@ describe Inversion::Template::RescueTag do
 
 	it "raises an error if it's about to be appended without an opening 'begin'" do
 		template    = double( "template object" )
-		parserstate = Inversion::Template::Parser::State.new( template )
+		parserstate = Inversion::Parser::State.new( template )
 
 		expect {
 			parserstate << Inversion::Template::RescueTag.new
