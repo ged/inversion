@@ -26,7 +26,7 @@ module Inversion
 	require 'inversion/monkeypatches'
 
 	# Library version constant
-	VERSION = '0.1.1'
+	VERSION = '0.2.0'
 
 	# Version-control revision constant
 	REVISION = %q$Revision$

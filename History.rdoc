@@ -1,3 +1,11 @@
+== v0.2.0 [2011-09-27] Michael Granger <ged@FaerieMUD.org>
+
+- Bugfixes (#1, #2)
+- Renamed Inversion::Template::Parser to Inversion::Parser
+- Added RenderState#tag_state for tracking tag state on a
+  per-render basis.
+
+
 == v0.1.1 [2011-09-23] Michael Granger <ged@FaerieMUD.org>
 
 - Bugfix for the Subscribe tag.
