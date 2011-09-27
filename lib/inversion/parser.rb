@@ -10,7 +10,7 @@ require 'inversion/template/endtag'
 
 # This is the parser for Inversion templates. It takes template source and
 # returns a tree of Inversion::Template::Node objects (if parsing is successful).
-class Inversion::Template::Parser
+class Inversion::Parser
 	include Inversion::Loggable
 
 	# The pattern for matching a tag opening
@@ -39,7 +39,7 @@ class Inversion::Template::Parser
 	}
 
 
-	### Create a new Inversion::Template::Parser with the specified config +options+.
+	### Create a new Inversion::Parser with the specified config +options+.
 	def initialize( template, options={} )
 		@template = template
 		@options  = DEFAULT_OPTIONS.merge( options )
@@ -63,7 +63,7 @@ class Inversion::Template::Parser
 			inherited_state.template = @template
 			state = inherited_state
 		else
-			state = Inversion::Template::Parser::State.new( @template, self.options )
+			state = Inversion::Parser::State.new( @template, self.options )
 		end
 
 		self.log.debug "Starting parse of template source (%0.2fK, %s)" %
@@ -290,8 +290,8 @@ class Inversion::Template::Parser
 			return Inversion::Template.load( path, substate, self.options )
 		end
 
-	end # class Inversion::Template::Parser::State
+	end # class Inversion::Parser::State
 
-end # class Inversion::Template::Parser
+end # class Inversion::Parser
 
 

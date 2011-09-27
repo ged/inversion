@@ -27,11 +27,13 @@ class Inversion::Template
 
 
 	# Load subordinate classes
-	require 'inversion/template/parser'
+	require 'inversion/parser'
 	require 'inversion/template/node'
 	require 'inversion/template/tag'
 	require 'inversion/renderstate'
 
+	# Alias to maintain backward compatibility with <0.2.0 code
+	Parser = Inversion::Parser
 
 	# Valid actions for 'on_render_error'
 	VALID_ERROR_ACTIONS = [
@@ -116,7 +118,7 @@ class Inversion::Template
 		end
 
 		@source       = source
-		@parser       = Inversion::Template::Parser.new( self, opts )
+		@parser       = Inversion::Parser.new( self, opts )
 		@node_tree    = [] # Parser expects this to always be an Array
 		@init_options = opts
 		@options      = nil

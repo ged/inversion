@@ -5,7 +5,7 @@ require 'inversion/mixins'
 require 'inversion/template' unless defined?( Inversion::Template )
 
 # Inversion template node base class. Template text is parsed by the
-# Inversion::Template::Parser into nodes, and appended to a tree
+# Inversion::Parser into nodes, and appended to a tree
 # that is later walked when the template is rendered.
 # 
 # This class is abstract; it just defines the API that other nodes
