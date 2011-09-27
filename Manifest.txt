@@ -8,6 +8,7 @@ lib/inversion.rb
 lib/inversion/exceptions.rb
 lib/inversion/mixins.rb
 lib/inversion/monkeypatches.rb
+lib/inversion/parser.rb
 lib/inversion/renderstate.rb
 lib/inversion/sinatra.rb
 lib/inversion/template.rb
@@ -28,7 +29,6 @@ lib/inversion/template/iftag.rb
 lib/inversion/template/importtag.rb
 lib/inversion/template/includetag.rb
 lib/inversion/template/node.rb
-lib/inversion/template/parser.rb
 lib/inversion/template/pptag.rb
 lib/inversion/template/publishtag.rb
 lib/inversion/template/rescuetag.rb
@@ -44,6 +44,7 @@ lib/inversion/utils.rb
 spec/data/sinatra/hello.inversion
 spec/inversion/mixins_spec.rb
 spec/inversion/monkeypatches_spec.rb
+spec/inversion/parser_spec.rb
 spec/inversion/renderstate_spec.rb
 spec/inversion/sinatra_spec.rb
 spec/inversion/template/attrtag_spec.rb
@@ -63,7 +64,6 @@ spec/inversion/template/iftag_spec.rb
 spec/inversion/template/importtag_spec.rb
 spec/inversion/template/includetag_spec.rb
 spec/inversion/template/node_spec.rb
-spec/inversion/template/parser_spec.rb
 spec/inversion/template/pptag_spec.rb
 spec/inversion/template/publishtag_spec.rb
 spec/inversion/template/rescuetag_spec.rb
