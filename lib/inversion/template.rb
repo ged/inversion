@@ -176,7 +176,7 @@ class Inversion::Template
 		# Pre-render hook
 		self.walk_tree {|node| node.before_rendering(state) }
 
-		self.log.debug "  rendering node tree: %p" % [ @node_tree ]
+		# self.log.debug "  rendering node tree: %p" % [ @node_tree ]
 		self.walk_tree {|node| state << node }
 
 		# Post-render hook

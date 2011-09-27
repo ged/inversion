@@ -41,6 +41,7 @@ class Inversion::Template::Tag < Inversion::Template::Node
 	def self::inherited( subclass )
 		# Inversion.log.debug "%p inherited from %p" % [ subclass, self ]
 		Inversion::Template::Tag.derivatives << subclass 
+		Inversion.log.debug "Loaded tag type %p" % [ subclass ]
 		super
 	end
 
@@ -58,8 +59,8 @@ class Inversion::Template::Tag < Inversion::Template::Node
 
 		Gem.find_files( TAG_PLUGIN_PATTERN ).each do |tagfile|
 			tagname = tagfile[ %r{/(\w+)tag\.rb$}, 1 ].untaint
+			next unless tagname
 
-			Inversion.log.debug "Loading tag type %p from %p" % [ tagname, tagfile ]
 			self.load( tagfile )
 
 			# Inversion.log.debug "Looking for class for %p tag" % [ tagname ]

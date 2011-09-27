@@ -31,10 +31,13 @@ class Inversion::RenderState
 		@block              = block
 		@default_errhandler = self.method( :default_error_handler )
 		@errhandler         = @default_errhandler
+		@rendering_enabled  = true
 
-		# The rendered output Array, and the stack of render destinations
+		# The rendered output Array, the stack of render destinations and
+		# tag states
 		@output             = []
 		@destinations       = [ @output ]
+		@tag_state          = [ {} ]
 
 		# Hash of subscribed Nodes, keyed by the subscription key as a Symbol
 		@subscriptions      = Hash.new {|hsh, k| hsh[k] = [] } # Auto-vivify
@@ -75,6 +78,12 @@ class Inversion::RenderState
 	end
 
 
+	### Return a Hash that tags can use to track state for the current render.
+	def tag_state
+		return @tag_state.last
+	end
+
+
 	### Evaluate the specified +code+ in the context of itself and
 	### return the result.
 	def eval( code )
@@ -94,6 +103,21 @@ class Inversion::RenderState
 			yield( self )
 		ensure
 			@attributes.pop
+		end
+	end
+
+
+	### Add an overlay to the current tag state Hash, yield to the provided block, then
+	### revert the tag state back to what it was prior to running the block.
+	def with_tag_state( newhash={} )
+		raise LocalJumpError, "no block given" unless block_given?
+		self.log.debug "Overriding tag state with: %p" % [ newhash ]
+
+		begin
+			@tag_state.push( @tag_state.last.merge(newhash) )
+			yield( self )
+		ensure
+			@tag_state.pop
 		end
 	end
 
@@ -174,10 +198,12 @@ class Inversion::RenderState
 				node = node.render( self )
 			end
 
-			self.log.debug "  adding a %p to the destination (%p)" %
-				[ node.class, self.destination.class ]
-			self.destination << node
-			self.log.debug "    just appended %p to %p" % [ node, self.destination ]
+			if self.rendering_enabled?
+				self.log.debug "  adding a %p to the destination (%p)" %
+					[ node.class, self.destination.class ]
+				self.destination << node
+				self.log.debug "    just appended %p to %p" % [ node, self.destination ]
+			end
 		rescue ::StandardError => err
 			self.log.debug "  handling a %p while rendering: %s" % [ err.class, err.message ]
 			self.destination << self.handle_render_error( original_node, err )
@@ -262,6 +288,30 @@ class Inversion::RenderState
 			raise Inversion::OptionsError,
 				"unknown exception-handling mode: %p" % [ self.options[:on_render_error] ]
 		end
+	end
+
+
+	### Return +true+ if rendered nodes are being saved for output.
+	def rendering_enabled?
+		return @rendering_enabled ? true : false
+	end
+
+
+	### Enable rendering, causing nodes to be appended to the rendered output.
+	def enable_rendering
+		@rendering_enabled = true
+	end
+
+
+	### Disable rendering, causing rendered nodes to be discarded instead of appended.
+	def disable_rendering
+		@rendering_enabled = false
+	end
+
+
+	### Toggle rendering, enabling it if it was disabled, and vice-versa.
+	def toggle_rendering
+		@rendering_enabled = !@rendering_enabled
 	end
 
 

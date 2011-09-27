@@ -74,13 +74,6 @@ describe Inversion::Template::ElsifTag do
 		}.to raise_exception( Inversion::ParseError, /orphaned 'elsif' tag/i )
 	end
 
-
-	it "renders as its attribute value if it's a simple attribute" do
-		renderstate = Inversion::RenderState.new( :bar => :the_attribute_value )
-		tag = Inversion::Template::ElsifTag.new( 'bar' )
-		tag.render( renderstate ).should == :the_attribute_value
-	end
-
 end
 
 

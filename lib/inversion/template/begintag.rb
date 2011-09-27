@@ -4,7 +4,6 @@
 require 'inversion/mixins'
 require 'inversion/template/attrtag'
 require 'inversion/template/containertag'
-require 'inversion/template/conditionaltag'
 require 'inversion/template/rescuetag'
 
 

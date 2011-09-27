@@ -4,7 +4,6 @@
 require 'inversion/mixins'
 require 'inversion/template/attrtag'
 require 'inversion/template/containertag'
-require 'inversion/template/conditionaltag'
 require 'inversion/template/elsiftag'
 require 'inversion/template/elsetag'
 
@@ -20,50 +19,33 @@ require 'inversion/template/elsetag'
 #
 class Inversion::Template::IfTag < Inversion::Template::AttrTag
 	include Inversion::Loggable,
-	        Inversion::Template::ContainerTag,
-	        Inversion::Template::ConditionalTag
+	        Inversion::Template::ContainerTag
 
 	# Inherits AttrTag's tag patterns
 
 	### Render the tag's contents if the condition is true, or any else or elsif sections
 	### if the condition isn't true.
 	def render( state )
-		self.enable_rendering if super
-		self.render_subnodes( state )
+
+		# Start out with rendering enabled if the tag body evaluates trueishly
+		if self.evaluate( state )
+			self.log.debug "Initial state was TRUE; enabling rendering"
+			state.enable_rendering
+		else
+			self.log.debug "Initial state was FALSE; disabling rendering"
+			state.disable_rendering
+		end
+
+		# Set the tag state to track whether or not rendering has been enabled during the
+		# 'if' for an 'else' or 'elsif' tag.
+		state.with_tag_state( :rendering_was_enabled => state.rendering_enabled? ) do
+			self.render_subnodes( state )
+		end
+
+		state.enable_rendering
 		return nil
 	end
 
-
-	### Render the tag's subnodes according to the tag's logical state.
-	def render_subnodes( renderstate )
-		self.log.debug "Rendering subnodes. Rendering initially %s" %
-			[ self.rendering_enabled? ? "enabled" : "disabled" ]
-
-		# walk the subtree, modifying the logic flags for else and elsif tags,
-		# and rendering nodes if rendering is enabled
-		self.subnodes.each do |node|
-			case node
-			when Inversion::Template::ElsifTag
-				self.log.debug "  logic switch: %p..." % [ node ]
-				if !self.rendering_was_enabled? && node.render( renderstate )
-					self.enable_rendering
-				else
-					self.disable_rendering
-				end
-
-			when Inversion::Template::ElseTag
-				self.log.debug "  logic switch: %p..." % [ node ]
-				if !self.rendering_was_enabled?
-					self.enable_rendering
-				else
-					self.disable_rendering
-				end
-
-			else
-				renderstate << node if self.rendering_enabled?
-			end
-		end
-	end
 
 end # class Inversion::Template::IfTag
 

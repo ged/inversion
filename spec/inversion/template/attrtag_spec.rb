@@ -99,18 +99,18 @@ describe Inversion::Template::AttrTag do
 			end
 
 			it "renders as the stringified contents of the template attribute with the same name" do
-				template = stub( "template object", :attributes => {:foo => %w[floppy the turtle]} )
-				@tag.render( template ).should == ["floppy", "the", "turtle"]
+				state = Inversion::RenderState.new( :foo => %w[floppy the turtle] )
+				@tag.render( state ).should == ["floppy", "the", "turtle"]
 			end
 
 			it "doesn't error if the attribute isn't set on the template" do
-				template = stub( "template object", :attributes => { :foo => nil } )
-				@tag.render( template ).should == nil
+				state = Inversion::RenderState.new( :foo => nil )
+				@tag.render( state ).should == nil
 			end
 
 			it "returns false when the rendered value is false" do
-				template = stub( "template object", :attributes => { :foo => false } )
-				@tag.render( template ).should equal( false )
+				state = Inversion::RenderState.new( :foo => false )
+				@tag.render( state ).should equal( false )
 			end
 
 			it "can render itself as a comment for template debugging" do
@@ -127,21 +127,13 @@ describe Inversion::Template::AttrTag do
 			end
 
 			it "renders as the formatted contents of the template attribute with the same name" do
-				attributes = double( "template object attributes" )
-				template = stub( "template object", :attributes => attributes )
-
-				attributes.should_receive( :[] ).with( :foo ).and_return( Math::PI )
-
-				@tag.render( template ).should == '3.14'
+				state = Inversion::RenderState.new( :foo => Math::PI )
+				@tag.render( state ).should == '3.14'
 			end
 
 			it "doesn't error if the attribute isn't set on the template" do
-				attributes = double( "template object attributes" )
-				template = stub( "template object", :attributes => attributes )
-
-				attributes.should_receive( :[] ).with( :foo ).and_return( nil )
-
-				@tag.render( template ).should == nil
+				state = Inversion::RenderState.new( :foo => nil )
+				@tag.render( state ).should == nil
 			end
 
 			it "can render itself as a comment for template debugging" do
