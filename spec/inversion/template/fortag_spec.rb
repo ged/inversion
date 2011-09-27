@@ -66,7 +66,28 @@ describe Inversion::Template::ForTag do
 		tag << Inversion::Template::AttrTag.new( 'foo' )
 		tag << Inversion::Template::TextNode.new( ']' )
 
-		tag.render( render_state ).should == "[monkey][goat]"
+		tag.render( render_state )
+		render_state.to_s.should == "[monkey][goat]"
+	end
+
+	it "supports nested iterators" do
+		render_state = Inversion::RenderState.new( :tic => [ 'x', 'o'], :tac => ['o', 'x'] )
+
+		# <?for omarker in tic ?><?for imarker in tac ?>
+		outer = Inversion::Template::ForTag.new( 'omarker in tic' )
+		inner = Inversion::Template::ForTag.new( 'imarker in tac' )
+
+		# [<?attr omarker?>, <?attr imarker?>]
+		inner << Inversion::Template::TextNode.new( '[' )
+		inner << Inversion::Template::AttrTag.new( 'omarker' )
+		inner << Inversion::Template::TextNode.new( ', ' )
+		inner << Inversion::Template::AttrTag.new( 'imarker' )
+		inner << Inversion::Template::TextNode.new( ']' )
+
+		outer << inner
+
+		outer.render( render_state )
+		render_state.to_s.should == "[x, o][x, x][o, o][o, x]"
 	end
 
 	it "raises a ParseError if a keyword other than 'in' is used" do

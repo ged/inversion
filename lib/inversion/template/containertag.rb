@@ -33,11 +33,16 @@ module Inversion::Template::ContainerTag
 	alias_method :container?, :is_container?
 
 
+	### Default render method for containertags; rendering each of its subnodes and 
+	### don't render anything for the container itself.
+	def render( renderstate )
+		self.render_subnodes( renderstate )
+	end
+
+
 	### Append the container's subnodes to the +renderstate+.
 	def render_subnodes( renderstate )
-		self.subnodes.each do |node|
-			renderstate << node
-		end
+		self.subnodes.each {|node| renderstate << node }
 	end
 
 end # module Inversion::Template::ContainerTag

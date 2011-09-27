@@ -82,7 +82,6 @@ class Inversion::Template::ForTag < Inversion::Template::CodeTag
 	### Iterate over the enumerator in +state+ and render the tag's
 	### contents for each iteration.
 	def render( state )
-		result = []
 		lvalue = state.eval( self.enumerator ) or return nil
 
 		self.log.debug "Rendering %p via block args: %p" % [ lvalue, self.block_args ]
@@ -95,13 +94,11 @@ class Inversion::Template::ForTag < Inversion::Template::CodeTag
 			# Overlay the block args from the 'for' over the template attributes and render 
 			# each subnode
 			state.with_attributes( overrides ) do
-				self.subnodes.each do |node|
-					result << node.render( state )
-				end
+				self.subnodes.each {|node| state << node }
 			end
 		end
 
-		return result.join
+		return nil
 	end
 
 

@@ -23,6 +23,11 @@ describe Inversion::RenderState do
 		setup_logging( :fatal )
 	end
 
+	after( :all ) do
+		reset_logging()
+	end
+
+
 	it "provides access to the block it was constructed with if there was one" do
 		block = Proc.new {}
 		state = Inversion::RenderState.new( &block )
@@ -31,9 +36,7 @@ describe Inversion::RenderState do
 
 	it "can evaluate code in the context of itself" do
 		attributes = { :foot => "in mouth", :bear => "in woods" }
-
 		state = Inversion::RenderState.new( attributes )
-
 		state.eval( "foot" ).should == 'in mouth'
 	end
 
@@ -146,6 +149,33 @@ describe Inversion::RenderState do
 
 	end
 
+
+	describe "context-aware tag state" do
+
+		before( :each ) do
+			@renderstate = Inversion::RenderState.new 
+		end
+
+		it "provides a mechanism for storing tag state for the current render" do
+			@renderstate.tag_state.should be_a( Hash )
+		end
+
+		it "can override tag state for the duration of a block" do
+			@renderstate.tag_state[ :montana ] = 'excellent fishing'
+			@renderstate.tag_state[ :colorado ] = 'fine fishing'
+
+			@renderstate.with_tag_state( :alaska => 'good fishing' ) do
+				@renderstate.tag_state[:alaska].should == 'good fishing'
+				@renderstate.tag_state[:alaska] = 'blueberry bear poop'
+				@renderstate.tag_state[:colorado] = 'Boulder has hippies'
+			end
+
+			@renderstate.tag_state.should_not have_key( :alaska )
+			@renderstate.tag_state[:montana].should == 'excellent fishing'
+			@renderstate.tag_state[:colorado].should == 'fine fishing'
+		end
+
+	end
 
 	describe "render destinations" do
 
@@ -295,6 +325,41 @@ describe Inversion::RenderState do
 
 			@state.subscriptions.should have( 1 ).member
 			@state.subscriptions[ :the_key ].should == [ subscriber ]
+		end
+
+	end
+
+
+	describe "conditional rendering" do
+
+		before( :each ) do
+			@state = Inversion::RenderState.new
+		end
+
+		it "allows rendering to be explicitly enabled and disabled" do
+			@state.rendering_enabled?.should be_true()
+			@state.disable_rendering
+			@state.rendering_enabled?.should be_false()
+			@state.enable_rendering
+			@state.rendering_enabled?.should be_true()
+		end
+
+		it "allows rendering to be toggled" do
+			@state.rendering_enabled?.should be_true()
+			@state.toggle_rendering
+			@state.rendering_enabled?.should be_false()
+			@state.toggle_rendering
+			@state.rendering_enabled?.should be_true()
+		end
+
+		it "doesn't render nodes that are appended to it if rendering is disabled" do
+			@state << Inversion::Template::TextNode.new( "before" )
+			@state.disable_rendering
+			@state << Inversion::Template::TextNode.new( "during" )
+			@state.enable_rendering
+			@state << Inversion::Template::TextNode.new( "after" )
+
+			@state.to_s.should == 'beforeafter'
 		end
 
 	end

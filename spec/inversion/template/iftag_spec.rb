@@ -64,6 +64,20 @@ describe Inversion::Template::IfTag do
 		renderstate.to_s.should == ''
 	end
 
+	it "works inside an iterator (ticket #3)" do
+		template = Inversion::Template.new( <<-END_TEMPLATE )
+		<?for item in items ?>
+		Item: <?if item ?>Yep.<?else?>Nope.<?end?>
+		<?end for ?>
+		END_TEMPLATE
+
+		template.items = [ true, false ]
+
+		template.render.should include( "Item: Yep." )
+		template.render.should include( "Item: Nope." )
+	end
+
+
 	context "with a single 'else' clause" do
 
 		before( :each ) do

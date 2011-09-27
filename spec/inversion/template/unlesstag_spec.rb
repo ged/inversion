@@ -32,7 +32,8 @@ describe Inversion::Template::UnlessTag do
 		tag << Inversion::Template::TextNode.new( 'the body' )
 
 		renderstate = Inversion::RenderState.new( :attribute => false )
-		tag.render( renderstate ).to_s.should == 'the body'
+		tag.render( renderstate )
+		renderstate.to_s.should == 'the body'
 	end
 
 	it "renders its contents if its methodchain is false" do
@@ -40,7 +41,8 @@ describe Inversion::Template::UnlessTag do
 		tag << Inversion::Template::TextNode.new( 'the body' )
 
 		renderstate = Inversion::RenderState.new( :attribute => {:bar => 1} )
-		tag.render( renderstate ).to_s.should == 'the body'
+		tag.render( renderstate )
+		renderstate.to_s.should == 'the body'
 	end
 
 	it "doesn't render its contents if its attribute is true" do
@@ -48,7 +50,8 @@ describe Inversion::Template::UnlessTag do
 		tag << Inversion::Template::TextNode.new( 'the body' )
 
 		renderstate = Inversion::RenderState.new( :attribute => true )
-		tag.render( renderstate ).to_s.should == ''
+		tag.render( renderstate )
+		renderstate.to_s.should == ''
 	end
 
 	it "doesn't render its contents if its methodchain is true" do
@@ -56,7 +59,8 @@ describe Inversion::Template::UnlessTag do
 		tag << Inversion::Template::TextNode.new( 'the body' )
 
 		renderstate = Inversion::RenderState.new( :attribute => {:foo => 1} )
-		tag.render( renderstate ).to_s.should == ''
+		tag.render( renderstate )
+		renderstate.to_s.should == ''
 	end
 
 	context "with an 'else' clause" do
@@ -71,12 +75,14 @@ describe Inversion::Template::UnlessTag do
 
 		it "only renders the second half of the contents if its attribute is true" do
 			renderstate = Inversion::RenderState.new( :attribute => true )
-			@tag.render( renderstate ).to_s.should == 'the body after else'
+			@tag.render( renderstate )
+			renderstate.to_s.should == 'the body after else'
 		end
 
 		it "only renders the first half of the contents if its attribute is false" do
 			renderstate = Inversion::RenderState.new( :attribute => false )
-			@tag.render( renderstate ).to_s.should == 'the body before else'
+			@tag.render( renderstate )
+			renderstate.to_s.should == 'the body before else'
 		end
 
 	end

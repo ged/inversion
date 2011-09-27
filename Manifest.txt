@@ -16,7 +16,6 @@ lib/inversion/template/begintag.rb
 lib/inversion/template/calltag.rb
 lib/inversion/template/codetag.rb
 lib/inversion/template/commenttag.rb
-lib/inversion/template/conditionaltag.rb
 lib/inversion/template/configtag.rb
 lib/inversion/template/containertag.rb
 lib/inversion/template/defaulttag.rb

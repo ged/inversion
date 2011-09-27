@@ -45,5 +45,21 @@ class Inversion::Template::ElsifTag < Inversion::Template::AttrTag
 		end
 	end
 
+
+	### Toggle rendering for the iftag's container if rendering hasn't yet been
+	### toggled.
+	def render( renderstate )
+		if renderstate.tag_state[ :rendering_was_enabled ]
+			self.log.debug "Rendering was previously enabled; disabling"
+			renderstate.disable_rendering
+		elsif self.evaluate( renderstate )
+			self.log.debug "Rendering was previously disabled, and condition is true; enabling"
+			renderstate.tag_state[ :rendering_was_enabled ] = true
+			renderstate.enable_rendering
+		end
+
+		return nil
+	end
+
 end # class Inversion::Template::ElsifTag
 
