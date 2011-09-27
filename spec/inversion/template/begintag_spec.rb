@@ -39,13 +39,13 @@ describe Inversion::Template::BeginTag do
 			@tag << Inversion::Template::TextNode.new( ':the stuff after the attr' )
 		end
 
-		it "should render its subnodes as-is if none of them raise an exception"  do
+		it "renders its subnodes as-is if none of them raise an exception"  do
 			renderstate = Inversion::RenderState.new( :foo => OpenStruct.new(:baz => 'the body') )
 			renderstate << @tag
 			renderstate.to_s.should == 'the body:the stuff after the attr'
 		end
 
-		it "should use the configured error behavior of the template if a subnode raises any exception" do
+		it "uses the configured error behavior of the template if a subnode raises any exception" do
 			renderstate = Inversion::RenderState.new
 			renderstate << @tag
 			renderstate.to_s.should =~ /NoMethodError/
@@ -74,13 +74,13 @@ describe Inversion::Template::BeginTag do
 			@tag.rescue_clauses.should == [ [[::RuntimeError], [@rescue_textnode]] ]
 		end
 
-		it "should render its subnodes as-is if none of them raise an exception"  do
+		it "renders its subnodes as-is if none of them raise an exception"  do
 			renderstate = Inversion::RenderState.new( :foo => OpenStruct.new(:baz => 'the body') )
 			renderstate << @tag
 			renderstate.to_s.should == 'the body:the stuff after the attr'
 		end
 
-		it "should render the rescue section if a subnode raises a RuntimeError"  do
+		it "renders the rescue section if a subnode raises a RuntimeError"  do
 			fooobj = Object.new
 			def fooobj.baz; raise "An exception"; end
 
@@ -89,7 +89,7 @@ describe Inversion::Template::BeginTag do
 			renderstate.to_s.should == 'rescue stuff'
 		end
 
-		it "should use the configured error behavior of the template if a subnode raises an " +
+		it "uses the configured error behavior of the template if a subnode raises an " +
 		   "exception other than RuntimeError" do
 			fooobj = Object.new
 			def fooobj.baz; raise Errno::ENOENT, "No such file or directory"; end
@@ -105,6 +105,7 @@ describe Inversion::Template::BeginTag do
 
 	context "with a single rescue clause with an exception type" do
 		before( :each ) do
+			
 			@tag = Inversion::Template::BeginTag.new( ' ' )
 
 			@attrtag = Inversion::Template::AttrTag.new( 'foo.baz' )
@@ -122,13 +123,13 @@ describe Inversion::Template::BeginTag do
 			@tag.rescue_clauses.should == [ [[::SystemCallError], [@rescue_textnode]] ]
 		end
 
-		it "should render its subnodes as-is if none of them raise an exception"  do
+		it "renders its subnodes as-is if none of them raise an exception"  do
 			renderstate = Inversion::RenderState.new( :foo => OpenStruct.new(:baz => 'the body') )
 			renderstate << @tag
 			renderstate.to_s.should == 'the body:the stuff after the attr'
 		end
 
-		it "should render the rescue section if a subnode raises the specified exception type"  do
+		it "renders the rescue section if a subnode raises the specified exception type"  do
 			fooobj = Object.new
 			def fooobj.baz; raise Errno::ENOENT, "no such file or directory"; end
 
@@ -137,7 +138,7 @@ describe Inversion::Template::BeginTag do
 			renderstate.to_s.should == 'rescue stuff'
 		end
 
-		it "should use the configured error behavior of the template if a subnode raises an " +
+		it "uses the configured error behavior of the template if a subnode raises an " +
 		   "exception other than the specified type" do
 			fooobj = Object.new
 			def fooobj.baz; raise "SPlat!"; end
@@ -175,13 +176,13 @@ describe Inversion::Template::BeginTag do
 			]
 		end
 
-		it "should render its subnodes as-is if none of them raise an exception"  do
+		it "renders its subnodes as-is if none of them raise an exception"  do
 			renderstate = Inversion::RenderState.new( :foo => OpenStruct.new(:baz => 'the body') )
 			renderstate << @tag
 			renderstate.to_s.should == 'the body:the stuff after the attr'
 		end
 
-		it "should render the first rescue section if a subnode raises the exception it " +
+		it "renders the first rescue section if a subnode raises the exception it " +
 		   "specifies"  do
 			fooobj = Object.new
 			def fooobj.baz; raise "An exception"; end
@@ -191,7 +192,7 @@ describe Inversion::Template::BeginTag do
 			renderstate.to_s.should == 'rescue stuff'
 		end
 
-		it "should render the second rescue section if a subnode raises the exception it " +
+		it "renders the second rescue section if a subnode raises the exception it " +
 		   "specifies"  do
 			fooobj = Object.new
 			def fooobj.baz; raise Errno::ENOENT, "no such file or directory"; end
@@ -201,7 +202,7 @@ describe Inversion::Template::BeginTag do
 			renderstate.to_s.should == 'alternative rescue stuff'
 		end
 
-		it "should use the configured error behavior of the template if a subnode raises an " +
+		it "uses the configured error behavior of the template if a subnode raises an " +
 		   "exception other than those specified by the rescue clauses" do
 			fooobj = Object.new
 			def fooobj.baz; raise Errno::ENOMEM, "All out!"; end

@@ -37,7 +37,7 @@ class Inversion::RenderState
 		# tag states
 		@output             = []
 		@destinations       = [ @output ]
-		@tag_state          = [ {} ]
+		@tag_data          = [ {} ]
 
 		# Hash of subscribed Nodes, keyed by the subscription key as a Symbol
 		@subscriptions      = Hash.new {|hsh, k| hsh[k] = [] } # Auto-vivify
@@ -79,8 +79,8 @@ class Inversion::RenderState
 
 
 	### Return a Hash that tags can use to track state for the current render.
-	def tag_state
-		return @tag_state.last
+	def tag_data
+		return @tag_data.last
 	end
 
 
@@ -109,15 +109,15 @@ class Inversion::RenderState
 
 	### Add an overlay to the current tag state Hash, yield to the provided block, then
 	### revert the tag state back to what it was prior to running the block.
-	def with_tag_state( newhash={} )
+	def with_tag_data( newhash={} )
 		raise LocalJumpError, "no block given" unless block_given?
 		self.log.debug "Overriding tag state with: %p" % [ newhash ]
 
 		begin
-			@tag_state.push( @tag_state.last.merge(newhash) )
+			@tag_data.push( @tag_data.last.merge(newhash) )
 			yield( self )
 		ensure
-			@tag_state.pop
+			@tag_data.pop
 		end
 	end
 

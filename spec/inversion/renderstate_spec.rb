@@ -157,22 +157,22 @@ describe Inversion::RenderState do
 		end
 
 		it "provides a mechanism for storing tag state for the current render" do
-			@renderstate.tag_state.should be_a( Hash )
+			@renderstate.tag_data.should be_a( Hash )
 		end
 
 		it "can override tag state for the duration of a block" do
-			@renderstate.tag_state[ :montana ] = 'excellent fishing'
-			@renderstate.tag_state[ :colorado ] = 'fine fishing'
+			@renderstate.tag_data[ :montana ] = 'excellent fishing'
+			@renderstate.tag_data[ :colorado ] = 'fine fishing'
 
-			@renderstate.with_tag_state( :alaska => 'good fishing' ) do
-				@renderstate.tag_state[:alaska].should == 'good fishing'
-				@renderstate.tag_state[:alaska] = 'blueberry bear poop'
-				@renderstate.tag_state[:colorado] = 'Boulder has hippies'
+			@renderstate.with_tag_data( :alaska => 'good fishing' ) do
+				@renderstate.tag_data[:alaska].should == 'good fishing'
+				@renderstate.tag_data[:alaska] = 'blueberry bear poop'
+				@renderstate.tag_data[:colorado] = 'Boulder has hippies'
 			end
 
-			@renderstate.tag_state.should_not have_key( :alaska )
-			@renderstate.tag_state[:montana].should == 'excellent fishing'
-			@renderstate.tag_state[:colorado].should == 'fine fishing'
+			@renderstate.tag_data.should_not have_key( :alaska )
+			@renderstate.tag_data[:montana].should == 'excellent fishing'
+			@renderstate.tag_data[:colorado].should == 'fine fishing'
 		end
 
 	end
