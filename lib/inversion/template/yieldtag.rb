@@ -19,12 +19,6 @@ class Inversion::Template::YieldTag < Inversion::Template::Tag
 	include Inversion::Loggable
 
 
-	### Set up a YieldTag's instance variables.
-	def initialize( * )
-		@block_value = nil
-	end
-
-
 	######
 	public
 	######
@@ -34,7 +28,7 @@ class Inversion::Template::YieldTag < Inversion::Template::Tag
 	def before_rendering( renderstate )
 		if renderstate.block
 			self.log.debug "Yielding to %p before rendering." % [ renderstate.block ]
-			@block_value = renderstate.block.call( renderstate ) 
+			renderstate.tag_data[ self ] = renderstate.block.call( renderstate ) 
 			self.log.debug "  render block returned: %p" % [ @block_value ]
 		end
 	end
@@ -44,8 +38,9 @@ class Inversion::Template::YieldTag < Inversion::Template::Tag
 	### #before_rendering (if there was a block).
 	def render( renderstate )
 		self.log.debug "Rendering as block return value: %p" % [ @block_value ]
-		return @block_value
+		return renderstate.tag_data[ self ]
 	end
+
 
 end # class Inversion::Template::YieldTag
 

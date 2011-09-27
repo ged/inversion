@@ -26,7 +26,7 @@ describe Inversion::Template::YieldTag do
 
 
 	it "calls the renderstate's block before rendering, and renders as its return value" do
-		tag = Inversion::Template::YieldTag.new
+		tag = Inversion::Template::YieldTag.new( '' )
 		renderstate = Inversion::RenderState.new do |state|
 			:return_value
 		end
@@ -40,7 +40,7 @@ describe Inversion::Template::YieldTag do
 	end
 
 	it "renders as nothing if there wasn't a render block" do
-		tag = Inversion::Template::YieldTag.new
+		tag = Inversion::Template::YieldTag.new( '' )
 		renderstate = Inversion::RenderState.new
 		tag.before_rendering( renderstate )
 

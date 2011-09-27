@@ -38,8 +38,8 @@ class Inversion::Template::IfTag < Inversion::Template::AttrTag
 
 		# Set the tag state to track whether or not rendering has been enabled during the
 		# 'if' for an 'else' or 'elsif' tag.
-		state.with_tag_state( :rendering_was_enabled => state.rendering_enabled? ) do
-			self.render_subnodes( state )
+		state.with_tag_data( :rendering_was_enabled => state.rendering_enabled? ) do
+			super
 		end
 
 		state.enable_rendering

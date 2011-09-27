@@ -34,7 +34,8 @@ class Inversion::Template::ImportTag < Inversion::Template::Tag
 	### Merge the inherited renderstate into the current template's +renderstate+.
 	def render( renderstate )
 		if (( cstate = renderstate.containerstate ))
-			self.log.debug "Importing inherited attributes: %p from %p" % [ @attributes, cstate.attributes ]
+			self.log.debug "Importing inherited attributes: %p from %p" %
+				[ @attributes, cstate.attributes ]
 
 			# Pick out the attributes that are being imported
 			inherited_attrs = @attributes.inject( {} ) do |attrs, key|

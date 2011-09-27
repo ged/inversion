@@ -84,7 +84,7 @@ class Inversion::Template::BeginTag < Inversion::Template::Tag
 		state.with_destination( output ) do
 			state.with_error_handler( errhandler ) do
 				catch( :stop_rendering ) do
-					self.render_subnodes( state )
+					super
 				end
 				self.log.debug "  leaving the error-handler block"
 			end

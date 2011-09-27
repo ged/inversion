@@ -94,7 +94,7 @@ class Inversion::Template::ForTag < Inversion::Template::CodeTag
 			# Overlay the block args from the 'for' over the template attributes and render 
 			# each subnode
 			state.with_attributes( overrides ) do
-				self.subnodes.each {|node| state << node }
+				super
 			end
 		end
 

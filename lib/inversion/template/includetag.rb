@@ -43,6 +43,8 @@ class Inversion::Template::IncludeTag < Inversion::Template::Tag
 	end
 
 
+	### Parser callback -- append the nodes from the included template onto the
+	### tree of the including template.
 	def after_appending( parsestate )
 		parsestate.append_tree( @included_template.node_tree )
 	end
