@@ -224,7 +224,7 @@ module Inversion
 
 		### Escape the given +output+ using HTML entity-encoding.
 		def escape_html( output )
-			return output.
+			return output.to_s.
 				gsub( /&/, '&amp;' ).
 				gsub( /</, '&lt;' ).
 				gsub( />/, '&gt;' )
