@@ -177,6 +177,7 @@ describe Inversion::RenderState do
 
 	end
 
+
 	describe "render destinations" do
 
 		it "can override the render destination for the duration of a block" do
@@ -360,6 +361,20 @@ describe Inversion::RenderState do
 			@state << Inversion::Template::TextNode.new( "after" )
 
 			@state.to_s.should == 'beforeafter'
+		end
+
+	end
+
+
+	describe "render timing" do
+
+		before( :each ) do
+			@state = Inversion::RenderState.new
+		end
+
+
+		it "knows how many floating-point seconds have passed since it was created" do
+			@state.time_elapsed.should be_a( Float )
 		end
 
 	end

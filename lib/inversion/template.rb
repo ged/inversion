@@ -184,7 +184,9 @@ class Inversion::Template
 		# Post-render hook
 		self.walk_tree {|node| node.after_rendering(state) }
 
-		self.log.info "  done rendering template 0x%08x" % [ self.object_id/2 ]
+		self.log.info "  done rendering template 0x%08x: %0.4fs" %
+			[ self.object_id/2, state.time_elapsed ]
+
 		return state.to_s
 	end
 	alias_method :to_s, :render

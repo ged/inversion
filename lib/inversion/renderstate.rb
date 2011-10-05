@@ -25,6 +25,7 @@ class Inversion::RenderState
 		self.log.debug "Creating a render state with attributes: %p" %
 			[ initial_attributes ]
 
+		@start_time         = Time.now
 		@containerstate     = containerstate
 		@options            = Inversion::Template::DEFAULT_CONFIG.merge( options )
 		@attributes         = [ deep_copy(initial_attributes) ]
@@ -69,6 +70,9 @@ class Inversion::RenderState
 
 	# The default error handler
 	attr_reader :default_errhandler
+
+	# The Time the object was created
+	attr_reader :start_time
 
 
 	### Return the hash of attributes that are currently in effect in the
@@ -312,6 +316,13 @@ class Inversion::RenderState
 	### Toggle rendering, enabling it if it was disabled, and vice-versa.
 	def toggle_rendering
 		@rendering_enabled = !@rendering_enabled
+	end
+
+
+	### Return the number of floting-point seconds that have passed since the
+	### object was created. Used to time renders.
+	def time_elapsed
+		return Time.now - self.start_time
 	end
 
 
