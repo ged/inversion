@@ -1,3 +1,10 @@
+== v0.3.0 [2011-10-05] Michael Granger <ged@FaerieMUD.org>
+
+- Fix require loop in if/elsif tags
+- Fixing a problem with HTML escaping of objects other than Strings
+- Added render timing (Inversion::RenderState#time_elapsed)
+
+
 == v0.2.0 [2011-09-27] Michael Granger <ged@FaerieMUD.org>
 
 - Bugfixes (#1, #2)
