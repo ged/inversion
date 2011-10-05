@@ -4,8 +4,6 @@
 require 'inversion/mixins'
 require 'inversion/template/attrtag'
 require 'inversion/template/containertag'
-require 'inversion/template/elsiftag'
-require 'inversion/template/elsetag'
 
 # Inversion 'if' tag.
 #
