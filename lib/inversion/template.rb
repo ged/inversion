@@ -175,15 +175,8 @@ class Inversion::Template
 		self.log.info "rendering template 0x%08x" % [ self.object_id/2 ]
 		state = Inversion::RenderState.new( parentstate, self.attributes, self.options, &block )
 
-		# Pre-render hook
-		self.walk_tree {|node| node.before_rendering(state) }
-
 		# self.log.debug "  rendering node tree: %p" % [ @node_tree ]
 		self.walk_tree {|node| state << node }
-
-		# Post-render hook
-		self.walk_tree {|node| node.after_rendering(state) }
-
 		self.log.info "  done rendering template 0x%08x: %0.4fs" %
 			[ self.object_id/2, state.time_elapsed ]
 

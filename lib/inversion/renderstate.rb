@@ -190,29 +190,32 @@ class Inversion::RenderState
 	### object either doesn't respond to #render or #renders as itself.
 	def <<( node )
 		self.log.debug "Appending a %p to %p" % [ node.class, self ]
-		self.destination << self.make_node_comment( node ) if self.options[:debugging_comments]
 		original_node = node
-		previous_node = nil
+		original_node.before_rendering( self )
 
-		begin
-			# Allow render to be delegated to subobjects
-			while node.respond_to?( :render ) && node != previous_node
-				self.log.debug "    delegated rendering to: %p" % [ node ]
-				previous_node = node
-				node = node.render( self )
-			end
+		if self.rendering_enabled?
+			self.destination << self.make_node_comment( node ) if self.options[:debugging_comments]
+			previous_node = nil
 
-			if self.rendering_enabled?
+			begin
+				# Allow render to be delegated to subobjects
+				while node.respond_to?( :render ) && node != previous_node
+					self.log.debug "    delegated rendering to: %p" % [ node ]
+					previous_node = node
+					node = node.render( self )
+				end
+
 				self.log.debug "  adding a %p to the destination (%p)" %
 					[ node.class, self.destination.class ]
 				self.destination << node
 				self.log.debug "    just appended %p to %p" % [ node, self.destination ]
+			rescue ::StandardError => err
+				self.log.debug "  handling a %p while rendering: %s" % [ err.class, err.message ]
+				self.destination << self.handle_render_error( original_node, err )
 			end
-		rescue ::StandardError => err
-			self.log.debug "  handling a %p while rendering: %s" % [ err.class, err.message ]
-			self.destination << self.handle_render_error( original_node, err )
 		end
 
+		original_node.after_rendering( self )
 		return self
 	end
 
