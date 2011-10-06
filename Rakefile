@@ -43,7 +43,7 @@ end
 ENV['VERSION'] ||= hoespec.spec.version.to_s
 
 # Ensure the specs pass before checking in
-task 'hg:precheckin' => :spec
+task 'hg:precheckin' => [:check_history, :spec]
 
 if Rake::Task.task_defined?( '.gemtest' )
 	Rake::Task['.gemtest'].clear

@@ -1,3 +1,14 @@
+== v0.4.0 [2011-10-05] Michael Granger <ged@FaerieMUD.org>
+
+Reworked render toggling so the before/after rendering hooks are
+called immediately before and after the node *would* have been
+rendered. This further cleans up the conditional logic, and causes
+the if/elsif/else tags to behave like you'd expect: the nodes they
+demark aren't even touched if rendering is disabled.
+
+Adjusted the other tags to account for the change.
+
+
 == v0.3.0 [2011-10-05] Michael Granger <ged@FaerieMUD.org>
 
 - Fix require loop in if/elsif tags
