@@ -96,7 +96,12 @@ class Inversion::Template
 		end
 
 		# We trust files read from disk
-		source = tmpl.read
+		encoding = opts.delete( :encoding )
+		source = if encoding
+				tmpl.read( encoding: encoding )
+			else
+				tmpl.read
+			end
 		source.untaint
 
 		# Load the instance and set the path to the source
