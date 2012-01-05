@@ -76,13 +76,21 @@ describe Inversion::Template do
 		tmpl.foo.should == :bar
 	end
 
+	it "can pass an encoding option to IO.open through the template constructor" do
+		content = 'some stuff'.encode( 'utf-8' )
+		IO.should_receive( :read ).with( '/a/utf8/template.tmpl', encoding: 'utf-8' ).and_return( content )
+		template = Inversion::Template.load( '/a/utf8/template.tmpl', encoding: 'utf-8' )
+
+		template.render.encoding.should == Encoding::UTF_8
+	end
+
 
 	context "loaded from a file" do
 
 		before( :each ) do
 			@timestamp = Time.now
 			content = 'file contents'.taint
-			IO.should_receive( :read ).with( '/tmp/hooowat' ).and_return( content )
+			IO.stub( :read ).with( '/tmp/hooowat' ).and_return( content )
 			@template = Inversion::Template.load( '/tmp/hooowat' )
 		end
 
