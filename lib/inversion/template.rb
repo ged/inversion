@@ -62,6 +62,7 @@ class Inversion::Template
 
 	### Configure the templating system.
 	def self::configure( config )
+		return unless config
 		Inversion.log.debug "Merging config %p with current config %p" % [ config, self.config ]
 		self.config = self.config.merge( config )
 	end

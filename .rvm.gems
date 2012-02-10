@@ -2,7 +2,9 @@
 hoe-manualgen -v0.2.0
 rack -v1.4.0
 rack-test -v0.6.1
+rdoc -v3.12
 rcodetools -v0.8.5.0
+rspec -v2.8.0
 RedCloth -v4.2.9
 simplecov -v0.4.2
 simplecov-html -v0.4.5
