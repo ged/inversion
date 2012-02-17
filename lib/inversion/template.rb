@@ -123,6 +123,9 @@ class Inversion::Template
 			self.log.debug "Parse state is: %p" % [ parsestate ]
 		end
 
+		# carry global template options to the parser.
+		opts = self.class.config.merge( opts )
+
 		@source       = source
 		@parser       = Inversion::Parser.new( self, opts )
 		@node_tree    = [] # Parser expects this to always be an Array
