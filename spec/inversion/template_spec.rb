@@ -61,6 +61,13 @@ describe Inversion::Template do
 		tmpl.render( &renderblock )
 	end
 
+	it "carries its global configuration to the parser" do
+		Inversion::Template.configure( :i_exist => true )
+		tmpl = Inversion::Template.new( '' )
+		parser = tmpl.instance_variable_get( :@parser )
+		parser.options.should have_key( :i_exist )
+	end
+
 	it "can make an human-readable string version of itself suitable for debugging" do
 		IO.should_receive( :read ).with( '/tmp/inspect.tmpl' ).and_return( '<?attr foo ?>' )
 		tmpl = Inversion::Template.load( '/tmp/inspect.tmpl' )
