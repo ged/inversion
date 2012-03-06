@@ -122,6 +122,23 @@ describe Inversion::Template do
 			it "knows that it hasn't changed" do
 				@template.should_not be_changed()
 			end
+
+			context "with a stat delay" do
+
+				before( :each ) do
+					@template.options[ :stat_delay ] = 30
+				end
+
+				it "returns unchanged if the delay time hasn't expired" do
+					@template.instance_variable_set( :@last_checked, @timestamp )
+					@template.should_not be_changed()
+				end
+
+				it "returns unchanged if the delay time has expired" do
+					@template.instance_variable_set( :@last_checked, @timestamp - 60 )
+					@template.should_not be_changed()
+				end
+			end
 		end
 
 		context "that has changed since it was loaded" do
@@ -134,8 +151,23 @@ describe Inversion::Template do
 				@template.should be_changed()
 			end
 
-		end
+			context "with a stat delay" do
 
+				before( :each ) do
+					@template.options[ :stat_delay ] = 30
+				end
+
+				it "returns unchanged if the delay time hasn't expired" do
+					@template.instance_variable_set( :@last_checked, @timestamp )
+					@template.should_not be_changed()
+				end
+
+				it "returns changed if the delay time has expired" do
+					@template.instance_variable_set( :@last_checked, @timestamp - 60 )
+					@template.should be_changed()
+				end
+			end
+		end
 	end
 
 
