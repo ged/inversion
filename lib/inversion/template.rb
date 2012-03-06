@@ -179,8 +179,10 @@ class Inversion::Template
 		now = Time.now
 
 		if now > ( @last_checked + self.options[ :stat_delay ].to_i )
-			@last_checked = now
-			return ( file.mtime > @last_checked )
+			if file.mtime > @last_checked
+				@last_checked = now
+				return true
+			end
 		end
 		return false
 	end
