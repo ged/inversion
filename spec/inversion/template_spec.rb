@@ -135,7 +135,8 @@ describe Inversion::Template do
 				end
 
 				it "returns unchanged if the delay time has expired" do
-					@template.instance_variable_set( :@last_checked, @timestamp - 60 )
+					@template.source_file.stub!( :mtime ).and_return( @timestamp - 30 )
+					@template.instance_variable_set( :@last_checked, @timestamp - 30 )
 					@template.should_not be_changed()
 				end
 			end
