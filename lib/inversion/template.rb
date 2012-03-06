@@ -52,6 +52,7 @@ class Inversion::Template
 		:template_paths      => [],
 		:escape_format       => :html,
 		:strip_tag_lines     => true,
+		:stat_delay          => 0
 	}
 
 
@@ -134,6 +135,7 @@ class Inversion::Template
 		@attributes   = {}
 		@source_file  = nil
 		@created_at   = Time.now
+		@last_checked = @created_at
 
 		self.parse( source, parsestate )
 	end
@@ -162,7 +164,7 @@ class Inversion::Template
 	### If the template was loaded from a file, reload and reparse it from the same file.
 	def reload
 		file = self.source_file or
-			raise Inversion::Error, "template was not loaded from a file" 
+			raise Inversion::Error, "template was not loaded from a file"
 
 		self.log.debug "Reloading from %s" % [ file ]
 		source = file.read
@@ -174,7 +176,13 @@ class Inversion::Template
 	### is after the time the template was created.
 	def changed?
 		return false unless file = self.source_file
-		return ( file.mtime > @created_at )
+		now = Time.now
+
+		if now > ( @last_checked + self.options[ :stat_delay ].to_i )
+			@last_checked = now
+			return ( file.mtime > @last_checked )
+		end
+		return false
 	end
 
 

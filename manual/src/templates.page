@@ -70,5 +70,9 @@ The available options are:
     <dt>:strip_tag_lines</dt>
     <dd>If a tag's presence introduces a blank line into the output, this option removes it.</dd>
     <dd class="default">Default: <code>true</code></dd>
+
+    <dt>:stat_delay</dt>
+    <dd>Templates know when they've been altered on disk, and can dynamically reload themselves in long running applications.  Setting this option creates a purposeful delay between reloads for busy servers.</dd>
+    <dd class="default">Default: <code>0</code></dd>
 </dl>
 </notextile>
