@@ -1,4 +1,5 @@
 # .rvm.gems generated gem export file. Note that any env variable settings will be missing. Append these after using a ';' field separator
+hoe-deveiate -v0.0.8
 hoe-manualgen -v0.2.0
 rack -v1.4.0
 rack-test -v0.6.1
