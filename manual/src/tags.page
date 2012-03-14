@@ -411,6 +411,37 @@ be assigned to.
 
 The example above uses a Ruby enumerator for the @#each_with_index@ method to set the class of the row to @'even-row'@ or @'odd-row'@.
 
+This works with the keys and values of Hashes, too:
+
+<?example { syntax: html, caption: "Display hash of notes keyed by author using 'For'" } ?>
+<?for user, content in user.notes ?>
+<section class="note">
+	<header>
+		Note by <?call user.username ?>
+	</header>
+	<p><?escape content ?></p>
+</section>
+
+<?end for ?>
+<?end?>
+
+Note that you can also use Ruby's "external iterator" syntax to iterate, too:
+
+<?example { syntax: html, caption: "Iterate over each byte of a string with an index using 'For'" } ?>
+<section class="hexdump">
+<?for byte, index in frame.header.each_byte.with_index ?>
+	<?if index.modulo(8).zero? ?>
+		<?if index.nonzero? ?>
+	</span><br />
+		<?end if ?>
+	<span class="row"><?attr "0x%08x" % index ?>:
+	<?end if ?>
+	&nbsp;<code><?attr "0x%02x" % byte ?></code>
+<?end for ?>
+</section>
+<?end?>
+
+
 
 h4(#if). If/Elsif/Else
 
