@@ -1,3 +1,13 @@
+== v0.6.0 [2012-03-13] Michael Granger <ged@FaerieMUD.org>
+
+- Fix a bug with "for" tag iteration over complex data structures
+- Add a configurable delay for checking for changes on file-based
+  templates to avoid a stat() per request.
+- Carry options that are set in the global configuration across to the
+  parser.
+- Handle Configurability's configure-with-defaults call.
+
+
 == v0.5.0 [2012-01-05] Michael Granger <ged@FaerieMUD.org>
 
 Added an encoding option to Inversion::Template.load for
