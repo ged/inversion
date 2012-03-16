@@ -1,3 +1,9 @@
+== v0.6.1 [2012-03-16] Michael Granger <ged@FaerieMUD.org>
+
+- Commented out some of the more expensive debug logging for an order
+  of magnitude increase in render speed.
+
+
 == v0.6.0 [2012-03-13] Michael Granger <ged@FaerieMUD.org>
 
 - Fix a bug with "for" tag iteration over complex data structures
