@@ -22,8 +22,8 @@ class Inversion::RenderState
 			containerstate = nil
 		end
 
-		self.log.debug "Creating a render state with attributes: %p" %
-			[ initial_attributes ]
+		# self.log.debug "Creating a render state with attributes: %p" %
+		#	[ initial_attributes ]
 
 		@start_time         = Time.now
 		@containerstate     = containerstate
@@ -189,7 +189,7 @@ class Inversion::RenderState
 	### the return value will be appended instead. This will continue until the returned
 	### object either doesn't respond to #render or #renders as itself.
 	def <<( node )
-		self.log.debug "Appending a %p to %p" % [ node.class, self ]
+		# self.log.debug "Appending a %p to %p" % [ node.class, self ]
 		original_node = node
 		original_node.before_rendering( self )
 
@@ -200,17 +200,17 @@ class Inversion::RenderState
 			begin
 				# Allow render to be delegated to subobjects
 				while node.respond_to?( :render ) && node != previous_node
-					self.log.debug "    delegated rendering to: %p" % [ node ]
+					# self.log.debug "    delegated rendering to: %p" % [ node ]
 					previous_node = node
 					node = node.render( self )
 				end
 
-				self.log.debug "  adding a %p to the destination (%p)" %
-					[ node.class, self.destination.class ]
+				# self.log.debug "  adding a %p to the destination (%p)" %
+				# 	[ node.class, self.destination.class ]
 				self.destination << node
-				self.log.debug "    just appended %p to %p" % [ node, self.destination ]
+				# self.log.debug "    just appended %p to %p" % [ node, self.destination ]
 			rescue ::StandardError => err
-				self.log.debug "  handling a %p while rendering: %s" % [ err.class, err.message ]
+				# self.log.debug "  handling a %p while rendering: %s" % [ err.class, err.message ]
 				self.destination << self.handle_render_error( original_node, err )
 			end
 		end
@@ -376,7 +376,7 @@ class Inversion::RenderState
 
 	### Recursively copy the specified +obj+ and return the result.
 	def deep_copy( obj )
-		Inversion.log.debug "Deep copying: %p" % [ obj ]
+		# Inversion.log.debug "Deep copying: %p" % [ obj ]
 
 		# Handle mocks during testing
 		return obj if obj.class.name == 'RSpec::Mocks::Mock'
