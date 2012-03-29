@@ -48,11 +48,11 @@ describe Inversion::RenderState do
 
 			state = Inversion::RenderState.new( attributes )
 
-			state.attributes.should_not equal( attributes )
-			state.attributes[:foot].should == "in mouth"
-			state.attributes[:foot].should_not equal( attributes[:foot] )
-			state.attributes[:bear].should == "in woods"
-			state.attributes[:bear].should_not equal( attributes[:bear] )
+			state.scope.__locals__.should_not equal( attributes )
+			state.scope[:foot].should == "in mouth"
+			state.scope[:foot].should_not equal( attributes[:foot] )
+			state.scope[:bear].should == "in woods"
+			state.scope[:bear].should_not equal( attributes[:bear] )
 		end
 
 		it "preserves tainted status when copying its attributes" do
@@ -61,7 +61,7 @@ describe Inversion::RenderState do
 
 			state = Inversion::RenderState.new( attributes )
 
-			state.attributes[:danger].should be_tainted()
+			state.scope[:danger].should be_tainted()
 		end
 
 		it "preserves singleton methods on attribute objects when copying" do
@@ -70,7 +70,7 @@ describe Inversion::RenderState do
 
 			state = Inversion::RenderState.new( :foo => obj )
 
-			state.attributes[:foo].singleton_methods.map( &:to_sym ).should include( :foo )
+			state.scope[:foo].singleton_methods.map( &:to_sym ).should include( :foo )
 		end
 
 		it "preserves frozen status when copying its attributes" do
@@ -79,7 +79,7 @@ describe Inversion::RenderState do
 
 			state = Inversion::RenderState.new( attributes )
 
-			state.attributes[:danger].should be_frozen()
+			state.scope[:danger].should be_frozen()
 		end
 
 		it "can override its attributes for the duration of a block" do
@@ -92,7 +92,7 @@ describe Inversion::RenderState do
 				state.bear.should == 'in woods'
 			end
 
-			state.attributes[:foot].should == 'in mouth'
+			state.scope[:foot].should == 'in mouth'
 		end
 
 
@@ -107,7 +107,7 @@ describe Inversion::RenderState do
 				end
 			}.to raise_error()
 
-			state.attributes[:foot].should == 'in mouth'
+			state.scope[:foot].should == 'in mouth'
 		end
 
 
@@ -117,14 +117,18 @@ describe Inversion::RenderState do
 			}.to raise_error( LocalJumpError, /no block/i )
 		end
 
-		it "provides accessor methods for its attributes" do
-			state = Inversion::RenderState.new( :bar => :the_attribute_value )
-			state.bar.should == :the_attribute_value
-		end
+		describe Inversion::RenderState::Scope do
 
-		it "doesn't error if an accessor for a non-existant attribute is called" do
-			state = Inversion::RenderState.new( :bar => :the_attribute_value )
-			state.foo.should be_nil()
+			it "provides accessor methods for its attributes" do
+				state = Inversion::RenderState.new( :bar => :the_attribute_value )
+				state.scope.bar.should == :the_attribute_value
+			end
+
+			it "doesn't error if an accessor for a non-existant attribute is called" do
+				state = Inversion::RenderState.new( :bar => :the_attribute_value )
+				state.scope.foo.should be_nil()
+			end
+
 		end
 
 		it "can be merged with another RenderState" do

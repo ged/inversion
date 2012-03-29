@@ -8,6 +8,63 @@ require 'inversion' unless defined?( Inversion )
 class Inversion::RenderState
 	include Inversion::Loggable
 
+
+	# An encapsulation of the scope in which the bodies of tags evaluate. It's
+	# used to provide a controlled, isolated namespace which remains the same from
+	# tag to tag.
+	class Scope < BasicObject
+
+		### Create a new RenderState::Scope with its initial tag locals set to
+		### +locals+.
+		def initialize( locals={} )
+			@locals = locals
+		end
+
+
+		### Return the tag local with the specified +name+.
+		def []( name )
+			return @locals[ name.to_sym ]
+		end
+
+
+		### Set the tag local with the specified +name+ to +value+.
+		def []=( name, value )
+			@locals[ name.to_sym ] = value
+		end
+
+
+		### Return a copy of the receiving Scope merged with the given +values+,
+		### which can be either another Scope or a Hash.
+		def +( values )
+			# Have to do it this kludgy way because Scopes don't have #respond_to?
+			begin
+				return Scope.new( @locals.merge(values.__locals__) )
+			rescue ::NameError
+				return Scope.new( @locals.merge(values) )
+			end
+		end
+
+
+		### Return the Hash of tag locals the belongs to this scope.
+		def __locals__
+			return @locals
+		end
+
+
+		#########
+		protected
+		#########
+
+		### The main trickery behind this class -- intercept tag locals as method calls
+		### and map them into values from the Scope's locals.
+		def method_missing( sym, *args, &block )
+			return super unless sym =~ /^\w+$/
+			@locals[ sym ]
+		end
+
+	end # class Scope
+
+
 	### Create a new RenderState. If the template is being rendered inside another one, the
 	### containing template's RenderState will be passed as the +containerstate+. The 
 	### +initial_attributes+ will be deep-copied, and the +options+ will be merged with
@@ -25,10 +82,12 @@ class Inversion::RenderState
 		# self.log.debug "Creating a render state with attributes: %p" %
 		#	[ initial_attributes ]
 
+		locals = deep_copy( initial_attributes )
+		@scopes             = [ Scope.new(locals) ]
+
 		@start_time         = Time.now
 		@containerstate     = containerstate
 		@options            = Inversion::Template::DEFAULT_CONFIG.merge( options )
-		@attributes         = [ deep_copy(initial_attributes) ]
 		@block              = block
 		@default_errhandler = self.method( :default_error_handler )
 		@errhandler         = @default_errhandler
@@ -77,8 +136,8 @@ class Inversion::RenderState
 
 	### Return the hash of attributes that are currently in effect in the
 	### rendering state.
-	def attributes
-		return @attributes.last
+	def scope
+		return @scopes.last
 	end
 
 
@@ -92,7 +151,13 @@ class Inversion::RenderState
 	### return the result.
 	def eval( code )
 		self.log.debug "Evaling: %p" [ code ]
-		return self.instance_eval( code )
+		return self.scope.instance_eval( code )
+	end
+
+
+	### Backward-compatibility -- return the tag locals of the current scope as a Hash.
+	def attributes
+		return self.scope.__locals__
 	end
 
 
@@ -103,10 +168,11 @@ class Inversion::RenderState
 		self.log.debug "Overriding template attributes with: %p" % [ overrides ]
 
 		begin
-			@attributes.push( @attributes.last.merge(overrides) )
+			newscope = self.scope + overrides
+			@scopes.push( newscope )
 			yield( self )
 		ensure
-			@attributes.pop
+			@scopes.pop
 		end
 	end
 
@@ -178,7 +244,8 @@ class Inversion::RenderState
 	### Merge the attributes and options of the +otherstate+ with those of the receiver,
 	### replacing any with the same keys.
 	def merge!( otherstate )
-		self.attributes.merge!( otherstate.attributes )
+		@scopes.push( @scopes.pop + otherstate.scope )
+		# self.attributes.merge!( otherstate.attributes )
 		self.options.merge!( otherstate.options )
 		return self
 	end
@@ -331,11 +398,11 @@ class Inversion::RenderState
 
 	### Return a human-readable representation of the object.
 	def inspect
-		return "#<%p:0x%08x containerstate: %s, attributes: %s, destination: %p>" % [
+		return "#<%p:0x%08x containerstate: %s, scope locals: %s, destination: %p>" % [
 			self.class,
 			self.object_id / 2,
 			self.containerstate ? "0x%08x" % [ self.containerstate.object_id ] : "nil",
-			self.attributes.keys.sort.join(', '),
+			self.scope.__locals__.keys.sort.join(', '),
 			self.destination.class,
 		]
 	end
@@ -364,9 +431,9 @@ class Inversion::RenderState
 
 	### Handle attribute methods.
 	def method_missing( sym, *args, &block )
-		return super unless sym.to_s =~ /^[a-z]\w+[\?=!]?$/
-		self.log.debug "mapping missing method call to attribute: %p" % [ sym ]
-		return self.attributes[ sym ]
+		return super unless sym.to_s =~ /^\w+$/
+		self.log.debug "mapping missing method call to tag local: %p" % [ sym ]
+		return self.scope[ sym ]
 	end
 
 
