@@ -132,8 +132,10 @@ describe Inversion::Template::AttrTag do
 			end
 
 			it "doesn't error if the attribute isn't set on the template" do
-				state = Inversion::RenderState.new( :foo => nil )
-				@tag.render( state ).should == nil
+				pending "recalling why we did this" do
+					state = Inversion::RenderState.new( :foo => nil )
+					@tag.render( state ).should == nil
+				end
 			end
 
 			it "can render itself as a comment for template debugging" do
@@ -198,6 +200,17 @@ describe Inversion::Template::AttrTag do
 				additional_object.should_receive( :baz ).with( :woo ).and_return( "the result" )
 
 				template.render.should == "this is the result"
+			end
+
+			it "renders method calls with template attribute arguments" do
+				template = Inversion::Template.new( 'this is <?attr foo.bar( baz ) ?>' )
+				foo = mock( "foo attribute object" )
+
+				template.foo = foo
+				template.baz = 18
+				foo.should_receive( :bar ).with( 18 ).and_return( "the result of calling bar" )
+
+				template.render.should == "this is the result of calling bar"
 			end
 		end
 

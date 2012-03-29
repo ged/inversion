@@ -35,6 +35,7 @@ hoespec = Hoe.spec 'inversion' do
 	self.dependency 'sysexits',      '~> 1.0',  :development
 
 	self.spec_extras[:licenses] = ["BSD"]
+	self.spec_extras[:rdoc_options] = ['-f', 'fivefish', '-t', 'Inversion Templates']
 	self.require_ruby_version( '>=1.9.2' )
 	self.hg_sign_tags = true if self.respond_to?( :hg_sign_tags= )
 	self.check_history_on_release = true if self.respond_to?( :check_history_on_release= )
