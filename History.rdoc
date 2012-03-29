@@ -1,3 +1,9 @@
+== v0.7.0 [2012-03-29] Michael Granger <ged@FaerieMUD.org>
+
+- Switch to a much more flexible way to render tag bodies. This should
+  resolve most of the problems we've encountered with complex templates.
+
+
 == v0.6.1 [2012-03-16] Michael Granger <ged@FaerieMUD.org>
 
 - Commented out some of the more expensive debug logging for an order
