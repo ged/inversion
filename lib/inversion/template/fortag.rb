@@ -85,12 +85,12 @@ class Inversion::Template::ForTag < Inversion::Template::CodeTag
 		lvalue = state.eval( self.enumerator ) or return nil
 		lvalue = lvalue.each unless lvalue.respond_to?( :next )
 
-		self.log.debug "Rendering %p via block args: %p" % [ lvalue, self.block_args ]
+		# self.log.debug "Rendering %p via block args: %p" % [ lvalue, self.block_args ]
 
 		# Loop will exit as soon as the Enumerator runs out of elements
 		loop do
 			args = Array( lvalue.next )
-			self.log.debug "  iterated block args are: %p" % [ args ]
+			# self.log.debug "  iterated block args are: %p" % [ args ]
 
 			# Turn the block arguments into an overrides hash by zipping up
 			# the arguments names and values

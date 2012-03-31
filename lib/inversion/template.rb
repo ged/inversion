@@ -117,7 +117,7 @@ class Inversion::Template
 	### Create a new Inversion:Template with the given +source+.
 	def initialize( source, parsestate=nil, opts={} )
 		if parsestate.is_a?( Hash )
-			self.log.debug "Shifting template options: %p" % [ parsestate ]
+			# self.log.debug "Shifting template options: %p" % [ parsestate ]
 			opts = parsestate
 			parsestate = nil
 		else
