@@ -37,11 +37,7 @@ class Inversion::RenderState
 		### which can be either another Scope or a Hash.
 		def +( values )
 			# Have to do it this kludgy way because Scopes don't have #respond_to?
-			begin
-				return Scope.new( @locals.merge(values.__locals__) )
-			rescue ::NameError
-				return Scope.new( @locals.merge(values) )
-			end
+			return Scope.new( @locals.merge(values) )
 		end
 
 
@@ -49,6 +45,7 @@ class Inversion::RenderState
 		def __locals__
 			return @locals
 		end
+		alias_method :to_hash, :__locals__
 
 
 		#########
