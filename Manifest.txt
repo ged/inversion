@@ -6,6 +6,7 @@ Rakefile
 bin/inversion
 lib/inversion.rb
 lib/inversion/exceptions.rb
+lib/inversion/logging.rb
 lib/inversion/mixins.rb
 lib/inversion/monkeypatches.rb
 lib/inversion/parser.rb
@@ -40,8 +41,8 @@ lib/inversion/template/unlesstag.rb
 lib/inversion/template/uriencodetag.rb
 lib/inversion/template/yieldtag.rb
 lib/inversion/tilt.rb
-lib/inversion/utils.rb
 spec/data/sinatra/hello.inversion
+spec/inversion/logging_spec.rb
 spec/inversion/mixins_spec.rb
 spec/inversion/monkeypatches_spec.rb
 spec/inversion/parser_spec.rb
