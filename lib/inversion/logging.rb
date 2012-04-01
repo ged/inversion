@@ -8,12 +8,64 @@ require 'inversion' unless defined?( Inversion )
 require 'inversion/mixins'
 
 
-module Inversion
+# A mixin that provides a top-level logging subsystem based on Logger.
+module Inversion::Logging
 
-	# :stopdoc:
+	### Logging
+	# Log levels
+	LOG_LEVELS = {
+		'debug' => Logger::DEBUG,
+		'info'  => Logger::INFO,
+		'warn'  => Logger::WARN,
+		'error' => Logger::ERROR,
+		'fatal' => Logger::FATAL,
+	}.freeze
+	LOG_LEVEL_NAMES = LOG_LEVELS.invert.freeze
+
+
+	### Inclusion hook
+	def self::extended( mod )
+		super
+
+		class << mod
+			# the log formatter that will be used when the logging subsystem is reset
+			attr_accessor :default_log_formatter
+
+			# the logger that will be used when the logging subsystem is reset
+			attr_accessor :default_logger
+
+			# the logger that's currently in effect
+			attr_accessor :logger
+			alias_method :log, :logger
+			alias_method :log=, :logger=
+		end
+
+		mod.default_logger = mod.logger = Logger.new( $stderr )
+		mod.default_logger.level = case
+			when $DEBUG then Logger::DEBUG
+			when $VERBOSE then Logger::INFO
+			else Logger::WARN end
+		mod.default_log_formatter = Inversion::Logging::Formatter.new( mod.default_logger )
+	end
+
+
+	### Reset the global logger object to the default
+	def reset_logger
+		self.logger = self.default_logger
+		self.logger.level = $DEBUG ? Logger::DEBUG : Logger::WARN
+		self.logger.formatter = self.default_log_formatter
+	end
+
+
+	### Returns +true+ if the global logger has not been set to something other than
+	### the default one.
+	def using_default_logger?
+		return self.logger == self.default_logger
+	end
+
 
 	# A alternate formatter for Logger instances.
-	class LogFormatter < Logger::Formatter
+	class Formatter < Logger::Formatter
 
 		# The format to output unless debugging is turned on
 		DEFAULT_FORMAT = "[%1$s.%2$06d %3$d/%4$s] %5$5s -- %7$s\n"
@@ -64,11 +116,11 @@ module Inversion
 				return self.format % args
 			end
 		end
-	end # class LogFormatter
+	end # class Formatter
 
 
 	# A ANSI-colorized formatter for Logger instances.
-	class ColorLogFormatter < Logger::Formatter
+	class ColorFormatter < Logger::Formatter
 
 		# Set some ANSI escape code constants (Shamelessly stolen from Perl's
 		# Term::ANSIColor by Russ Allbery <rra@stanford.edu> and Zenin <zenin@best.com>
@@ -173,12 +225,12 @@ module Inversion
 			return self.settings[ severity.downcase.to_sym ] % args
 		end
 
-	end # class LogFormatter
+	end # class Formatter
 
 
 	# An alternate formatter for Logger instances that outputs +div+ HTML
 	# fragments.
-	class HtmlLogFormatter < Logger::Formatter
+	class HtmlFormatter < Logger::Formatter
 		include ERB::Util  # for html_escape()
 
 		# The default HTML fragment that'll be used as the template for each log message.
@@ -229,7 +281,7 @@ module Inversion
 			return self.format % args
 		end
 
-	end # class HtmlLogFormatter
+	end # class HtmlFormatter
 
 end # module Inversion
 
