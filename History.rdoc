@@ -1,3 +1,9 @@
+== v0.8.0 [2012-04-01] Michael Granger <ged@FaerieMUD.org>
+
+- Optimization fixes
+- Fixed rendering flow control to not use a begin/rescue.
+
+
 == v0.7.0 [2012-03-29] Michael Granger <ged@FaerieMUD.org>
 
 - Switch to a much more flexible way to render tag bodies. This should
