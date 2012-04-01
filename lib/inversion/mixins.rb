@@ -232,5 +232,47 @@ module Inversion
 
 	end # Escaping
 
+
+	# A collection of methods for declaring other methods.
+	#
+	#   class MyClass
+	#       include Inversion::MethodUtilities
+	#
+	#       singleton_attr_accessor :types
+	#   end
+	#
+	#   MyClass.types = [ :pheno, :proto, :stereo ]
+	#
+	module MethodUtilities
+
+		### Creates instance variables and corresponding methods that return their
+		### values for each of the specified +symbols+ in the singleton of the
+		### declaring object (e.g., class instance variables and methods if declared
+		### in a Class).
+		def singleton_attr_reader( *symbols )
+			symbols.each do |sym|
+				singleton_class.__send__( :attr_reader, sym )
+			end
+		end
+
+		### Creates methods that allow assignment to the attributes of the singleton
+		### of the declaring object that correspond to the specified +symbols+.
+		def singleton_attr_writer( *symbols )
+			symbols.each do |sym|
+				singleton_class.__send__( :attr_writer, sym )
+			end
+		end
+
+		### Creates readers and writers that allow assignment to the attributes of
+		### the singleton of the declaring object that correspond to the specified
+		### +symbols+.
+		def singleton_attr_accessor( *symbols )
+			symbols.each do |sym|
+				singleton_class.__send__( :attr_accessor, sym )
+			end
+		end
+
+	end # module MethodUtilities
+
 end # module Inversion
 

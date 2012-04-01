@@ -14,6 +14,7 @@ require 'inversion/mixins'
 # in a gem of your own, put them into a directory named 'inversion/template' and
 # name the files <tt><tagname>tag.rb</tt> and the classes <tagname.capitalize>Tag.
 class Inversion::Template::Tag < Inversion::Template::Node
+	extend Inversion::MethodUtilities
 	include Inversion::Loggable,
 	        Inversion::AbstractClass
 
@@ -26,21 +27,23 @@ class Inversion::Template::Tag < Inversion::Template::Node
 	### C L A S S   M E T H O D S
 	########################################################################
 
-	# The hash of loaded tag types
+	@derivatives = []
 	@types = nil
 
-	# Derivatives of this class
-	@derivatives = []
 
-	class << self
-		attr_reader :types, :derivatives
-	end
+	##
+	# The hash of loaded tag types, keyed by the tag name as a Symbol
+	singleton_attr_reader :types
+
+	##
+	# The Array of subclasses of this class
+	singleton_attr_reader :derivatives
 
 
 	### Inheritance hook -- keep track of loaded derivatives.
 	def self::inherited( subclass )
 		# Inversion.log.debug "%p inherited from %p" % [ subclass, self ]
-		Inversion::Template::Tag.derivatives << subclass 
+		Inversion::Template::Tag.derivatives << subclass
 		Inversion.log.debug "Loaded tag type %p" % [ subclass ]
 		super
 	end
