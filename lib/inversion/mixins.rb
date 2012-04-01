@@ -6,12 +6,12 @@ require 'logger'
 
 module Inversion
 
-	# Add logging to a Inversion class. Including classes get #log and 
+	# Add logging to a Inversion class. Including classes get #log and
 	# #log_debug methods.
 	#
 	#   class MyClass
 	#       include Inversion::Loggable
-	#       
+	#
 	#       def a_method
 	#           self.log.debug "Doing a_method stuff..."
 	#       end
@@ -189,10 +189,10 @@ module Inversion
 
 
 	# A mixin that adds configurable escaping to a tag class.
-	# 
+	#
 	#   class MyTag < Inversion::Template::Tag
 	#       include Inversion::Escaping
-	#   
+	#
 	#       def render( renderstate )
 	#           val = self.get_rendered_value
 	#           return self.escape( val.to_s, renderstate )

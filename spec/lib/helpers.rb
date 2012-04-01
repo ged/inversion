@@ -117,8 +117,8 @@ module Inversion::SpecHelpers
 	def setup_logging( level=Logger::FATAL )
 
 		# Turn symbol-style level config into Logger's expected Fixnum level
-		if Inversion::LOG_LEVELS.key?( level.to_s )
-			level = Inversion::LOG_LEVELS[ level.to_s ]
+		if Inversion::Logging::LOG_LEVELS.key?( level.to_s )
+			level = Inversion::Logging::LOG_LEVELS[ level.to_s ]
 		end
 
 		logger = Logger.new( $stderr )
@@ -131,7 +131,7 @@ module Inversion::SpecHelpers
 			logdevice = ArrayLogger.new( Thread.current['logger-output'] )
 			Inversion.logger = Logger.new( logdevice )
 			# Inversion.logger.level = level
-			Inversion.logger.formatter = Inversion::HtmlLogFormatter.new( logger )
+			Inversion.logger.formatter = Inversion::Logging::HtmlFormatter.new( logger )
 		end
 	end
 
