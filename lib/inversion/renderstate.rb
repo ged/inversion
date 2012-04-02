@@ -36,7 +36,6 @@ class Inversion::RenderState
 		### Return a copy of the receiving Scope merged with the given +values+,
 		### which can be either another Scope or a Hash.
 		def +( values )
-			# Have to do it this kludgy way because Scopes don't have #respond_to?
 			return Scope.new( @locals.merge(values) )
 		end
 
