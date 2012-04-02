@@ -1,6 +1,8 @@
 = inversion
 
-* http://deveiate.org/projects/Inversion
+home :: http://deveiate.org/projects/Inversion
+code :: http://repo.deveiate.org/Inversion
+github :: http://github.com/ged/inversion.git
 
 
 == Description
