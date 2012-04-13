@@ -337,7 +337,7 @@ Please attend the mandatory Man Overboard (tm) session we have scheduled
 for you at 8:45AM on Thursday in the Sunshine Room. Light refreshments 
 and computer-aided aptitude testing will be provided.
 
-<?import "signature.tmpl" ?>
+<?include signature.tmpl ?>
 <?end?>
 
 <?example { syntax: html, caption: "Included template (signature.tmpl)" } ?>
