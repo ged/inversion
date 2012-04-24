@@ -45,27 +45,39 @@ class Inversion::Template
 	### Default config values
 	DEFAULT_CONFIG = {
 		:ignore_unknown_tags => true,
+		:template_paths      => [],
+
 		:on_render_error     => :comment,
 		:debugging_comments  => false,
 		:comment_start       => '<!-- ',
 		:comment_end         => ' -->',
-		:template_paths      => [],
 		:escape_format       => :html,
 		:strip_tag_lines     => true,
 		:stat_delay          => 0
-	}
+	}.freeze
 
 
 	### Global config
 	@config = DEFAULT_CONFIG.dup
 	class << self; attr_accessor :config; end
 
+	# Global template search path
+	@template_paths = []
+	class << self; attr_accessor :template_paths; end
+
 
 	### Configure the templating system.
 	def self::configure( config )
-		return unless config
-		Inversion.log.debug "Merging config %p with current config %p" % [ config, self.config ]
-		self.config = self.config.merge( config )
+		if config
+			Inversion.log.debug "Merging config %p with current config %p" % [ config, self.config ]
+			merged_config = DEFAULT_CONFIG.merge( config )
+			self.template_paths = Array( merged_config.delete(:template_paths) )
+			self.config = merged_config
+		else
+			defaults = DEFAULT_CONFIG.dup
+			self.template_paths = defaults.delete( :template_paths )
+			self.config = defaults
+		end
 	end
 
 
@@ -80,7 +92,7 @@ class Inversion::Template
 
 		tmpl = nil
 		path = Pathname( path )
-		template_paths = Array( self.config[:template_paths] ) + [ Dir.pwd ]
+		template_paths = self.template_paths + [ Dir.pwd ]
 
 		# Unrestricted template location.
 		if path.absolute?

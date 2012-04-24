@@ -195,7 +195,7 @@ describe Inversion::Template do
 	context "without template paths set" do
 
 		before( :each ) do
-			Inversion::Template.config[:template_paths].clear
+			Inversion::Template.template_paths.clear
 		end
 
 		it "instances can be loaded from an absolute path" do
@@ -215,11 +215,11 @@ describe Inversion::Template do
 	context "with template paths set" do
 
 		before( :each ) do
-			Inversion::Template.config[:template_paths] = [ '/tmp', '/fun' ]
+			Inversion::Template.template_paths = [ '/tmp', '/fun' ]
 		end
 
 		after( :each ) do
-			Inversion::Template.config[:template_paths].clear
+			Inversion::Template.template_paths.clear
 		end
 
 		it "instances can be loaded from an absolute path" do
