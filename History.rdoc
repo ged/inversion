@@ -1,3 +1,9 @@
+== v0.9.0 [2012-04-24] Michael Granger <ged@FaerieMUD.org>
+
+- Split the template path out from the config into a class instance variable.
+- Documentation update.
+
+
 == v0.8.0 [2012-04-01] Michael Granger <ged@FaerieMUD.org>
 
 - Optimization fixes
