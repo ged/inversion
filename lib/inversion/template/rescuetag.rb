@@ -9,7 +9,7 @@ require 'inversion/template/tag'
 # This tag adds a logical switch to a BeginTag. If rendering any of the BeginTag's nodes raises
 # an exception of the type specified by the RescueTag, the nodes following the RescueTag are
 # rendered instead.
-# 
+#
 # == Syntax
 #
 #   <?begin ?>
@@ -19,14 +19,12 @@ require 'inversion/template/tag'
 #   <?rescue DatabaseError => err ?>
 #       Oh no!! I can't talk to the database for some reason.  The
 #       error was as follows:
-#       
+#
 #           <?attr err.message ?>
-#       
+#
 #   <?end?>
 #
 class Inversion::Template::RescueTag < Inversion::Template::Tag
-	include Inversion::Loggable
-
 
 	### Overridden to default body to nothing, and raise an error if it has one.
 	def initialize( body='', linenum=nil, colnum=nil ) # :notnew:

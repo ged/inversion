@@ -16,8 +16,7 @@ require 'inversion/template/containertag'
 #   <?if obj.method ?>...<?end?>
 #
 class Inversion::Template::IfTag < Inversion::Template::AttrTag
-	include Inversion::Loggable,
-	        Inversion::Template::ContainerTag
+	include Inversion::Template::ContainerTag
 
 	# Inherits AttrTag's tag patterns
 

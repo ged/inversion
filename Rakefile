@@ -20,7 +20,8 @@ hoespec = Hoe.spec 'inversion' do
 	self.developer 'Michael Granger', 'ged@FaerieMUD.org'
 	self.developer 'Mahlon E. Smith', 'mahlon@martini.nu'
 
-	self.dependency 'ripper',        '~> 1.0',  :development unless defined?( Encoding )
+	self.dependency 'loggability',   '~> 0.0'
+
 	self.dependency 'rdoc',          '~> 3.12', :development
 	self.dependency 'rspec',         '~> 2.8',  :development
 	self.dependency 'tilt',          '~> 1.3',  :development

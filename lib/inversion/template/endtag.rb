@@ -7,8 +7,6 @@ require 'inversion/template/tag' unless defined?( Inversion::Template::Tag )
 
 # Closing tag class
 class Inversion::Template::EndTag < Inversion::Template::Tag
-	include Inversion::Loggable
-
 
 	### Overridden to provide a default +body+.
 	def initialize( body='', linenum=nil, colnum=nil )

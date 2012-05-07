@@ -1,6 +1,7 @@
 #!/usr/bin/env ruby
 # vim: set noet nosta sw=4 ts=4 :
 
+require 'loggability'
 require 'pathname'
 require 'inversion' unless defined?( Inversion )
 
@@ -16,7 +17,10 @@ end
 # source and combining the resulting node tree with a set of attributes that
 # can be used to populate it when rendered.
 class Inversion::Template
-	include Inversion::Loggable
+	extend Loggability
+
+	# Loggability API -- set up logging through the Inversion module's logger
+	log_to :inversion
 
 	# Configurability support -- load template configuration from the 'templates' section
 	# of the config.

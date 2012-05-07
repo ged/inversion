@@ -16,7 +16,7 @@ require 'inversion'
 file = ARGV.shift or abort "No template file specified."
 io = File.open( file, 'r' )
 
-Inversion.log.level = Logger::DEBUG
+Loggability.level = Logger::DEBUG
 tmpl = Inversion::Template.load( file )
 
 

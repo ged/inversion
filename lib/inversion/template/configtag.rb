@@ -26,8 +26,7 @@ require 'inversion/template/tag'
 #
 #
 class Inversion::Template::ConfigTag < Inversion::Template::Tag
-	include Inversion::Loggable,
-			Inversion::HashUtilities
+	include Inversion::HashUtilities
 
 
 	### Create a new ConfigTag with the specified +body+.

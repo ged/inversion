@@ -31,8 +31,7 @@ require 'inversion/template/tag'
 # :TODO: Finish the tag_pattern docs: placeholders, regex limitations, etc.
 #
 class Inversion::Template::CodeTag < Inversion::Template::Tag
-	include Inversion::Loggable,
-	        Inversion::AbstractClass
+	include Inversion::AbstractClass
 
 
 	### A subclass of Ripper::TokenPattern that binds matches to the beginning and

@@ -1,6 +1,8 @@
 #!/usr/bin/env ruby
 # vim: set noet nosta sw=4 ts=4 :
 
+require 'loggability'
+
 require 'inversion' unless defined?( Inversion )
 require 'inversion/template' unless defined?( Inversion::Template )
 
@@ -14,10 +16,13 @@ require 'inversion/mixins'
 # in a gem of your own, put them into a directory named 'inversion/template' and
 # name the files <tt><tagname>tag.rb</tt> and the classes <tagname.capitalize>Tag.
 class Inversion::Template::Tag < Inversion::Template::Node
-	extend Inversion::MethodUtilities
-	include Inversion::Loggable,
-	        Inversion::AbstractClass
+	extend Loggability,
+	       Inversion::MethodUtilities
+	include Inversion::AbstractClass
 
+
+	# Loggability API -- set up logging through the Inversion module's logger
+	log_to :inversion
 
 	# The glob pattern for matching template tag plugins
 	TAG_PLUGIN_PATTERN = 'inversion/template/*tag.rb'

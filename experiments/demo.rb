@@ -9,9 +9,8 @@ class DatabaseError < Exception; end
 
 Encoding.default_external = Encoding::UTF_8
 
-Inversion.log.level = $DEBUG ? Logger::DEBUG : Logger::WARN
-Inversion.log.formatter = Inversion::ColorLogFormatter.new( Inversion.logger )
-Configurability.logger = Inversion.logger
+Loggability.level = opts.debug ? :debug : :error
+Loggability.format_with( :color ) if $stdin.tty?
 
 config = Configurability::Config.new
 config.overboard_url = 'http://failedcompany.spime-thorpe.com/overboard'

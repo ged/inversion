@@ -9,7 +9,7 @@ require 'logger'
 # How many times to load each template for the benchmark
 ITERATIONS = 25
 
-Inversion.log.level = Logger::FATAL
+Loggability.level = :fatal
 
 templatedir = ARGV.shift or abort "usage: #$0 <templatedir>"
 templatedir = Pathname( templatedir )

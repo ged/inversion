@@ -1,7 +1,9 @@
 # .rvm.gems generated gem export file. Note that any env variable settings will be missing. Append these after using a ';' field separator
-hoe-deveiate -v0.1.0
+hoe-deveiate -v0.1.1
 hoe-manualgen -v0.3.0
 simplecov -v0.4.2
 sinatra -v1.2.8
 sysexits -v1.0.2
 trollop -v1.16.2
+loggability -v0.0.2
+

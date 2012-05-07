@@ -1,6 +1,7 @@
 #!/usr/bin/env ruby
 # vim: set noet nosta sw=4 ts=4 :
 
+require 'loggability'
 
 # The Inversion templating system. This module provides the namespace for all the other
 # classes and modules, and contains the logging subsystem. A good place to start for
@@ -15,17 +16,19 @@
 # :main: README.rdoc
 #
 module Inversion
+	extend Loggability
+
+	# Loggability API -- set up a log host for the Inversion library
+	log_as :inversion
+
 
 	warn ">>> Inversion requires Ruby 1.9.2 or later. <<<" if RUBY_VERSION < '1.9.2'
 
 	# Library version constant
-	VERSION = '0.9.0'
+	VERSION = '0.10.0'
 
 	# Version-control revision constant
 	REVISION = %q$Revision$
-
-	require 'inversion/logging'
-	extend Inversion::Logging
 
 
 	### Get the Inversion version.

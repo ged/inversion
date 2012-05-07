@@ -18,8 +18,7 @@ require 'inversion/template/elsetag'
 #   <?unless obj.method ?>...<?end?>
 #
 class Inversion::Template::UnlessTag < Inversion::Template::AttrTag
-	include Inversion::Loggable,
-	        Inversion::Template::ContainerTag
+	include Inversion::Template::ContainerTag
 
 	# Inherits AttrTag's tag patterns
 

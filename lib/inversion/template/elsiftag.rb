@@ -23,7 +23,6 @@ require 'inversion/template/iftag' unless
 #   <?end?>
 #
 class Inversion::Template::ElsifTag < Inversion::Template::AttrTag
-	include Inversion::Loggable
 
 	# Inherits AttrTag's tag patterns
 

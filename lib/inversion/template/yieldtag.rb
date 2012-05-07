@@ -14,10 +14,8 @@ require 'inversion/template/tag'
 # == Example
 #
 #   <?yield ?>
-# 
+#
 class Inversion::Template::YieldTag < Inversion::Template::Tag
-	include Inversion::Loggable
-
 
 	######
 	public
