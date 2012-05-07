@@ -2,6 +2,8 @@
 # encoding: utf-8
 # vim: set noet nosta sw=4 ts=4 :
 
+require 'loggability'
+
 require 'inversion/template' unless defined?( Inversion::Template )
 require 'inversion/mixins'
 require 'inversion/template/textnode'
@@ -11,7 +13,11 @@ require 'inversion/template/endtag'
 # This is the parser for Inversion templates. It takes template source and
 # returns a tree of Inversion::Template::Node objects (if parsing is successful).
 class Inversion::Parser
-	include Inversion::Loggable
+	extend Loggability
+
+	# Loggability API -- set up logging through the Inversion module's logger
+	log_to :inversion
+
 
 	# The pattern for matching a tag opening
 	TAG_OPEN = /[\[<]\?/
@@ -157,7 +163,10 @@ class Inversion::Parser
 	# Parse state object class. State objects keep track of where in the parse tree
 	# new nodes should be appended, and manages inclusion.
 	class State
-		include Inversion::Loggable
+		extend Loggability
+
+		# 
+		log_to :inversion
 
 		### Create a new State object
 		def initialize( template, options={} )

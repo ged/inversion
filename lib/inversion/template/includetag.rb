@@ -17,8 +17,6 @@ require 'inversion/template/tag'
 #
 #
 class Inversion::Template::IncludeTag < Inversion::Template::Tag
-	include Inversion::Loggable
-
 
 	### Create a new IncludeTag with the specified +path+.
 	def initialize( path, linenum=nil, colnum=nil )

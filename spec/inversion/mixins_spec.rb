@@ -18,40 +18,6 @@ require 'inversion/mixins'
 
 describe Inversion, "mixins" do
 
-	describe Inversion::Loggable do
-		before(:each) do
-			@logfile = StringIO.new('')
-			Inversion.logger = Logger.new( @logfile )
-
-			@test_class = Class.new do
-				include Inversion::Loggable
-
-				def log_test_message( level, msg )
-					self.log.send( level, msg )
-				end
-
-				def logdebug_test_message( msg )
-					self.log_debug.debug( msg )
-				end
-			end
-			@obj = @test_class.new
-		end
-
-
-		it "is able to output to the log via its #log method" do
-			@obj.log_test_message( :debug, "debugging message" )
-			@logfile.rewind
-			@logfile.read.should =~ /debugging message/
-		end
-
-		it "is able to output to the log via its #log_debug method" do
-			@obj.logdebug_test_message( "sexydrownwatch" )
-			@logfile.rewind
-			@logfile.read.should =~ /sexydrownwatch/
-		end
-	end
-
-
 	describe Inversion::HashUtilities do
 		it "includes a function for stringifying Hash keys" do
 			testhash = {

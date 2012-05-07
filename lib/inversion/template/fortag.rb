@@ -26,8 +26,7 @@ require 'inversion/template/containertag'
 #    <?end ?>
 #
 class Inversion::Template::ForTag < Inversion::Template::CodeTag
-	include Inversion::Loggable,
-			Inversion::Template::ContainerTag
+	include Inversion::Template::ContainerTag
 
 	# <?for var in attribute ?>
 	# <?for var in attribute.methodchain ?>

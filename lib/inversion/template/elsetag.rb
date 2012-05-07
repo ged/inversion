@@ -18,8 +18,6 @@ require 'inversion/template/tag'
 #   <?end?>
 #
 class Inversion::Template::ElseTag < Inversion::Template::Tag
-	include Inversion::Loggable
-
 
 	### Overridden to default body to nothing, and raise an error if it has one.
 	def initialize( body='', linenum=nil, colnum=nil ) # :notnew:

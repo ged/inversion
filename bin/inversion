@@ -105,9 +105,11 @@ class Inversion::Command
 		@opts      = opts
 		@prompt    = self.class.prompt
 
-		# Configure Inversion's strictness and logging
-		Inversion.log.level = opts.debug ? Logger::DEBUG : Logger::ERROR
-		Inversion.log.formatter = Inversion::ColorLogFormatter.new( Inversion.log )
+		# Configure logging
+		Loggability.level = opts.debug ? :debug : :error
+		Loggability.format_with( :color ) if $stdin.tty?
+
+		# Configure Inversion's strictness
 		Inversion::Template.configure(
 			:ignore_unknown_tags => opts.ignore_unknown_tags,
 			:template_paths      => opts.path,

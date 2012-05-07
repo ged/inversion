@@ -17,8 +17,8 @@ require 'inversion/template/containertag'
 #   <?end comment ?>
 #
 class Inversion::Template::CommentTag < Inversion::Template::Tag
-	include Inversion::Loggable,
-			Inversion::Template::ContainerTag
+	include Inversion::Template::ContainerTag
+
 
 	######
 	public

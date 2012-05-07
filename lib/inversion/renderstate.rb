@@ -1,13 +1,16 @@
 #!/usr/bin/env ruby
 # vim: set noet nosta sw=4 ts=4 :
 
+require 'loggability'
 require 'inversion' unless defined?( Inversion )
 
 
 # An object that provides an encapsulation of the template's state while it is rendering.
 class Inversion::RenderState
-	include Inversion::Loggable
+	extend Loggability
 
+	# Loggability API -- set up logging through the Inversion module's logger
+	log_to :inversion
 
 	# An encapsulation of the scope in which the bodies of tags evaluate. It's
 	# used to provide a controlled, isolated namespace which remains the same from
@@ -439,7 +442,7 @@ class Inversion::RenderState
 
 	### Recursively copy the specified +obj+ and return the result.
 	def deep_copy( obj )
-		# Inversion.log.debug "Deep copying: %p" % [ obj ]
+		# self.log.debug "Deep copying: %p" % [ obj ]
 
 		# Handle mocks during testing
 		return obj if obj.class.name == 'RSpec::Mocks::Mock'

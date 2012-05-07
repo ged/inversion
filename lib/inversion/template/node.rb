@@ -1,6 +1,8 @@
 #!/usr/bin/env ruby
 # vim: set noet nosta sw=4 ts=4 :
 
+require 'loggability'
+
 require 'inversion/mixins'
 require 'inversion/template' unless defined?( Inversion::Template )
 
@@ -11,7 +13,11 @@ require 'inversion/template' unless defined?( Inversion::Template )
 # This class is abstract; it just defines the API that other nodes
 # are expected to implement.
 class Inversion::Template::Node
+	extend Loggability
 	include Inversion::AbstractClass
+
+	# Loggability API -- set up logging through the Inversion module's logger
+	log_to :inversion
 
 
 	### Create a new TextNode with the specified +source+.

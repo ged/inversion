@@ -32,8 +32,7 @@ require 'inversion/template/rescuetag'
 #   <?end?>
 #
 class Inversion::Template::BeginTag < Inversion::Template::Tag
-	include Inversion::Loggable,
-	        Inversion::Template::ContainerTag
+	include Inversion::Template::ContainerTag
 
 
 	### Initialize a new BeginTag.

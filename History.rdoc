@@ -1,3 +1,8 @@
+== v0.10.0 [2012-05-07] Michael Granger <ged@FaerieMUD.org>
+
+- Convert to Loggability for logging.
+
+
 == v0.9.0 [2012-04-24] Michael Granger <ged@FaerieMUD.org>
 
 - Split the template path out from the config into a class instance variable.
