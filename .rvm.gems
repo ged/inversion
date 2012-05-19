@@ -5,5 +5,5 @@ simplecov -v0.4.2
 sinatra -v1.2.8
 sysexits -v1.0.2
 trollop -v1.16.2
-loggability -v0.2.0
+loggability -v0.2.3
 
