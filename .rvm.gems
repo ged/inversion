@@ -1,9 +1,14 @@
 # .rvm.gems generated gem export file. Note that any env variable settings will be missing. Append these after using a ';' field separator
+highline -v1.6.13
 hoe-deveiate -v0.1.1
 hoe-manualgen -v0.3.0
-simplecov -v0.4.2
-sinatra -v1.2.8
+loggability -v0.4.0
+rack-test -v0.6.1
+rdoc -v3.12
+rspec -v2.10.0
+simplecov -v0.6.4
+sinatra -v1.3.2
+tilt -v1.3.3
 sysexits -v1.0.2
 trollop -v1.16.2
-loggability -v0.2.3
 
