@@ -20,20 +20,19 @@ hoespec = Hoe.spec 'inversion' do
 	self.developer 'Michael Granger', 'ged@FaerieMUD.org'
 	self.developer 'Mahlon E. Smith', 'mahlon@martini.nu'
 
-	self.dependency 'loggability',   '~> 0.2'
+	self.dependency 'loggability',   '~> 0.4'
 
-	self.dependency 'rdoc',          '~> 3.12', :development
-	self.dependency 'rspec',         '~> 2.8',  :development
-	self.dependency 'tilt',          '~> 1.3',  :development
-	self.dependency 'sinatra',       '~> 1.2',  :development
-	self.dependency 'rack-test',     '~> 0.6',  :development
-	self.dependency 'simplecov',     '~> 0.4',  :development
-	self.dependency 'hoe-manualgen', '~> 0.2',  :development
-
-	# bin/inversion deps
-	self.dependency 'trollop',       '~> 1.16', :development
 	self.dependency 'highline',      '~> 1.6',  :development
+	self.dependency 'hoe-deveiate',  '~> 0.1',  :development
+	self.dependency 'hoe-manualgen', '~> 0.3',  :development
+	self.dependency 'rack-test',     '~> 0.6',  :development
+	self.dependency 'rdoc',          '~> 3.12', :development
+	self.dependency 'rspec',         '~> 2.10', :development
+	self.dependency 'simplecov',     '~> 0.6',  :development
+	self.dependency 'sinatra',       '~> 1.3',  :development
+	self.dependency 'tilt',          '~> 1.3',  :development
 	self.dependency 'sysexits',      '~> 1.0',  :development
+	self.dependency 'trollop',       '~> 1.16', :development
 
 	self.spec_extras[:licenses] = ["BSD"]
 	self.spec_extras[:rdoc_options] = ['-f', 'fivefish', '-t', 'Inversion Templates']
