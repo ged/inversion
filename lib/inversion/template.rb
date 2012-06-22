@@ -18,6 +18,8 @@ end
 # can be used to populate it when rendered.
 class Inversion::Template
 	extend Loggability
+	include Inversion::DataUtilities
+
 
 	# Loggability API -- set up logging through the Inversion module's logger
 	log_to :inversion
@@ -140,20 +142,23 @@ class Inversion::Template
 			self.log.debug "Parse state is: %p" % [ parsestate ]
 		end
 
-		# carry global template options to the parser.
-		opts = self.class.config.merge( opts )
-
 		@source       = source
-		@parser       = Inversion::Parser.new( self, opts )
 		@node_tree    = [] # Parser expects this to always be an Array
-		@init_options = opts
-		@options      = nil
+		@options      = opts
 		@attributes   = {}
 		@source_file  = nil
 		@created_at   = Time.now
 		@last_checked = @created_at
 
 		self.parse( source, parsestate )
+	end
+
+
+	### Copy constructor -- make copies of some internal data structures, too.
+	def initialize_copy( other )
+		@options    = deep_copy( other.options )
+		@node_tree  = deep_copy( other.node_tree )
+		@attributes = deep_copy( other.attributes )
 	end
 
 
@@ -223,13 +228,19 @@ class Inversion::Template
 	### Return a human-readable representation of the template object suitable
 	### for debugging.
 	def inspect
-		return "#<%s:%08x (loaded from %s) attributes: %p, node_tree: %p, options: %p>" % [
+		nodemap = if $DEBUG
+				", node_tree: %p" % [ self.node_tree.map(&:as_comment_body) ]
+			else
+				''
+			end
+
+		return "#<%s:%08x (loaded from %s) attributes: %p, options: %p%s>" % [
 			self.class.name,
 			self.object_id / 2,
 			self.source_file ? self.source_file : "memory",
-			self.attributes,
-			self.node_tree.map(&:as_comment_body),
+			self.attributes.keys,
 			self.options,
+			nodemap
 		]
 	end
 
@@ -252,9 +263,11 @@ class Inversion::Template
 
 	### Parse the given +source+ into the template node tree.
 	def parse( source, parsestate=nil )
-		@options = self.class.config.merge( @init_options )
+		opts = self.class.config.merge( self.options )
+		parser = Inversion::Parser.new( self, opts )
+
 		@attributes.clear
-		@node_tree = @parser.parse( source, parsestate )
+		@node_tree = parser.parse( source, parsestate )
 		@source = source
 
 		self.define_attribute_accessors

@@ -62,10 +62,16 @@ describe Inversion::Template do
 	end
 
 	it "carries its global configuration to the parser" do
-		Inversion::Template.configure( :i_exist => true )
-		tmpl = Inversion::Template.new( '' )
-		parser = tmpl.instance_variable_get( :@parser )
-		parser.options.should have_key( :i_exist )
+		begin
+			orig_config = Inversion::Template.config
+			Inversion::Template.configure( :ignore_unknown_tags => false )
+
+			expect {
+				Inversion::Template.new( '<?rumple an unknown tag ?>' )
+			}.to raise_error( Inversion::ParseError, /unknown tag/i )
+		ensure
+			Inversion::Template.config = orig_config
+		end
 	end
 
 	it "can make an human-readable string version of itself suitable for debugging" do
@@ -74,7 +80,19 @@ describe Inversion::Template do
 		tmpl.inspect.should =~ /Inversion::Template/
 		tmpl.inspect.should =~ %r{/tmp/inspect.tmpl}
 		tmpl.inspect.should =~ /attributes/
-		tmpl.inspect.should =~ /node_tree/
+		tmpl.inspect.should_not =~ /node_tree/
+	end
+
+	it "includes the node tree in the inspected object if debugging is enabled" do
+		begin
+			debuglevel = $DEBUG
+			$DEBUG = true
+
+			tmpl = Inversion::Template.new( '<?attr something ?>' )
+			tmpl.inspect.should =~ /node_tree/
+		ensure
+			$DEBUG = debuglevel
+		end
 	end
 
 	it "provides accessors for attributes that aren't identifiers in the template" do
