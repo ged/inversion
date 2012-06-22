@@ -1,3 +1,12 @@
+== v0.10.1 [2012-06-22] Michael Granger <ged@FaerieMUD.org>
+
+- Bugfix: duplicated templates get distinct copies of their attributes.
+
+
+== v0.10.0 [2012-05-07] Michael Granger <ged@FaerieMUD.org>
+
+- Added signature for changeset 9d9c49d532be
+
 == v0.10.0 [2012-05-07] Michael Granger <ged@FaerieMUD.org>
 
 - Convert to Loggability for logging.
