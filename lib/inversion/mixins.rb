@@ -196,5 +196,37 @@ module Inversion
 
 	end # module MethodUtilities
 
+
+	# A collection of data-manipulation functions.
+	module DataUtilities
+
+		### Recursively copy the specified +obj+ and return the result.
+		def deep_copy( obj )
+			# self.log.debug "Deep copying: %p" % [ obj ]
+
+			# Handle mocks during testing
+			return obj if obj.class.name == 'RSpec::Mocks::Mock'
+
+			return case obj
+				when NilClass, Numeric, TrueClass, FalseClass, Symbol
+					obj
+
+				when Array
+					obj.map {|o| deep_copy(o) }
+
+				when Hash
+					newhash = {}
+					obj.each do |k,v|
+						newhash[ deep_copy(k) ] = deep_copy( v )
+					end
+					newhash
+
+				else
+					obj.clone
+				end
+		end
+
+	end # module DataUtilities
+
 end # module Inversion
 
