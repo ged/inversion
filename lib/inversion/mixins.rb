@@ -200,6 +200,10 @@ module Inversion
 	# A collection of data-manipulation functions.
 	module DataUtilities
 
+		###############
+		module_function
+		###############
+
 		### Recursively copy the specified +obj+ and return the result.
 		def deep_copy( obj )
 			# self.log.debug "Deep copying: %p" % [ obj ]
@@ -208,7 +212,7 @@ module Inversion
 			return obj if obj.class.name == 'RSpec::Mocks::Mock'
 
 			return case obj
-				when NilClass, Numeric, TrueClass, FalseClass, Symbol
+				when NilClass, Numeric, TrueClass, FalseClass, Symbol, Module
 					obj
 
 				when Array
@@ -216,6 +220,7 @@ module Inversion
 
 				when Hash
 					newhash = {}
+					newhash.default_proc = obj.default_proc if obj.default_proc
 					obj.each do |k,v|
 						newhash[ deep_copy(k) ] = deep_copy( v )
 					end

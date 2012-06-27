@@ -157,7 +157,6 @@ class Inversion::Template
 	### Copy constructor -- make copies of some internal data structures, too.
 	def initialize_copy( other )
 		@options    = deep_copy( other.options )
-		@node_tree  = deep_copy( other.node_tree )
 		@attributes = deep_copy( other.attributes )
 	end
 
