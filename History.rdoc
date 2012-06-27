@@ -1,3 +1,10 @@
+== v0.10.2 [2012-06-27] Mahlon E. Smith  <mahlon@martini.nu>
+
+- Bugfix: Don't dup Classes and Modules in template attributes.
+- Optimization: Don't needlessly duplicate the node tree on template
+  duplication.
+
+
 == v0.10.1 [2012-06-22] Michael Granger <ged@FaerieMUD.org>
 
 - Bugfix: duplicated templates get distinct copies of their attributes.
