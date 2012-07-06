@@ -1,3 +1,9 @@
+== v0.11.0 [2012-07-06] Michael Granger <ged@FaerieMUD.org>
+
+- Automatically transcode output according to the registered encoding
+  if the template is created with one
+
+
 == v0.10.2 [2012-06-27] Mahlon E. Smith  <mahlon@martini.nu>
 
 - Bugfix: Don't dup Classes and Modules in template attributes.
