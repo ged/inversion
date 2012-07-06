@@ -1,4 +1,5 @@
 #!/usr/bin/env rspec -cfd -b
+# encoding: utf-8
 # vim: set noet nosta sw=4 ts=4 :
 
 BEGIN {
@@ -379,6 +380,25 @@ describe Inversion::RenderState do
 
 		it "knows how many floating-point seconds have passed since it was created" do
 			@state.time_elapsed.should be_a( Float )
+		end
+
+	end
+
+
+	describe "encoding support" do
+
+		it "transcodes attribute values if the template's encoding is set" do
+			attributes = {
+				good_doggie: "Стрелка".encode('koi8-u'),
+				little:      "arrow".encode('us-ascii')
+			}
+
+			state = Inversion::RenderState.new( attributes, encoding: 'utf-8' )
+
+			state << Inversion::Template::AttrTag.new( 'good_doggie' )
+			state << Inversion::Template::AttrTag.new( 'little' )
+
+			state.to_s.encoding.should be( Encoding::UTF_8 )
 		end
 
 	end

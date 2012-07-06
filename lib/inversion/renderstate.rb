@@ -264,6 +264,7 @@ class Inversion::RenderState
 		if self.rendering_enabled?
 			self.destination << self.make_node_comment( node ) if self.options[:debugging_comments]
 			previous_node = nil
+			enc = self.options[:encoding] || Encoding.default_internal
 
 			begin
 				# Allow render to be delegated to subobjects
@@ -273,8 +274,8 @@ class Inversion::RenderState
 					node = node.render( self )
 				end
 
-				# self.log.debug "  adding a %p to the destination (%p)" %
-				# 	[ node.class, self.destination.class ]
+				# self.log.debug "  adding a %p (%p; encoding: %s) to the destination (%p)" %
+				#	[ node.class, node, node.respond_to?(:encoding) ? node.encoding : 'n/a', self.destination.class ]
 				self.destination << node
 				# self.log.debug "    just appended %p to %p" % [ node, self.destination ]
 			rescue ::StandardError => err
@@ -290,7 +291,14 @@ class Inversion::RenderState
 
 	### Turn the rendered node structure into the final rendered String.
 	def to_s
-		return @output.flatten.map( &:to_s ).join
+		strings = @output.flatten.map( &:to_s )
+
+		if enc = self.options[ :encoding ]
+			self.log.debug "Encoding rendered template parts to %s" % [ enc ]
+			strings.map! {|str| str.encode(enc) }
+		end
+
+		return strings.join
 	end
 
 
