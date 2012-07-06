@@ -116,9 +116,8 @@ class Inversion::Template
 		end
 
 		# We trust files read from disk
-		encoding = opts.delete( :encoding )
-		source = if encoding
-				tmpl.read( encoding: encoding )
+		source = if opts.key?( :encoding )
+				tmpl.read( encoding: opts[:encoding] )
 			else
 				tmpl.read
 			end
