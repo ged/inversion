@@ -212,7 +212,7 @@ module Inversion
 			return obj if obj.class.name == 'RSpec::Mocks::Mock'
 
 			return case obj
-				when NilClass, Numeric, TrueClass, FalseClass, Symbol, Module
+				when NilClass, Numeric, TrueClass, FalseClass, Symbol, Module, Encoding
 					obj
 
 				when Array
