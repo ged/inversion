@@ -1,3 +1,8 @@
+== v0.11.2 [2012-09-17] Michael Granger <ged@FaerieMUD.org>
+
+- [bugfix] Don't cast enumerated values in for tags to Arrays.
+
+
 == v0.11.1 [2012-09-17] Michael Granger <ged@FaerieMUD.org>
 
 - [bugfix] Make subscriptions get nodes that were already published
