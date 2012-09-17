@@ -1,3 +1,8 @@
+== v0.11.1 [2012-09-17] Michael Granger <ged@FaerieMUD.org>
+
+- [bugfix] Make subscriptions get nodes that were already published
+
+
 == v0.11.0 [2012-07-06] Michael Granger <ged@FaerieMUD.org>
 
 - Automatically transcode output according to the registered encoding
