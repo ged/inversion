@@ -100,8 +100,10 @@ class Inversion::RenderState
 		@destinations       = [ @output ]
 		@tag_data          = [ {} ]
 
-		# Hash of subscribed Nodes, keyed by the subscription key as a Symbol
-		@subscriptions      = Hash.new {|hsh, k| hsh[k] = [] } # Auto-vivify
+		# Hash of subscribed Nodes and published data, keyed by the subscription key
+		# as a Symbol
+		@subscriptions      = Hash.new {|hsh, k| hsh[k] = [] } # Auto-vivify to an Array
+		@published_nodes    = Hash.new {|hsh, k| hsh[k] = [] }
 
 	end
 
@@ -121,6 +123,9 @@ class Inversion::RenderState
 
 	# Subscribe placeholders for publish/subscribe
 	attr_reader :subscriptions
+
+	# Published nodes, keyed by subscription
+	attr_reader :published_nodes
 
 	# The stack of rendered output destinations, most-recent last.
 	attr_reader :destinations
@@ -313,6 +318,7 @@ class Inversion::RenderState
 			# 	[ nodes.length, subscriber, subscriber.class ]
 			subscriber.publish( *nodes )
 		end
+		self.published_nodes[ key ].concat( nodes )
 	end
 	alias_method :publish_nodes, :publish
 
@@ -320,7 +326,14 @@ class Inversion::RenderState
 	### Subscribe the given +node+ to nodes published with the specified +key+.
 	def subscribe( key, node )
 		key = key.to_sym
+		self.log.debug "Adding subscription to %p nodes for %p" % [ key, node ]
 		self.subscriptions[ key ] << node
+		# self.log.debug "  now have subscriptions for: %p" % [ self.subscriptions.keys ]
+		if self.published_nodes.key?( key )
+			self.log.debug "    re-publishing %d %p nodes to late subscriber" %
+				[ self.published_nodes[key].length, key ]
+			node.publish( *self.published_nodes[key] )
+		end
 	end
 
 

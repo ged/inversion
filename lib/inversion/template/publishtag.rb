@@ -54,9 +54,12 @@ class Inversion::Template::PublishTag < Inversion::Template::Tag
 		self.log.debug "Publishing %d nodes as %s" % [ self.subnodes.length, self.key ]
 		rendered_nodes = []
 		renderstate.with_destination( rendered_nodes ) do
-			self.render_subnodes( renderstate )
+			sn = self.render_subnodes( renderstate )
+			self.log.debug "  subnodes are: %p" % [ sn ]
+			sn
 		end
 
+		self.log.debug "  rendered nodes are: %p" % [ rendered_nodes ]
 		renderstate.publish( self.key, *rendered_nodes ) unless rendered_nodes.empty?
 
 		return nil

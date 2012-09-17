@@ -30,7 +30,7 @@ describe Inversion::Template::SubscribeTag do
 	it "raises a parse error if the key isn't a simple attribute" do
 		expect {
 			Inversion::Template::SubscribeTag.new( 'a.non-identifier' )
-		}.should raise_exception( Inversion::ParseError, /malformed subscribe/i )
+		}.to raise_exception( Inversion::ParseError, /malformed subscribe/i )
 	end
 
 	it "renders the nodes published by an immediate subtemplate with the same key" do
@@ -40,6 +40,15 @@ describe Inversion::Template::SubscribeTag do
 		template.subtemplate = subtemplate
 
 		template.render.should == '--a style--(subtemplate)'
+	end
+
+	it "renders nodes published by an immediate subtemplate that's rendered before it" do
+		template = Inversion::Template.new( '--<?attr subtemplate ?>--<?subscribe stylesheets ?>' )
+		subtemplate = Inversion::Template.new( '<?publish stylesheets ?>a style<?end?>(subtemplate)' )
+
+		template.subtemplate = subtemplate
+
+		template.render.should == '--(subtemplate)--a style'
 	end
 
 	it "doesn't render anything if there are no publications with its key" do

@@ -41,7 +41,7 @@ describe Inversion::Template::PublishTag do
 	it "raises a parse error if the body isn't a simple attribute" do
 		expect {
 			Inversion::Template::PublishTag.new( 'a.non-identifier' )
-		}.should raise_exception( Inversion::ParseError, /malformed key/i )
+		}.to raise_exception( Inversion::ParseError, /malformed key/i )
 	end
 
 
