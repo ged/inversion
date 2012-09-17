@@ -88,8 +88,8 @@ class Inversion::Template::ForTag < Inversion::Template::CodeTag
 
 		# Loop will exit as soon as the Enumerator runs out of elements
 		loop do
-			args = Array( lvalue.next )
-			# self.log.debug "  iterated block args are: %p" % [ args ]
+			args = lvalue.next
+			args = [ args ] unless args.is_a?( Array )
 
 			# Turn the block arguments into an overrides hash by zipping up
 			# the arguments names and values

@@ -170,6 +170,24 @@ describe Inversion::Template::ForTag do
 			render_state.to_s.should =~ /ch \(1\) => ch/
 		end
 
+		it "preserves an array of subhashes" do
+			tree = Inversion::Parser.new( nil ).parse( <<-"END_TEMPLATE" )
+			<?for subhash in the_hash[:a] ?>
+				Subhash is a <?call subhash.class.name ?>
+			<?end for ?>
+			END_TEMPLATE
+
+			# Drop the non-container nodes at the beginning and end
+			tree.delete_if {|node| !node.container? }
+
+			the_hash = { :a => [ { :b => 'foo', :c => 'bar' }, { :d => 'blah', :e => 'blubb'} ] }
+
+			render_state = Inversion::RenderState.new( :the_hash => the_hash )
+			tree.first.render( render_state )
+
+			render_state.to_s.should =~ /Subhash is a Hash/i
+		end
+
 	end
 
 
