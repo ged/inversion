@@ -374,6 +374,9 @@ class Inversion::RenderState
 		when 'comment'
 			self.log.debug "  rendering error as a comment"
 			msg = "%s: %s" % [ exception.class.name, exception.message ]
+			if self.options[:debugging_comments]
+				exception.backtrace.each {|line| msg << "\n" << line }
+			end
 			return self.make_comment( msg )
 
 		when 'propagate'

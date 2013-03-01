@@ -267,6 +267,17 @@ describe Inversion::RenderState do
 			state.to_s.should == "<!-- NoMethodError: undefined method `klang' for nil:NilClass -->"
 		end
 
+		it "includes a backtrace when rendering errors in 'comment' mode with 'debugging_comments' enabled" do
+			node  = Inversion::Template::AttrTag.new( 'boom.klang' )
+			state = Inversion::RenderState.new( {}, :on_render_error => :comment, :debugging_comments => true )
+
+			state << node
+			output = state.to_s
+
+			output.should include( "<!-- NoMethodError: undefined method `klang' for nil:NilClass" )
+			output.should include( "#{__FILE__}:#{__LINE__ - 4}" )
+		end
+
 		it "re-raises errors while rendering appended nodes in 'propagate' mode" do
 			node  = Inversion::Template::AttrTag.new( 'boom.klang' )
 			state = Inversion::RenderState.new( {}, :on_render_error => :propagate )
