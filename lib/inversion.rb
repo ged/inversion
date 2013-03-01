@@ -1,4 +1,5 @@
-#!/usr/bin/env ruby
+# -*- ruby -*-
+#encoding: utf-8
 # vim: set noet nosta sw=4 ts=4 :
 
 require 'loggability'
@@ -25,7 +26,7 @@ module Inversion
 	warn ">>> Inversion requires Ruby 1.9.2 or later. <<<" if RUBY_VERSION < '1.9.2'
 
 	# Library version constant
-	VERSION = '0.11.2'
+	VERSION = '0.12.0'
 
 	# Version-control revision constant
 	REVISION = %q$Revision$
