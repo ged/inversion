@@ -95,8 +95,8 @@ class Inversion::Parser
 					[ match[0], linenum, colnum ]
 			end
 
-			self.log.debug "  found a tag at offset: %d (%p) (line %d, col %d)" %
-				[ start_pos, abbrevstring(match[0]), linenum, colnum ]
+			# self.log.debug "  found a tag at offset: %d (%p) (line %d, col %d)" %
+			# 	[ start_pos, abbrevstring(match[0]), linenum, colnum ]
 
 			# If there were characters between the end of the last match and
 			# the beginning of the tag, create a text node with them
@@ -106,8 +106,8 @@ class Inversion::Parser
 				state << Inversion::Template::TextNode.new( text, last_linenum, last_colnum )
 			end
 
-			self.log.debug "  creating tag with tagname: %p, body: %p" %
-				[ match[:tagname], match[:body] ]
+			# self.log.debug "  creating tag with tagname: %p, body: %p" %
+			# 	[ match[:tagname], match[:body] ]
 
 			tag = Inversion::Template::Tag.create( match[:tagname], match[:body], linenum, colnum )
 			if tag.nil?
@@ -119,7 +119,7 @@ class Inversion::Parser
 			    tag = Inversion::Template::TextNode.new( match[0], linenum, colnum )
 			end
 
-			self.log.debug "  created tag: %p" % [ tag ]
+			# self.log.debug "  created tag: %p" % [ tag ]
 			state << tag
 
 			# Keep offsets for the next match
@@ -131,7 +131,7 @@ class Inversion::Parser
 		# If there are any characters left over after the last tag
 		remainder = source[ last_pos..-1 ]
 		if remainder && !remainder.empty?
-			self.log.debug "Remainder after last tag: %p" % [ abbrevstring(remainder) ]
+			# self.log.debug "Remainder after last tag: %p" % [ abbrevstring(remainder) ]
 
 			# Detect unclosed tags
 			if remainder.index( "<?" ) || remainder.index( "[?" )
@@ -207,7 +207,7 @@ class Inversion::Parser
 
 		### Append operator: add nodes to the correct part of the parse tree.
 		def <<( node )
-			self.log.debug "Appending %p" % [ node ]
+			# self.log.debug "Appending %p" % [ node ]
 
 			node.before_appending( self )
 			self.node_stack.last << node
@@ -290,7 +290,7 @@ class Inversion::Parser
 				raise Inversion::StackError, msg
 			end
 
-			self.log.debug "Include stack is: %p" % [ self.include_stack ]
+			# self.log.debug "Include stack is: %p" % [ self.include_stack ]
 
 			substate = self.dup
 			substate.clear_nodes
