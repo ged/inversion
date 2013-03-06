@@ -75,6 +75,7 @@ class Inversion::Parser
 		self.log.debug "Starting parse of template source (%0.2fK, %s)" %
 			[ source.bytesize/1024.0, source.encoding ]
 
+		t0 = Time.now
 		last_pos = last_linenum = last_colnum = 0
 		source.scan( TAG_PATTERN ) do |*|
 			match = Regexp.last_match
@@ -90,7 +91,7 @@ class Inversion::Parser
 			end
 
 			# Check for nested tags
-			if match[0].index( TAG_OPEN, 2 ) 
+			if match[0].index( TAG_OPEN, 2 )
 				raise Inversion::ParseError, "unclosed or nested tag %p at line %d, column %d" %
 					[ match[0], linenum, colnum ]
 			end
@@ -102,7 +103,7 @@ class Inversion::Parser
 			# the beginning of the tag, create a text node with them
 			unless last_pos == start_pos
 				text = match.pre_match[ last_pos..-1 ]
-				self.log.debug "  adding literal text node: %p" % [ abbrevstring(text) ]
+				# self.log.debug "  adding literal text node: %p" % [ abbrevstring(text) ]
 				state << Inversion::Template::TextNode.new( text, last_linenum, last_colnum )
 			end
 
@@ -142,6 +143,7 @@ class Inversion::Parser
 			# Add any remaining text as a text node
 			state << Inversion::Template::TextNode.new( remainder, last_linenum, last_colnum )
 		end
+		self.log.debug "  done parsing: %0.5fs" % [ Time.now - t0 ]
 
 		return state.tree
 	end
