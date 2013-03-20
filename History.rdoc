@@ -1,3 +1,8 @@
+== v0.12.1 [2013-03-05] Michael Granger <ged@FaerieMUD.org>
+
+A bunch of optimization and inspect-encoding fixes.
+
+
 == v0.12.0 [2013-03-01] Michael Granger <ged@FaerieMUD.org>
 
 - Make exceptions rendered as comments include the backtrace if
