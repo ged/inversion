@@ -412,6 +412,23 @@ describe Inversion::RenderState do
 			state.to_s.encoding.should be( Encoding::UTF_8 )
 		end
 
+		it "replaces characters with undefined conversions instead of raising an encoding error" do
+			bogus = "this character doesn't translate: \xc3 "
+			bogus.force_encoding( 'binary' )
+
+			attributes = {
+				bogus: bogus,
+				okay:  "this stuff will transcode fine"
+			}
+
+			state = Inversion::RenderState.new( attributes, encoding: 'utf-8' )
+
+			state << Inversion::Template::AttrTag.new( 'okay' )
+			state << Inversion::Template::AttrTag.new( 'bogus' )
+
+			state.to_s.encoding.should be( Encoding::UTF_8 )
+		end
+
 	end
 
 end
