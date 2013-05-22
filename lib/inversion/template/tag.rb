@@ -11,7 +11,7 @@ require 'inversion/mixins'
 
 # Inversion template tag node base class. Represents a directive in a template
 # that defines behavior and/or state.
-# 
+#
 # This class supports the RubyGems plugin API: to provide one or more Inversion tags
 # in a gem of your own, put them into a directory named 'inversion/template' and
 # name the files <tt><tagname>tag.rb</tt> and the classes <tagname.capitalize>Tag.

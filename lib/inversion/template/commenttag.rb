@@ -30,7 +30,7 @@ class Inversion::Template::CommentTag < Inversion::Template::Tag
 	end
 
 
-	### Render the tag as the body of a comment, suitable for template 
+	### Render the tag as the body of a comment, suitable for template
 	### debugging.
 	def as_comment_body
 		firstnode, lastnode = self.subnodes.first, self.subnodes.last

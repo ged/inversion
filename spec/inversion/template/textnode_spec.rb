@@ -76,7 +76,7 @@ describe Inversion::Template::TextNode do
 			expected_content = LONGER_CONTENT[0,40].dump
 			expected_content[-1,0] = '...'
 
-			@node.as_comment_body.should == 
+			@node.as_comment_body.should ==
 				%Q{Text (488 bytes): "\\t\\t<p>Lorem ipsum dolor sit amet, consect..."}
 		end
 
