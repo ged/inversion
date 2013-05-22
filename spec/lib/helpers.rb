@@ -26,6 +26,7 @@ end
 
 require 'rspec'
 require 'loggability'
+require 'loggability/spechelpers'
 
 require 'inversion'
 require 'spec/lib/constants'
@@ -45,31 +46,6 @@ module Inversion::SpecHelpers
 	end
 
 
-	### Reset the logging subsystem to its default state.
-	def reset_logging
-		Loggability.formatter = nil
-		Loggability.output_to( $stderr )
-		Loggability.level = :fatal
-	end
-
-
-	### Alter the output of the default log formatter to be pretty in SpecMate output
-	def setup_logging( level=:fatal )
-
-		# Only do this when executing from a spec in TextMate
-		if ENV['HTML_LOGGING'] || (ENV['TM_FILENAME'] && ENV['TM_FILENAME'] =~ /_spec\.rb/)
-			$stderr.puts "Setting up HTML logs."
-			logarray = []
-			Thread.current['logger-output'] = logarray
-			Loggability.output_to( logarray )
-			Loggability.format_as( :html )
-			Loggability.level = :debug
-		else
-			Loggability.level = level
-		end
-	end
-
-
 	### Create a string containing an XML Processing Instruction with the given +name+
 	### and +data+.
 	def create_pi( name, data )
@@ -83,9 +59,13 @@ end
 ### Mock with RSpec
 RSpec.configure do |c|
 	include Inversion::TestConstants
+	include Loggability::SpecHelpers
 
 	c.mock_with :rspec
+
 	c.include( Inversion::SpecHelpers )
+	c.include( Loggability::SpecHelpers )
+
 	c.filter_run_excluding( :ruby_1_9_only => true ) if
 		Inversion::SpecHelpers.vvec( RUBY_VERSION ) < Inversion::SpecHelpers.vvec('1.9.0')
 end
