@@ -16,7 +16,7 @@ require 'inversion/template/attrtag'
 class Inversion::Template::UriencodeTag < Inversion::Template::AttrTag
 
 	# Unreserved characters from section 2.3 of RFC 3986
- 	# ALPHA / DIGIT / "-" / "." / "_" / "~"
+	# ALPHA / DIGIT / "-" / "." / "_" / "~"
 	DEFAULT_ENCODED_CHARACTERS = /[^\w\-\.~]/
 
 	### Render the method chains against the attributes of the specified +render_state+

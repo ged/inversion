@@ -97,7 +97,7 @@ class Inversion::Parser
 			end
 
 			# self.log.debug "  found a tag at offset: %d (%p) (line %d, col %d)" %
-			# 	[ start_pos, abbrevstring(match[0]), linenum, colnum ]
+			#     [ start_pos, abbrevstring(match[0]), linenum, colnum ]
 
 			# If there were characters between the end of the last match and
 			# the beginning of the tag, create a text node with them
@@ -108,7 +108,7 @@ class Inversion::Parser
 			end
 
 			# self.log.debug "  creating tag with tagname: %p, body: %p" %
-			# 	[ match[:tagname], match[:body] ]
+			#    [ match[:tagname], match[:body] ]
 
 			tag = Inversion::Template::Tag.create( match[:tagname], match[:body], linenum, colnum )
 			if tag.nil?
@@ -167,7 +167,7 @@ class Inversion::Parser
 	class State
 		extend Loggability
 
-		# 
+		# Write logs to the Inversion logger
 		log_to :inversion
 
 		### Create a new State object

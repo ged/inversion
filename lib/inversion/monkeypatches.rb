@@ -4,7 +4,7 @@
 require 'inversion' unless defined?( Inversion )
 require 'ripper'
 
-# Monkeypatch mixin to expose the 'tokens' instance variable of 
+# Monkeypatch mixin to expose the 'tokens' instance variable of
 # Ripper::TokenPattern::MatchData. Included in Ripper::TokenPattern::MatchData.
 module Inversion::RipperAdditions
 

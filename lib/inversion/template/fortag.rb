@@ -95,7 +95,7 @@ class Inversion::Template::ForTag < Inversion::Template::CodeTag
 			# the arguments names and values
 			overrides = Hash[ self.block_args.zip(args) ]
 
-			# Overlay the block args from the 'for' over the template attributes and render 
+			# Overlay the block args from the 'for' over the template attributes and render
 			# each subnode
 			state.with_attributes( overrides ) do
 				super

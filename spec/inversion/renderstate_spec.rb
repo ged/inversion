@@ -158,7 +158,7 @@ describe Inversion::RenderState do
 	describe "context-aware tag state" do
 
 		before( :each ) do
-			@renderstate = Inversion::RenderState.new 
+			@renderstate = Inversion::RenderState.new
 		end
 
 		it "provides a mechanism for storing tag state for the current render" do

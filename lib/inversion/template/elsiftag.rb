@@ -9,7 +9,7 @@ require 'inversion/template/iftag' unless
 
 # Inversion 'elsif' tag.
 #
-# This tag adds a conditional logical switch to an IfTag. If the IfTag's condition was false, 
+# This tag adds a conditional logical switch to an IfTag. If the IfTag's condition was false,
 # but the attribute or methodchain of the elsif is true, start rendering.
 #
 # == Syntax

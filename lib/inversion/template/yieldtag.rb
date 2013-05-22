@@ -26,7 +26,7 @@ class Inversion::Template::YieldTag < Inversion::Template::Tag
 	def before_rendering( renderstate )
 		if renderstate.block
 			self.log.debug "Yielding to %p before rendering." % [ renderstate.block ]
-			renderstate.tag_data[ self ] = renderstate.block.call( renderstate ) 
+			renderstate.tag_data[ self ] = renderstate.block.call( renderstate )
 			self.log.debug "  render block returned: %p" % [ @block_value ]
 		end
 	end

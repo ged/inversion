@@ -67,7 +67,7 @@ class Inversion::RenderState
 
 
 	### Create a new RenderState. If the template is being rendered inside another one, the
-	### containing template's RenderState will be passed as the +containerstate+. The 
+	### containing template's RenderState will be passed as the +containerstate+. The
 	### +initial_attributes+ will be deep-copied, and the +options+ will be merged with
 	### Inversion::Template::DEFAULT_CONFIG. The +block+ is stored for use by
 	### template nodes.
@@ -257,8 +257,8 @@ class Inversion::RenderState
 	end
 
 
-	### Append operator -- add an node to the final rendered output. If the +node+ renders 
-	### as an object that itself responds to the #render method, #render will be called and 
+	### Append operator -- add an node to the final rendered output. If the +node+ renders
+	### as an object that itself responds to the #render method, #render will be called and
 	### the return value will be appended instead. This will continue until the returned
 	### object either doesn't respond to #render or #renders as itself.
 	def <<( node )
@@ -315,7 +315,7 @@ class Inversion::RenderState
 		self.containerstate.publish( key, *nodes ) if self.containerstate
 		self.subscriptions[ key ].each do |subscriber|
 			# self.log.debug "  sending %d nodes to subscriber: %p (a %p)" %
-			# 	[ nodes.length, subscriber, subscriber.class ]
+			#     [ nodes.length, subscriber, subscriber.class ]
 			subscriber.publish( *nodes )
 		end
 		self.published_nodes[ key ].concat( nodes )
@@ -362,7 +362,7 @@ class Inversion::RenderState
 	end
 
 
-	### Default exception handler: Handle an +exception+ while rendering +node+ according to the 
+	### Default exception handler: Handle an +exception+ while rendering +node+ according to the
 	### behavior specified by the `on_render_error` option. Returns the string which should be
 	### appended to the output, if any.
 	def default_error_handler( state, node, exception )

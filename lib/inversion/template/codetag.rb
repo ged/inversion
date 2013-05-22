@@ -11,12 +11,12 @@ require 'inversion/template/tag'
 # tokens to match, and a block for handling tag instances that match the pattern.
 #
 #    class Inversion::Template::MyTag < Inversion::Template::CodeTag
-#    
+#
 #        # Match a tag that looks like: <?my "string of stuff" ?>
 #        tag_pattern 'tstring_beg $(tstring_content) tstring_end' do |tag, match|
 #            tag.string = match.string( 1 )
 #        end
-#    
+#
 #    end
 #
 # The tokens in the +tag_pattern+ are Ruby token names used by the parser. If you're creating
@@ -90,8 +90,10 @@ class Inversion::Template::CodeTag < Inversion::Template::Tag
 
 
 	### Declare a +token_pattern+ for tag bodies along with a +callback+ that will
-	### be called when a tag matching the pattern is instantiated.
-	def self::tag_pattern( token_pattern, &callback ) #:yield: 
+	### be called when a tag matching the pattern is instantiated. The +callback+ will
+	### be called with the tag instance, and the MatchData object that resulted from
+	### matching the input, and should set up the yielded +tag+ object appropriately.
+	def self::tag_pattern( token_pattern, &callback ) #:yield: tag, match_data
 		pattern = TokenPattern.compile( token_pattern )
 		@tag_patterns = [] unless defined?( @tag_patterns )
 		@tag_patterns << [ pattern, callback ]

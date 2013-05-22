@@ -6,7 +6,7 @@ require 'inversion/template/tag'
 
 # Inversion 'else' tag.
 #
-# This tag adds a logical switch to an IfTag. If the IfTag's condition was false, 
+# This tag adds a logical switch to an IfTag. If the IfTag's condition was false,
 # start rendering.
 #
 # == Syntax
@@ -38,7 +38,7 @@ class Inversion::Template::ElseTag < Inversion::Template::Tag
 			case node
 
 			# If there was a previous 'if' or 'unless', the else belongs to it. Also
-			# allow it to be appended to a 'comment' section so you can comment out an 
+			# allow it to be appended to a 'comment' section so you can comment out an
 			# else clause
 			when Inversion::Template::IfTag,
 			     Inversion::Template::UnlessTag,

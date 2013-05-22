@@ -105,7 +105,7 @@ describe Inversion::Template::BeginTag do
 
 	context "with a single rescue clause with an exception type" do
 		before( :each ) do
-			
+
 			@tag = Inversion::Template::BeginTag.new( ' ' )
 
 			@attrtag = Inversion::Template::AttrTag.new( 'foo.baz' )
