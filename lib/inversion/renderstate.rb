@@ -300,7 +300,7 @@ class Inversion::RenderState
 
 		if enc = self.options[ :encoding ]
 			self.log.debug "Encoding rendered template parts to %s" % [ enc ]
-			strings.map! {|str| str.encode(enc) }
+			strings.map! {|str| str.encode(enc, invalid: :replace, undef: :replace) }
 		end
 
 		return strings.join
