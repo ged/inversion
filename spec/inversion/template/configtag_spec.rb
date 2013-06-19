@@ -18,9 +18,11 @@ describe Inversion::Template::ConfigTag do
 
 	before( :all ) do
 		setup_logging( :fatal )
+		Inversion::Template.template_paths << 'spec/data'
 	end
 
 	after( :all ) do
+		Inversion::Template.template_paths.delete( 'spec/data' )
 		reset_logging()
 	end
 
@@ -46,24 +48,26 @@ describe Inversion::Template::ConfigTag do
             comment_end: "*/"
 		YAML
 		tag = Inversion::Template::ConfigTag.new( yaml )
-		tag.options.should == {
+
+		expect( tag.options ).to eq({
 			:on_render_error    => 'propagate',
 			:debugging_comments => true,
 			:comment_start      => '/*',
 			:comment_end        => '*/'
-		}
+		})
 	end
 
 	# <?config { comment_start: "/*", comment_end: "*/" } ?>
 	it "can contain multiple configuration settings using an inline hash" do
 		tag = Inversion::Template::ConfigTag.new( '{ comment_start: "/*", comment_end: "*/" }' )
-		tag.options.should == { :comment_start => '/*', :comment_end => '*/' }
+		expect( tag.options ).to eq({ :comment_start => '/*', :comment_end => '*/' })
 	end
 
 	it "renders invisibly" do
 		tag = Inversion::Template::ConfigTag.new( 'comment_start: /*' )
 		state = Inversion::RenderState.new
-		tag.render( state ).should == nil
+
+		expect( tag.render(state) ).to be nil
 	end
 
 	it "raises an error on an empty body" do
@@ -94,7 +98,29 @@ describe Inversion::Template::ConfigTag do
 		something else
 		TEMPLATE
 		tmpl = Inversion::Template.new( source )
-		tmpl.render.should include( "<!-- If: { template.foo } -->" )
+
+		expect( tmpl.render ).to include( "<!-- If: { template.foo } -->" )
+	end
+
+	it "propagates options to subtemplates during parsing" do
+		source = <<-TEMPLATE
+		<?config ignore_unknown_tags: false ?>
+		<?include unknown-tag.tmpl ?>
+		TEMPLATE
+		expect {
+			Inversion::Template.new( source )
+		}.to raise_error( Inversion::ParseError, /unknown tag "unknown"/i )
+	end
+
+	it "propagates options to subtemplates during rendering" do
+		source = <<-TEMPLATE
+		<?config debugging_comments: true ?>
+		<?attr subtemplate ?>
+		TEMPLATE
+		tmpl = Inversion::Template.new( source )
+		tmpl.subtemplate = Inversion::Template.load( 'unknown-tag.tmpl' )
+
+		expect( tmpl.render ).to match( /commented out 1 nodes on line 3: some stuff/i )
 	end
 
 end
