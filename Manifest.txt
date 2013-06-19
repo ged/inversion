@@ -41,6 +41,7 @@ lib/inversion/template/uriencodetag.rb
 lib/inversion/template/yieldtag.rb
 lib/inversion/tilt.rb
 spec/data/sinatra/hello.inversion
+spec/data/unknown-tag.tmpl
 spec/inversion/mixins_spec.rb
 spec/inversion/monkeypatches_spec.rb
 spec/inversion/parser_spec.rb
