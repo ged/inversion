@@ -50,16 +50,18 @@ class Inversion::Template
 
 	### Default config values
 	DEFAULT_CONFIG = {
+		# Loading/parsing options
 		:ignore_unknown_tags => true,
 		:template_paths      => [],
+		:stat_delay          => 0,
 
+		# Rendering options
 		:on_render_error     => :comment,
 		:debugging_comments  => false,
 		:comment_start       => '<!-- ',
 		:comment_end         => ' -->',
 		:escape_format       => :html,
 		:strip_tag_lines     => true,
-		:stat_delay          => 0
 	}.freeze
 
 
@@ -211,7 +213,10 @@ class Inversion::Template
 	### template is being rendered inside another template).
 	def render( parentstate=nil, &block )
 		self.log.info "rendering template 0x%08x" % [ self.object_id/2 ]
-		state = Inversion::RenderState.new( parentstate, self.attributes, self.options, &block )
+		opts = self.options
+		opts.merge!( parentstate.options ) if parentstate
+
+		state = Inversion::RenderState.new( parentstate, self.attributes, opts, &block )
 
 		# self.log.debug "  rendering node tree: %p" % [ @node_tree ]
 		self.walk_tree {|node| state << node }
