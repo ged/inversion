@@ -1,3 +1,9 @@
+== v0.12.2 [2013-06-19] Michael Granger <ged@FaerieMUD.org>
+
+- Fix propagation of config tags into subtemplates (fixes #1)
+- Use replacement in transcoding instead of raising encoding errors
+
+
 == v0.12.1 [2013-03-05] Michael Granger <ged@FaerieMUD.org>
 
 A bunch of optimization and inspect-encoding fixes.
