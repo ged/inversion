@@ -9,6 +9,7 @@ end
 Hoe.plugin :mercurial
 Hoe.plugin :signing
 Hoe.plugin :manualgen
+Hoe.plugin :bundler
 
 Hoe.plugins.delete :rubyforge
 
@@ -25,6 +26,7 @@ hoespec = Hoe.spec 'inversion' do
 	self.dependency 'highline',      '~> 1.6',  :development
 	self.dependency 'hoe-deveiate',  '~> 0.1',  :development
 	self.dependency 'hoe-manualgen', '~> 0.3',  :development
+	self.dependency 'hoe-bundler',   '~> 1.2',  :development
 	self.dependency 'rack-test',     '~> 0.6',  :development
 	self.dependency 'rdoc',          '~> 3.12', :development
 	self.dependency 'rspec',         '~> 2.10', :development
