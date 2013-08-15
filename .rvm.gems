@@ -2,6 +2,7 @@
 highline -v1.6.13
 hoe-deveiate -v0.1.1
 hoe-manualgen -v0.3.0
+hoe-bundler -v1.2.0
 loggability -v0.4.0
 rack-test -v0.6.1
 rdoc -v3.12
