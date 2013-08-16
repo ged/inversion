@@ -32,14 +32,14 @@ describe "Tilt support", :if => $tilt_support do
 	end
 
 	it "merges locals with template attributes upon evaluation" do
-		File.stub( :binread ).with( 'test.tmpl' ).and_return( '<?attr foo ?>' )
+		File.stub( :open ).with( 'test.tmpl', 'rb' ).and_return( '<?attr foo ?>' )
 		Tilt.new( 'test.tmpl' ).render( Object.new, :foo => 'Booyakasha!' ).should == 'Booyakasha!'
 	end
 
 	it "merges the 'scope' object if it responds_to #to_h" do
 		scope = Object.new
 		def scope.to_h; { :message => "Respek!" }; end
-		File.stub( :binread ).with( 'test.tmpl' ).and_return( '<?attr message ?>' )
+		File.stub( :open ).with( 'test.tmpl', 'rb' ).and_return( '<?attr message ?>' )
 		Tilt.new( 'test.tmpl' ).render( scope, {} ).should == 'Respek!'
 	end
 

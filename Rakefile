@@ -29,7 +29,7 @@ hoespec = Hoe.spec 'inversion' do
 	self.dependency 'rack-test',     '~> 0.6',  :development
 	self.dependency 'simplecov',     '~> 0.6',  :development
 	self.dependency 'sinatra',       '~> 1.3',  :development
-	self.dependency 'tilt',          '~> 1.3',  :development
+	self.dependency 'tilt',          '~> 1.4',  :development
 	self.dependency 'sysexits',      '~> 1.0',  :development
 	self.dependency 'trollop',       '~> 1.16', :development
 
