@@ -24,12 +24,9 @@ hoespec = Hoe.spec 'inversion' do
 	self.dependency 'loggability',   '~> 0.4'
 
 	self.dependency 'highline',      '~> 1.6',  :development
-	self.dependency 'hoe-deveiate',  '~> 0.1',  :development
-	self.dependency 'hoe-manualgen', '~> 0.3',  :development
+	self.dependency 'hoe-deveiate',  '~> 0.2',  :development
 	self.dependency 'hoe-bundler',   '~> 1.2',  :development
 	self.dependency 'rack-test',     '~> 0.6',  :development
-	self.dependency 'rdoc',          '~> 3.12', :development
-	self.dependency 'rspec',         '~> 2.10', :development
 	self.dependency 'simplecov',     '~> 0.6',  :development
 	self.dependency 'sinatra',       '~> 1.3',  :development
 	self.dependency 'tilt',          '~> 1.3',  :development
@@ -47,7 +44,7 @@ end
 ENV['VERSION'] ||= hoespec.spec.version.to_s
 
 # Ensure the specs pass before checking in
-task 'hg:precheckin' => [:check_history, :check_manifest, :spec]
+task 'hg:precheckin' => [:check_history, 'bundler:gemfile', :check_manifest, :spec]
 
 if Rake::Task.task_defined?( '.gemtest' )
 	Rake::Task['.gemtest'].clear
