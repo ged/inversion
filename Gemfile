@@ -16,9 +16,9 @@ gem "hoe-bundler", "~>1.2", :group => [:development, :test]
 gem "rack-test", "~>0.6", :group => [:development, :test]
 gem "simplecov", "~>0.6", :group => [:development, :test]
 gem "sinatra", "~>1.3", :group => [:development, :test]
-gem "tilt", "~>1.3", :group => [:development, :test]
+gem "tilt", "~>1.4", :group => [:development, :test]
 gem "sysexits", "~>1.0", :group => [:development, :test]
 gem "trollop", "~>1.16", :group => [:development, :test]
-gem "hoe", "~>3.6", :group => [:development, :test]
+gem "hoe", "~>3.7", :group => [:development, :test]
 
 # vim: syntax=ruby
