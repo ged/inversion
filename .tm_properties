@@ -16,6 +16,6 @@ softTabs = false
 tabSize  = 4
 
 [ "**/*_spec.rb" ]
-fileType = 'text.ruby.rspec'
+fileType = 'source.ruby.rspec'
 
 

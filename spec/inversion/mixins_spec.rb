@@ -155,6 +155,16 @@ describe Inversion, "mixins" do
 			Inversion::DataUtilities.deep_copy( klass ).should be( klass )
 		end
 
+		it "doesn't try to dup IOs" do
+			data = [ $stdin ]
+			Inversion::DataUtilities.deep_copy( data[0] ).should be( $stdin )
+		end
+
+		it "doesn't try to dup Tempfiles" do
+			data = Tempfile.new( 'inversion_deepcopy.XXXXX' )
+			Inversion::DataUtilities.deep_copy( data ).should be( data )
+		end
+
 		it "makes distinct copies of arrays and their members" do
 			original = [ 'foom', Set.new([ 1,2 ]), :a_symbol ]
 
