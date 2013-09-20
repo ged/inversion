@@ -1,6 +1,7 @@
 #!/usr/bin/env ruby
 # vim: set nosta noet ts=4 sw=4:
 
+require 'tempfile'
 
 module Inversion
 
@@ -212,7 +213,8 @@ module Inversion
 			return obj if obj.class.name == 'RSpec::Mocks::Mock'
 
 			return case obj
-				when NilClass, Numeric, TrueClass, FalseClass, Symbol, Module, Encoding
+				when NilClass, Numeric, TrueClass, FalseClass, Symbol,
+				     Module, Encoding, IO, Tempfile
 					obj
 
 				when Array
