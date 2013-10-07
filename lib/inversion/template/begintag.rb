@@ -20,15 +20,15 @@ require 'inversion/template/rescuetag'
 #   <?begin ?><?call employees.length ?><?end?>
 #
 #   <?begin ?>
-#		<?for employee in employees.all ?>
-#			<?attr employee.name ?> --> <?attr employee.title ?>
-#		<?end for?>
+#       <?for employee in employees.all ?>
+#           <?attr employee.name ?> --> <?attr employee.title ?>
+#       <?end for?>
 #   <?rescue DatabaseError => err ?>
-#		Oh no!! I can't talk to the database for some reason.  The
-#		error was as follows:
-#		<pre>
-#			<?attr err.message ?>
-#		</pre>
+#       Oh no!! I can't talk to the database for some reason.  The
+#       error was as follows:
+#       <pre>
+#           <?attr err.message ?>
+#       </pre>
 #   <?end?>
 #
 class Inversion::Template::BeginTag < Inversion::Template::Tag

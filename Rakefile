@@ -1,5 +1,7 @@
 #!/usr/bin/env rake
 
+require 'rdoc/task'
+
 begin
 	require 'hoe'
 rescue LoadError
@@ -33,6 +35,7 @@ hoespec = Hoe.spec 'inversion' do
 	self.dependency 'tilt',          '~> 1.4',  :development
 	self.dependency 'sysexits',      '~> 1.0',  :development
 	self.dependency 'trollop',       '~> 1.16', :development
+	self.dependency 'rdoc-generator-fivefish', '~> 0', :development
 
 	self.require_ruby_version( '>=1.9.2' )
 	self.hg_sign_tags = true if self.respond_to?( :hg_sign_tags= )
@@ -57,4 +60,14 @@ task :coverage do
 	ENV["COVERAGE"] = 'yes'
 	Rake::Task[:spec].invoke
 end
+
+
+Rake::Task[ 'docs' ].clear
+RDoc::Task.new( 'docs' ) do |rdoc|
+	rdoc.main = "README.rdoc"
+	rdoc.rdoc_files.include( "*.rdoc", "ChangeLog", "lib/**/*.rb" )
+	rdoc.generator = :fivefish
+	rdoc.rdoc_dir = 'doc'
+end
+
 

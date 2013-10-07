@@ -19,6 +19,7 @@ gem "sinatra", "~>1.3", :group => [:development, :test]
 gem "tilt", "~>1.4", :group => [:development, :test]
 gem "sysexits", "~>1.0", :group => [:development, :test]
 gem "trollop", "~>1.16", :group => [:development, :test]
+gem "rdoc-generator-fivefish", "~>0", :group => [:development, :test]
 gem "hoe", "~>3.7", :group => [:development, :test]
 
 # vim: syntax=ruby

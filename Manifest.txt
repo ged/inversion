@@ -1,8 +1,12 @@
 ChangeLog
+Examples.rdoc
+GettingStarted.rdoc
+Guide.rdoc
 History.rdoc
 Manifest.txt
 README.rdoc
 Rakefile
+Tags.rdoc
 bin/inversion
 lib/inversion.rb
 lib/inversion/exceptions.rb
