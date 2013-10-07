@@ -13,9 +13,76 @@ rescue LoadError
 end
 
 
-# The main template class. Instances of this class are created by parsing template
-# source and combining the resulting node tree with a set of attributes that
-# can be used to populate it when rendered.
+# The main template class.
+#
+# Inversion templates are the primary objects you'll be interacting with. Templates
+# can be created from a string:
+#
+#   Inversion::Template.new( template_source )
+#
+# or from a file:
+#
+#   Inversion::Template.load( 'path/to/template.tmpl' )
+#
+#
+# == Template Options
+#
+# Inversion supports the {Configurability}[http://rubygems.org/gems/configurability]
+# API, and registers itself with the +templates+ key. This means you can either add
+# a +templates+ section to your Configurability config, or call
+# ::configure yourself with a config Hash (or something that quacks like one).
+#
+# To set options on a per-template basis, you can pass an options hash to either
+# Inversion::Template::load or Inversion::Template::new, or set them from within the template
+# itself using the {config tag}[rdoc-ref:Tags@config].
+#
+# The available options are:
+#
+# [:ignore_unknown_tags]
+#   Setting to false causes unknown tags used in templates to raise an
+#   Inversion::ParseError. Defaults to +true+.
+#
+# [:on_render_error]
+#   Dictates the behavior of exceptions during rendering. Defaults to +:comment+.
+#
+#   [:ignore]
+#     Exceptions are silently ignored.
+#   [:comment]
+#     Exceptions are rendered inline as comments.
+#   [:propagate]
+#     Exceptions bubble up to the caller of Inversion::Template#render.
+#
+#
+# [:debugging_comments]
+#   Insert various Inversion parse and render statements while rendering. Defaults to +false+.
+#
+# [:comment_start]
+#   When rendering debugging comments, the comment is started with these characters.
+#   Defaults to <code>"<!--"</code>.
+#
+# [:comment_end]
+#   When rendering debugging comments, the comment is finished with these characters.
+#   Defaults to <code>"-->"</code>.
+#
+# [:template_paths]
+#   An array of filesystem paths to search for templates within, when loaded or
+#   included with a relative path.  The current working directory is always the
+#   last checked member of this. Defaults to <code>[]</code>.
+#
+# [:escape_format]
+#   The escaping used by tags such as +escape+ and +pp+. Default: +:html+.
+#
+# [:strip_tag_lines]
+#   If a tag's presence introduces a blank line into the output, this option
+#   removes it. Defaults to +true+.
+#
+# [:stat_delay]
+#   Templates know when they've been altered on disk, and can dynamically
+#   reload themselves in long running applications.  Setting this option creates
+#   a purposeful delay between reloads for busy servers. Defaults to +0+
+#   (disabled).
+#
+#
 class Inversion::Template
 	extend Loggability
 	include Inversion::DataUtilities
@@ -65,13 +132,15 @@ class Inversion::Template
 	}.freeze
 
 
-	### Global config
-	@config = DEFAULT_CONFIG.dup
+	##
+	# Global config
 	class << self; attr_accessor :config; end
+	self.config = DEFAULT_CONFIG.dup
 
+	##
 	# Global template search path
-	@template_paths = []
 	class << self; attr_accessor :template_paths; end
+	self.template_paths = []
 
 
 	### Configure the templating system.

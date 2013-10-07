@@ -47,12 +47,12 @@ You can also interact with the values set in the template:
 This will call the +#full_name+ method on whatever is set as the +employee+
 attribute when rendered, and the result will take the place of the tag.
 
-Inversion also comes with a collection of other tags that provide flow
-control, exception-handling, etc.
+Inversion also comes with {a collection of other tags}[rdoc-ref:Tags] that
+provide flow control, exception-handling, etc.
 
 Here's a slightly more complex example: Say we have a layout template that
 contains all the boilerplate, navigation, etc. for the site, and then an
-`<?attr body ?>` somewhere in the content area for the content specific to
+<code><?attr body ?></code> somewhere in the content area for the content specific to
 each view:
 
     layout = Inversion::Template.load( 'templates/layout.tmpl' )
@@ -69,8 +69,8 @@ Then there's a view template that displays a bulleted list of article titles:
     </section>
 
 Loading this template results in a Ruby object whose API contains one method:
-`#articles`. To render the view, we just call that accessor with instances of
-an `Article` domain class we defined elsewhere, and then drop the 'alist'
++#articles+. To render the view, we just call that accessor with instances of
+an +Article+ domain class we defined elsewhere, and then drop the +alist+
 template into the layout and render them:
 
     alist = Inversion::Template.load( 'templates/alist.tmpl' )
@@ -79,14 +79,13 @@ template into the layout and render them:
     layout.body = alist
     puts layout.render
 
-The `for` tag in the alist will iterate over the enumerable Articles and
-generate an `<li>` for each one. The resulting template object will be set as
+The +for+ tag in the alist will iterate over the enumerable Articles and
+generate an +<li>+ for each one. The resulting template object will be set as
 the body of the layout template, and stringified when the enclosing template
 is rendered. Templates can be nested this way as deeply as you like.
 
-For detailed tag documentation and examples, see the {online
-manual}[http://deveiate.org/code/Inversion-manual/] or browse {the API
-docs}[http://deveiate.org/code/inversion].
+For detailed tag documentation and examples, start with the Inversion::Template
+class in the API documentation.
 
 
 == References
