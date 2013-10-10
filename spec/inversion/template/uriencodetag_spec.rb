@@ -25,7 +25,7 @@ describe Inversion::Template::UriencodeTag do
 	end
 
 	before( :each ) do
-		@attribute_object = mock( "template attribute" )
+		@attribute_object = double( "template attribute" )
 	end
 
 

@@ -148,7 +148,7 @@ describe Inversion::Template::AttrTag do
 		context "with a methodchain" do
 
 			before( :each ) do
-				@attribute_object = mock( "template attribute" )
+				@attribute_object = double( "template attribute" )
 			end
 
 			it "renders a single method call with no arguments" do
@@ -183,7 +183,7 @@ describe Inversion::Template::AttrTag do
 			end
 
 			it "renders multiple method calls with no arguments" do
-				additional_object = mock( 'additional template attribute' )
+				additional_object = double( 'additional template attribute' )
 				template = Inversion::Template.new( 'this is <?attr foo.bar.baz ?>' )
 				template.foo = @attribute_object
 				template.foo.should_receive( :bar ).and_return( additional_object )
@@ -193,7 +193,7 @@ describe Inversion::Template::AttrTag do
 			end
 
 			it "renders multiple method calls with arguments" do
-				additional_object = mock( 'additional template attribute' )
+				additional_object = double( 'additional template attribute' )
 				template = Inversion::Template.new( 'this is <?attr foo.bar( 8 ).baz( :woo ) ?>' )
 				template.foo = @attribute_object
 				template.foo.should_receive( :bar ).with( 8 ).and_return( additional_object )
@@ -204,7 +204,7 @@ describe Inversion::Template::AttrTag do
 
 			it "renders method calls with template attribute arguments" do
 				template = Inversion::Template.new( 'this is <?attr foo.bar( baz ) ?>' )
-				foo = mock( "foo attribute object" )
+				foo = double( "foo attribute object" )
 
 				template.foo = foo
 				template.baz = 18

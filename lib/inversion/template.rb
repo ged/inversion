@@ -214,7 +214,7 @@ class Inversion::Template
 
 		@source       = source
 		@node_tree    = [] # Parser expects this to always be an Array
-		@options      = opts
+		@options      = self.class.config.merge( opts )
 		@attributes   = {}
 		@source_file  = nil
 		@created_at   = Time.now
