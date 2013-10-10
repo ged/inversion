@@ -47,7 +47,7 @@ describe Inversion::Template::EndTag do
 
 	it "closes the parse state's currently-open container node before it's appended" do
 		container = double( "container node", :tagname => 'for', :location => nil )
-		parserstate = mock( "parser state" )
+		parserstate = double( "parser state" )
 
 		parserstate.should_receive( :pop ).and_return( container )
 

@@ -74,6 +74,22 @@ describe Inversion::Template do
 		end
 	end
 
+	it "carries its global configuration to per-template options" do
+		begin
+			orig_config = Inversion::Template.config
+			Inversion::Template.configure( :stat_delay => 300 )
+
+			template = Inversion::Template.new( 'hi!' )
+			expect( template.options[ :stat_delay ] ).to eq( 300 )
+
+			template = Inversion::Template.new( 'hi!', :stat_delay => 600 )
+			expect( template.options[ :stat_delay ] ).to eq( 600 )
+		ensure
+			Inversion::Template.config = orig_config
+		end
+	end
+
+
 	it "can make an human-readable string version of itself suitable for debugging" do
 		IO.should_receive( :read ).with( '/tmp/inspect.tmpl' ).and_return( '<?attr foo ?>' )
 		tmpl = Inversion::Template.load( '/tmp/inspect.tmpl' )
@@ -134,7 +150,7 @@ describe Inversion::Template do
 		context "that hasn't changed since it was loaded" do
 
 			before( :each ) do
-				@template.source_file.stub!( :mtime ).and_return( @timestamp )
+				@template.source_file.stub( :mtime ).and_return( @timestamp )
 			end
 
 			it "knows that it hasn't changed" do
@@ -153,7 +169,7 @@ describe Inversion::Template do
 				end
 
 				it "returns unchanged if the delay time has expired" do
-					@template.source_file.stub!( :mtime ).and_return( @timestamp - 30 )
+					@template.source_file.stub( :mtime ).and_return( @timestamp - 30 )
 					@template.instance_variable_set( :@last_checked, @timestamp - 30 )
 					@template.should_not be_changed()
 				end
@@ -163,7 +179,7 @@ describe Inversion::Template do
 		context "that has changed since it was loaded" do
 
 			before( :each ) do
-				@template.source_file.stub!( :mtime ).and_return( @timestamp + 1 )
+				@template.source_file.stub( :mtime ).and_return( @timestamp + 1 )
 			end
 
 			it "knows that is has changed" do

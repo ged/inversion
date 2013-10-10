@@ -127,7 +127,7 @@ describe Inversion::Parser do
 		end
 
 		it "calls the #after_appending hook of container nodes when they're popped" do
-			container = mock( "container tag", :before_appending => false, :is_container? => true )
+			container = double( "container tag", :before_appending => false, :is_container? => true )
 			@state << container
 
 			container.should_receive( :after_appending ).with( @state )
@@ -150,14 +150,14 @@ describe Inversion::Parser do
 		end
 
 		it "calls the #before_appending callback on nodes that are appended to it" do
-			node = mock( "node", :is_container? => false, :after_appending => nil )
+			node = double( "node", :is_container? => false, :after_appending => nil )
 			node.should_receive( :before_appending ).with( @state )
 
 			@state << node
 		end
 
 		it "calls the #after_appending callback on nodes that are appended to it" do
-			node = mock( "node", :is_container? => false, :before_appending => nil )
+			node = double( "node", :is_container? => false, :before_appending => nil )
 			node.should_receive( :after_appending ).with( @state )
 
 			@state << node
