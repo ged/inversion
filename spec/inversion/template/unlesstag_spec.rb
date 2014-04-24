@@ -1,30 +1,13 @@
 #!/usr/bin/env rspec -cfd -b
 # vim: set noet nosta sw=4 ts=4 :
 
-BEGIN {
-	require 'pathname'
-	basedir = Pathname( __FILE__ ).dirname.parent.parent.parent
-	libdir = basedir + 'lib'
+require_relative '../../helpers'
 
-	$LOAD_PATH.unshift( basedir.to_s ) unless $LOAD_PATH.include?( basedir.to_s )
-	$LOAD_PATH.unshift( libdir.to_s ) unless $LOAD_PATH.include?( libdir.to_s )
-}
-
-require 'rspec'
-require 'spec/lib/helpers'
 require 'inversion/template/unlesstag'
 require 'inversion/template/textnode'
 require 'inversion/renderstate'
 
 describe Inversion::Template::UnlessTag do
-
-	before( :all ) do
-		setup_logging( :fatal )
-	end
-
-	after( :all ) do
-		reset_logging()
-	end
 
 
 	it "renders its contents if its attribute is false" do
@@ -33,7 +16,7 @@ describe Inversion::Template::UnlessTag do
 
 		renderstate = Inversion::RenderState.new( :attribute => false )
 		tag.render( renderstate )
-		renderstate.to_s.should == 'the body'
+		expect( renderstate.to_s ).to eq( 'the body' )
 	end
 
 	it "renders its contents if its methodchain is false" do
@@ -42,7 +25,7 @@ describe Inversion::Template::UnlessTag do
 
 		renderstate = Inversion::RenderState.new( :attribute => {:bar => 1} )
 		tag.render( renderstate )
-		renderstate.to_s.should == 'the body'
+		expect( renderstate.to_s ).to eq( 'the body' )
 	end
 
 	it "doesn't render its contents if its attribute is true" do
@@ -51,7 +34,7 @@ describe Inversion::Template::UnlessTag do
 
 		renderstate = Inversion::RenderState.new( :attribute => true )
 		tag.render( renderstate )
-		renderstate.to_s.should == ''
+		expect( renderstate.to_s ).to eq( '' )
 	end
 
 	it "doesn't render its contents if its methodchain is true" do
@@ -60,7 +43,7 @@ describe Inversion::Template::UnlessTag do
 
 		renderstate = Inversion::RenderState.new( :attribute => {:foo => 1} )
 		tag.render( renderstate )
-		renderstate.to_s.should == ''
+		expect( renderstate.to_s ).to eq( '' )
 	end
 
 	context "with an 'else' clause" do
@@ -76,13 +59,13 @@ describe Inversion::Template::UnlessTag do
 		it "only renders the second half of the contents if its attribute is true" do
 			renderstate = Inversion::RenderState.new( :attribute => true )
 			@tag.render( renderstate )
-			renderstate.to_s.should == 'the body after else'
+			expect( renderstate.to_s ).to eq( 'the body after else' )
 		end
 
 		it "only renders the first half of the contents if its attribute is false" do
 			renderstate = Inversion::RenderState.new( :attribute => false )
 			@tag.render( renderstate )
-			renderstate.to_s.should == 'the body before else'
+			expect( renderstate.to_s ).to eq( 'the body before else' )
 		end
 
 	end

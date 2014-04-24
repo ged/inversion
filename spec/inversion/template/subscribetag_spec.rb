@@ -1,36 +1,19 @@
 #!/usr/bin/env rspec -cfd -b
 # vim: set noet nosta sw=4 ts=4 :
 
-BEGIN {
-	require 'pathname'
-	basedir = Pathname( __FILE__ ).dirname.parent.parent.parent
-	libdir = basedir + 'lib'
+require_relative '../../helpers'
 
-	$LOAD_PATH.unshift( basedir.to_s ) unless $LOAD_PATH.include?( basedir.to_s )
-	$LOAD_PATH.unshift( libdir.to_s ) unless $LOAD_PATH.include?( libdir.to_s )
-}
-
-require 'rspec'
-require 'spec/lib/helpers'
 require 'inversion/template'
 require 'inversion/template/textnode'
 require 'inversion/template/subscribetag'
 
 describe Inversion::Template::SubscribeTag do
 
-	before( :all ) do
-		setup_logging( :fatal )
-	end
-
-	after( :all ) do
-		reset_logging()
-	end
-
 
 	it "raises a parse error if the key isn't a simple attribute" do
 		expect {
 			Inversion::Template::SubscribeTag.new( 'a.non-identifier' )
-		}.to raise_exception( Inversion::ParseError, /malformed subscribe/i )
+		}.to raise_error( Inversion::ParseError, /malformed subscribe/i )
 	end
 
 	it "renders the nodes published by an immediate subtemplate with the same key" do
@@ -39,7 +22,7 @@ describe Inversion::Template::SubscribeTag do
 
 		template.subtemplate = subtemplate
 
-		template.render.should == '--a style--(subtemplate)'
+		expect( template.render ).to eq( '--a style--(subtemplate)' )
 	end
 
 	it "renders nodes published by an immediate subtemplate that's rendered before it" do
@@ -48,7 +31,7 @@ describe Inversion::Template::SubscribeTag do
 
 		template.subtemplate = subtemplate
 
-		template.render.should == '--(subtemplate)--a style'
+		expect( template.render ).to eq( '--(subtemplate)--a style' )
 	end
 
 	it "doesn't render anything if there are no publications with its key" do
@@ -57,12 +40,12 @@ describe Inversion::Template::SubscribeTag do
 
 		template.subtemplate = subtemplate
 
-		template.render.should == '----(subtemplate)'
+		expect( template.render ).to eq( '----(subtemplate)' )
 	end
 
 	it "renders a default value if one is supplied" do
 		template = Inversion::Template.new( "<?subscribe not_here || default value! ?>" )
-		template.render.should == "default value!"
+		expect( template.render ).to eq( "default value!" )
 	end
 
 	it "doesn't retain published nodes across renders" do
@@ -71,8 +54,8 @@ describe Inversion::Template::SubscribeTag do
 
 		template.subtemplate = subtemplate
 
-		template.render.should == '--a style--(subtemplate)'
-		template.render.should == '--a style--(subtemplate)'
+		expect( template.render ).to eq( '--a style--(subtemplate)' )
+		expect( template.render ).to eq( '--a style--(subtemplate)' )
 	end
 
 end

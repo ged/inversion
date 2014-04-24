@@ -1,23 +1,13 @@
 #!/usr/bin/env rspec -cfd -b
 # vim: set noet nosta sw=4 ts=4 :
 
-BEGIN {
-	require 'pathname'
-	basedir = Pathname( __FILE__ ).dirname.parent.parent.parent
-	libdir = basedir + 'lib'
+require_relative '../../helpers'
 
-	$LOAD_PATH.unshift( basedir.to_s ) unless $LOAD_PATH.include?( basedir.to_s )
-	$LOAD_PATH.unshift( libdir.to_s ) unless $LOAD_PATH.include?( libdir.to_s )
-}
-
-require 'rspec'
-require 'spec/lib/helpers'
 require 'inversion/template/tag'
 
 describe Inversion::Template::Tag do
 
 	before( :all ) do
-		setup_logging( :fatal )
 		@real_derivatives = Inversion::Template::Tag.derivatives.dup
 		@real_types = Inversion::Template::Tag.types.dup
 	end
@@ -30,46 +20,43 @@ describe Inversion::Template::Tag do
 	after( :all ) do
 		Inversion::Template::Tag.instance_variable_set( :@derivatives, @real_derivatives )
 		Inversion::Template::Tag.instance_variable_set( :@types, @real_types )
-		reset_logging()
 	end
 
 
 	it "loads pluggable types via Rubygems" do
 		pluginfile = '/usr/lib/ruby/gems/1.8/gems/inversion-extra-1.0.8/lib/inversion/template/zebratag.rb'
-		Gem.stub( :find_files ).
+		expect( Gem ).to receive( :find_files ).
 			with( Inversion::Template::Tag::TAG_PLUGIN_PATTERN ).
 			and_return([ pluginfile ])
-		Inversion::Template::Tag.should_receive( :require ).
-			with( 'inversion/template/zebratag' ).
-			and_return {
-				Class.new( Inversion::Template::Tag ) {
-					def self::name; "ZebraTag"; end
-				}
-			}
+		expect( Inversion::Template::Tag ).to receive( :require ) do |filename|
+			expect( filename ).to eq( 'inversion/template/zebratag' )
+			Class.new( Inversion::Template::Tag ) do
+				def self::name; "ZebraTag"; end
+			end
+		end
 		result = Inversion::Template::Tag.load_all
-		result.should be_a( Hash )
-		result.should have( 1 ).member
-		result.should have_key( :zebra )
-		result[:zebra].should be_a( Class )
-		result[:zebra].should < Inversion::Template::Tag
+		expect( result ).to be_a( Hash )
+		expect( result.size ).to eq( 1 )
+		expect( result ).to have_key( :zebra )
+		expect( result[:zebra] ).to be_a( Class )
+		expect( result[:zebra] ).to be < Inversion::Template::Tag
 	end
 
 	it "doesn't include abstract tag types in its loading mechanism" do
 		pluginfile = '/usr/lib/ruby/gems/1.8/gems/inversion-extra-1.0.8/lib/inversion/template/zebratag.rb'
-		Gem.stub( :find_files ).
+		expect( Gem ).to receive( :find_files ).
 			with( Inversion::Template::Tag::TAG_PLUGIN_PATTERN ).
 			and_return([ pluginfile ])
-		Inversion::Template::Tag.should_receive( :require ).
-			with( 'inversion/template/zebratag' ).
-			and_return {
-				Class.new( Inversion::Template::Tag ) {
-					include Inversion::AbstractClass
-					def self::name; "ZebraTag"; end
-				}
-			}
+		expect( Inversion::Template::Tag ).to receive( :require ) do |filename|
+			expect( filename ).to eq( 'inversion/template/zebratag' )
+			Class.new( Inversion::Template::Tag ) do
+				include Inversion::AbstractClass
+				def self::name; "ZebraTag"; end
+			end
+		end
 		result = Inversion::Template::Tag.load_all
-		result.should be_a( Hash )
-		result.should == {}
+		expect( result ).to be_a( Hash )
+		expect( result ).to eq( {} )
 	end
 
 
@@ -90,7 +77,7 @@ describe Inversion::Template::Tag do
 
 
 		it "can render itself as a comment for template debugging" do
-			@tag.as_comment_body.should == %{Concrete "the body" at line ??, column ??}
+			expect( @tag.as_comment_body ).to eq( %{Concrete "the body" at line ??, column ??} )
 		end
 
 	end
