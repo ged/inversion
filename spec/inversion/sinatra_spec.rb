@@ -1,19 +1,10 @@
 #!/usr/bin/env rspec -cfd -b
 # vim: set noet nosta sw=4 ts=4 :
 
-BEGIN {
-	require 'pathname'
-	basedir = Pathname( __FILE__ ).dirname.parent.parent
-	libdir  = basedir + 'lib'
-
-	$LOAD_PATH.unshift( basedir.to_s ) unless $LOAD_PATH.include?( basedir.to_s )
-	$LOAD_PATH.unshift( libdir.to_s )  unless $LOAD_PATH.include?( libdir.to_s )
-}
-
-require 'rspec'
-require 'spec/lib/helpers'
+require_relative '../helpers'
 
 begin
+	require 'sinatra'
 	require 'rack/test'
 	require 'inversion/sinatra'
 	$sinatra_support = true
@@ -25,21 +16,17 @@ end
 describe "Sinatra support", :if => $sinatra_support do
 	include Rack::Test::Methods if defined?( ::Rack )
 
-	before( :all ) do
-		setup_logging( :fatal )
-	end
-
 	before( :each ) do
 		@datadir = Pathname( __FILE__ ).dirname.parent + 'data'
-		Sinatra::Base.set :environment, :test
 	end
 
 	def app
+		Sinatra::Base.set :environment, :test
 		@app
 	end
 
 	it "extends the Sinatra DSL with an #inversion helper method" do
-		Sinatra::Base.instance_methods.should include( :inversion )
+		expect( Sinatra::Base.instance_methods ).to include( :inversion )
 	end
 
 	it "renders .inversion files in views path" do
@@ -51,8 +38,8 @@ describe "Sinatra support", :if => $sinatra_support do
 		end
 
 		get '/'
-		last_response.should be_ok
-	    last_response.body.should == 'Hello, Sinatra!'
+		expect( last_response ).to be_ok
+		expect( last_response.body ).to eq( 'Hello, Sinatra!' )
 	end
 
 end

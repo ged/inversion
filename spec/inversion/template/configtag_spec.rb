@@ -1,29 +1,18 @@
 #!/usr/bin/env rspec -cfd -b
 # vim: set noet nosta sw=4 ts=4 :
 
-BEGIN {
-	require 'pathname'
-	basedir = Pathname( __FILE__ ).dirname.parent.parent.parent
-	libdir = basedir + 'lib'
+require_relative '../../helpers'
 
-	$LOAD_PATH.unshift( basedir.to_s ) unless $LOAD_PATH.include?( basedir.to_s )
-	$LOAD_PATH.unshift( libdir.to_s ) unless $LOAD_PATH.include?( libdir.to_s )
-}
-
-require 'rspec'
-require 'spec/lib/helpers'
 require 'inversion/template/configtag'
 
 describe Inversion::Template::ConfigTag do
 
 	before( :all ) do
-		setup_logging( :fatal )
 		Inversion::Template.template_paths << 'spec/data'
 	end
 
 	after( :all ) do
 		Inversion::Template.template_paths.delete( 'spec/data' )
-		reset_logging()
 	end
 
 
@@ -31,7 +20,7 @@ describe Inversion::Template::ConfigTag do
 	# <?config comment_end: */ ?>
 	it "can contain a single configuration setting" do
 		tag = Inversion::Template::ConfigTag.new( 'comment_start: /*' )
-		tag.options.should == { :comment_start => '/*' }
+		expect( tag.options ).to eq({ :comment_start => '/*' })
 	end
 
 	# <?config
@@ -67,13 +56,13 @@ describe Inversion::Template::ConfigTag do
 		tag = Inversion::Template::ConfigTag.new( 'comment_start: /*' )
 		state = Inversion::RenderState.new
 
-		expect( tag.render(state) ).to be nil
+		expect( tag.render(state) ).to be_nil
 	end
 
 	it "raises an error on an empty body" do
 		expect {
 			Inversion::Template::ConfigTag.new( '' )
-		}.to raise_exception( Inversion::ParseError, /empty config settings/i )
+		}.to raise_error( Inversion::ParseError, /empty config settings/i )
 	end
 
 
@@ -87,7 +76,7 @@ describe Inversion::Template::ConfigTag do
 		TEMPLATE
 		expect {
 			Inversion::Template.new( source, :ignore_unknown_tags => true )
-		}.to raise_exception( Inversion::ParseError, /unknown tag "what"/i )
+		}.to raise_error( Inversion::ParseError, /unknown tag "what"/i )
 	end
 
 	it "can turn on debugging comments in rendered output" do

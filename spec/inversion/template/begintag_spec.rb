@@ -1,18 +1,9 @@
 #!/usr/bin/env rspec -cfd -b
 # vim: set noet nosta sw=4 ts=4 :
 
-BEGIN {
-	require 'pathname'
-	basedir = Pathname( __FILE__ ).dirname.parent.parent.parent
-	libdir = basedir + 'lib'
+require_relative '../../helpers'
 
-	$LOAD_PATH.unshift( basedir.to_s ) unless $LOAD_PATH.include?( basedir.to_s )
-	$LOAD_PATH.unshift( libdir.to_s ) unless $LOAD_PATH.include?( libdir.to_s )
-}
-
-require 'rspec'
 require 'ostruct'
-require 'spec/lib/helpers'
 require 'inversion/template/begintag'
 require 'inversion/template/textnode'
 require 'inversion/template/attrtag'
@@ -21,14 +12,6 @@ require 'inversion/template/endtag'
 require 'inversion/renderstate'
 
 describe Inversion::Template::BeginTag do
-
-	before( :all ) do
-		setup_logging( :fatal )
-	end
-
-	after( :all ) do
-		reset_logging()
-	end
 
 
 	context "without any rescue clauses" do
@@ -42,14 +25,14 @@ describe Inversion::Template::BeginTag do
 		it "renders its subnodes as-is if none of them raise an exception"  do
 			renderstate = Inversion::RenderState.new( :foo => OpenStruct.new(:baz => 'the body') )
 			renderstate << @tag
-			renderstate.to_s.should == 'the body:the stuff after the attr'
+			expect( renderstate.to_s ).to eq( 'the body:the stuff after the attr' )
 		end
 
 		it "uses the configured error behavior of the template if a subnode raises any exception" do
 			renderstate = Inversion::RenderState.new
 			renderstate << @tag
-			renderstate.to_s.should =~ /NoMethodError/
-			renderstate.to_s.should_not =~ /the stuff after the attr/i
+			expect( renderstate.to_s ).to match( /NoMethodError/ )
+			expect( renderstate.to_s ).to_not match( /the stuff after the attr/i )
 		end
 
 	end
@@ -71,13 +54,13 @@ describe Inversion::Template::BeginTag do
 		end
 
 		it "contains one rescue clause for RuntimeErrors" do
-			@tag.rescue_clauses.should == [ [[::RuntimeError], [@rescue_textnode]] ]
+			expect( @tag.rescue_clauses ).to eq([ [[::RuntimeError], [@rescue_textnode]] ])
 		end
 
 		it "renders its subnodes as-is if none of them raise an exception"  do
 			renderstate = Inversion::RenderState.new( :foo => OpenStruct.new(:baz => 'the body') )
 			renderstate << @tag
-			renderstate.to_s.should == 'the body:the stuff after the attr'
+			expect( renderstate.to_s ).to eq( 'the body:the stuff after the attr' )
 		end
 
 		it "renders the rescue section if a subnode raises a RuntimeError"  do
@@ -86,7 +69,7 @@ describe Inversion::Template::BeginTag do
 
 			renderstate = Inversion::RenderState.new( :foo => fooobj )
 			renderstate << @tag
-			renderstate.to_s.should == 'rescue stuff'
+			expect( renderstate.to_s ).to eq( 'rescue stuff' )
 		end
 
 		it "uses the configured error behavior of the template if a subnode raises an " +
@@ -96,9 +79,9 @@ describe Inversion::Template::BeginTag do
 
 			renderstate = Inversion::RenderState.new( :foo => fooobj )
 			renderstate << @tag
-			renderstate.to_s.should =~ /ENOENT/i
-			renderstate.to_s.should_not =~ /rescue stuff/i
-			renderstate.to_s.should_not =~ /the stuff after the attr/i
+			expect( renderstate.to_s ).to match( /ENOENT/i )
+			expect( renderstate.to_s ).to_not match( /rescue stuff/i )
+			expect( renderstate.to_s ).to_not match( /the stuff after the attr/i )
 		end
 	end
 
@@ -120,13 +103,13 @@ describe Inversion::Template::BeginTag do
 		end
 
 		it "contains one rescue clause for the specified exception type" do
-			@tag.rescue_clauses.should == [ [[::SystemCallError], [@rescue_textnode]] ]
+			expect( @tag.rescue_clauses ).to eq( [ [[::SystemCallError], [@rescue_textnode]] ] )
 		end
 
 		it "renders its subnodes as-is if none of them raise an exception"  do
 			renderstate = Inversion::RenderState.new( :foo => OpenStruct.new(:baz => 'the body') )
 			renderstate << @tag
-			renderstate.to_s.should == 'the body:the stuff after the attr'
+			expect( renderstate.to_s ).to eq( 'the body:the stuff after the attr' )
 		end
 
 		it "renders the rescue section if a subnode raises the specified exception type"  do
@@ -135,7 +118,7 @@ describe Inversion::Template::BeginTag do
 
 			renderstate = Inversion::RenderState.new( :foo => fooobj )
 			renderstate << @tag
-			renderstate.to_s.should == 'rescue stuff'
+			expect( renderstate.to_s ).to eq( 'rescue stuff' )
 		end
 
 		it "uses the configured error behavior of the template if a subnode raises an " +
@@ -145,9 +128,9 @@ describe Inversion::Template::BeginTag do
 
 			renderstate = Inversion::RenderState.new( :foo => fooobj )
 			renderstate << @tag
-			renderstate.to_s.should =~ /RuntimeError/i
-			renderstate.to_s.should_not =~ /rescue stuff/i
-			renderstate.to_s.should_not =~ /the stuff after the attr/i
+			expect( renderstate.to_s ).to match( /RuntimeError/i )
+			expect( renderstate.to_s ).to_not match( /rescue stuff/i )
+			expect( renderstate.to_s ).to_not match( /the stuff after the attr/i )
 		end
 	end
 
@@ -170,16 +153,16 @@ describe Inversion::Template::BeginTag do
 		end
 
 		it "contains a rescue tuple for each rescue tag" do
-			@tag.rescue_clauses.should == [
+			expect( @tag.rescue_clauses ).to eq([
 				[[::RuntimeError], [@rescue_textnode]],
 				[[Errno::ENOENT, Errno::EWOULDBLOCK], [@rescue_textnode2]],
-			]
+			])
 		end
 
 		it "renders its subnodes as-is if none of them raise an exception"  do
 			renderstate = Inversion::RenderState.new( :foo => OpenStruct.new(:baz => 'the body') )
 			renderstate << @tag
-			renderstate.to_s.should == 'the body:the stuff after the attr'
+			expect( renderstate.to_s ).to eq( 'the body:the stuff after the attr' )
 		end
 
 		it "renders the first rescue section if a subnode raises the exception it " +
@@ -189,7 +172,7 @@ describe Inversion::Template::BeginTag do
 
 			renderstate = Inversion::RenderState.new( :foo => fooobj )
 			renderstate << @tag
-			renderstate.to_s.should == 'rescue stuff'
+			expect( renderstate.to_s ).to eq( 'rescue stuff' )
 		end
 
 		it "renders the second rescue section if a subnode raises the exception it " +
@@ -199,7 +182,7 @@ describe Inversion::Template::BeginTag do
 
 			renderstate = Inversion::RenderState.new( :foo => fooobj )
 			renderstate << @tag
-			renderstate.to_s.should == 'alternative rescue stuff'
+			expect( renderstate.to_s ).to eq( 'alternative rescue stuff' )
 		end
 
 		it "uses the configured error behavior of the template if a subnode raises an " +
@@ -209,9 +192,9 @@ describe Inversion::Template::BeginTag do
 
 			renderstate = Inversion::RenderState.new( :foo => fooobj )
 			renderstate << @tag
-			renderstate.to_s.should =~ /ENOMEM/i
-			renderstate.to_s.should_not =~ /rescue stuff/i
-			renderstate.to_s.should_not =~ /the stuff after the attr/i
+			expect( renderstate.to_s ).to match( /ENOMEM/i )
+			expect( renderstate.to_s ).to_not match( /rescue stuff/i )
+			expect( renderstate.to_s ).to_not match( /the stuff after the attr/i )
 		end
 	end
 

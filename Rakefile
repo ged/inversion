@@ -24,17 +24,17 @@ hoespec = Hoe.spec 'inversion' do
 	self.developer 'Michael Granger', 'ged@FaerieMUD.org'
 	self.developer 'Mahlon E. Smith', 'mahlon@martini.nu'
 
-	self.dependency 'loggability',   '~> 0.4'
+	self.dependency 'loggability',   '~> 0.11'
 
-	self.dependency 'highline',      '~> 1.6',  :development
-	self.dependency 'hoe-deveiate',  '~> 0.3',  :development
-	self.dependency 'hoe-bundler',   '~> 1.2',  :development
-	self.dependency 'rack-test',     '~> 0.6',  :development
-	self.dependency 'simplecov',     '~> 0.6',  :development
-	self.dependency 'sinatra',       '~> 1.3',  :development
-	self.dependency 'tilt',          '~> 1.4',  :development
-	self.dependency 'sysexits',      '~> 1.0',  :development
-	self.dependency 'trollop',       '~> 1.16', :development
+	self.dependency 'highline',      '~> 1.6', :development
+	self.dependency 'hoe-deveiate',  '~> 0.5', :development
+	self.dependency 'hoe-bundler',   '~> 1.2', :development
+	self.dependency 'rack-test',     '~> 0.6', :development
+	self.dependency 'simplecov',     '~> 0.8', :development
+	self.dependency 'sinatra',       '~> 1.4', :development
+	self.dependency 'tilt',          '~> 2.0', :development
+	self.dependency 'sysexits',      '~> 1.0', :development
+	self.dependency 'trollop',       '~> 2.0', :development
 	self.dependency 'rdoc-generator-fivefish', '~> 0', :development
 
 	self.require_ruby_version( '>=1.9.2' )

@@ -1,17 +1,8 @@
 #!/usr/bin/env rspec -cfd -b
 # vim: set noet nosta sw=4 ts=4 :
 
-BEGIN {
-	require 'pathname'
-	basedir = Pathname( __FILE__ ).dirname.parent.parent.parent
-	libdir = basedir + 'lib'
+require_relative '../../helpers'
 
-	$LOAD_PATH.unshift( basedir.to_s ) unless $LOAD_PATH.include?( basedir.to_s )
-	$LOAD_PATH.unshift( libdir.to_s ) unless $LOAD_PATH.include?( libdir.to_s )
-}
-
-require 'rspec'
-require 'spec/lib/helpers'
 require 'inversion/template/begintag'
 require 'inversion/template/rescuetag'
 require 'inversion/template/commenttag'
@@ -20,32 +11,24 @@ require 'inversion/renderstate'
 
 describe Inversion::Template::RescueTag do
 
-	before( :all ) do
-		setup_logging( :fatal )
-	end
-
-	after( :all ) do
-		reset_logging()
-	end
-
 	it "handles a non-existant body" do
 		tag = Inversion::Template::RescueTag.new( nil )
-		tag.exception_types.should == [ ::RuntimeError ]
+		expect( tag.exception_types ).to eq( [ ::RuntimeError ] )
 	end
 
 	it "parses its body into classes" do
 		tag = Inversion::Template::RescueTag.new( 'ScriptError' )
-		tag.exception_types.should == [ ::ScriptError ]
+		expect( tag.exception_types ).to eq( [ ::ScriptError ] )
 	end
 
 	it "handles fully-qualified class names" do
 		tag = Inversion::Template::RescueTag.new( '::ScriptError' )
-		tag.exception_types.should == [ ::ScriptError ]
+		expect( tag.exception_types ).to eq( [ ::ScriptError ] )
 	end
 
 	it "can parse multiple exception class names" do
 		tag = Inversion::Template::RescueTag.new( '::ScriptError, Inversion::ParseError' )
-		tag.exception_types.should == [ ::ScriptError, Inversion::ParseError ]
+		expect( tag.exception_types ).to eq( [ ::ScriptError, Inversion::ParseError ] )
 	end
 
 	it "can be appended to a 'begin' tag" do
@@ -58,8 +41,8 @@ describe Inversion::Template::RescueTag do
 
 		parserstate << begintag << rescuetag << textnode << endtag
 
-		parserstate.tree.should == [ begintag, endtag ]
-		begintag.rescue_clauses.should == [ [[::RuntimeError], [textnode]] ]
+		expect( parserstate.tree ).to eq( [ begintag, endtag ] )
+		expect( begintag.rescue_clauses ).to eq( [ [[::RuntimeError], [textnode]] ] )
 	end
 
 	it "can be appended to a 'comment' tag" do
@@ -71,8 +54,8 @@ describe Inversion::Template::RescueTag do
 
 		parserstate << commenttag << rescuetag << endtag
 
-		parserstate.tree.should == [ commenttag, endtag ]
-		commenttag.subnodes.should include( rescuetag )
+		expect( parserstate.tree ).to eq( [ commenttag, endtag ] )
+		expect( commenttag.subnodes ).to include( rescuetag )
 	end
 
 	it "raises an error if it's about to be appended to anything other than a 'begin' or " +
@@ -83,7 +66,7 @@ describe Inversion::Template::RescueTag do
 
 		expect {
 			parserstate << Inversion::Template::RescueTag.new
-		}.to raise_exception( Inversion::ParseError, /'for' tags can't have 'rescue' clauses/i )
+		}.to raise_error( Inversion::ParseError, /'for' tags can't have 'rescue' clauses/i )
 	end
 
 
@@ -93,14 +76,14 @@ describe Inversion::Template::RescueTag do
 
 		expect {
 			parserstate << Inversion::Template::RescueTag.new
-		}.to raise_exception( Inversion::ParseError, /orphaned 'rescue' tag/i )
+		}.to raise_error( Inversion::ParseError, /orphaned 'rescue' tag/i )
 	end
 
 
 	it "doesn't render as anything by itself" do
 		renderstate = Inversion::RenderState.new
 		tag = Inversion::Template::RescueTag.new
-		tag.render( renderstate ).should be_nil()
+		expect( tag.render( renderstate ) ).to be_nil()
 	end
 
 end

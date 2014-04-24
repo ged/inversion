@@ -2,43 +2,25 @@
 # encoding: utf-8
 # vim: set noet nosta sw=4 ts=4 :
 
-BEGIN {
-	require 'pathname'
-	basedir = Pathname( __FILE__ ).dirname.parent.parent
-	libdir  = basedir + 'lib'
+require_relative '../helpers'
 
-	$LOAD_PATH.unshift( basedir.to_s ) unless $LOAD_PATH.include?( basedir.to_s )
-	$LOAD_PATH.unshift( libdir.to_s )  unless $LOAD_PATH.include?( libdir.to_s )
-}
-
-require 'rspec'
-
-require 'spec/lib/helpers'
 require 'inversion/renderstate'
 require 'inversion/template/attrtag'
 require 'inversion/template/textnode'
 
 describe Inversion::RenderState do
 
-	before( :all ) do
-		setup_logging( :fatal )
-	end
-
-	after( :all ) do
-		reset_logging()
-	end
-
 
 	it "provides access to the block it was constructed with if there was one" do
 		block = Proc.new {}
 		state = Inversion::RenderState.new( &block )
-		state.block.should equal( block )
+		expect( state.block ).to equal( block )
 	end
 
 	it "can evaluate code in the context of itself" do
 		attributes = { :foot => "in mouth", :bear => "in woods" }
 		state = Inversion::RenderState.new( attributes )
-		state.eval( "foot" ).should == 'in mouth'
+		expect( state.eval( "foot" ) ).to eq( 'in mouth' )
 	end
 
 
@@ -49,11 +31,11 @@ describe Inversion::RenderState do
 
 			state = Inversion::RenderState.new( attributes )
 
-			state.scope.__locals__.should_not equal( attributes )
-			state.scope[:foot].should == "in mouth"
-			state.scope[:foot].should_not equal( attributes[:foot] )
-			state.scope[:bear].should == "in woods"
-			state.scope[:bear].should_not equal( attributes[:bear] )
+			expect( state.scope.__locals__ ).to_not equal( attributes )
+			expect( state.scope[:foot] ).to eq( "in mouth" )
+			expect( state.scope[:foot] ).to_not equal( attributes[:foot] )
+			expect( state.scope[:bear] ).to eq( "in woods" )
+			expect( state.scope[:bear] ).to_not equal( attributes[:bear] )
 		end
 
 		it "preserves tainted status when copying its attributes" do
@@ -62,7 +44,7 @@ describe Inversion::RenderState do
 
 			state = Inversion::RenderState.new( attributes )
 
-			state.scope[:danger].should be_tainted()
+			expect( state.scope[:danger] ).to be_tainted()
 		end
 
 		it "preserves singleton methods on attribute objects when copying" do
@@ -71,7 +53,7 @@ describe Inversion::RenderState do
 
 			state = Inversion::RenderState.new( :foo => obj )
 
-			state.scope[:foo].singleton_methods.map( &:to_sym ).should include( :foo )
+			expect( state.scope[:foo].singleton_methods.map( &:to_sym ) ).to include( :foo )
 		end
 
 		it "preserves frozen status when copying its attributes" do
@@ -80,7 +62,7 @@ describe Inversion::RenderState do
 
 			state = Inversion::RenderState.new( attributes )
 
-			state.scope[:danger].should be_frozen()
+			expect( state.scope[:danger] ).to be_frozen()
 		end
 
 		it "can override its attributes for the duration of a block" do
@@ -89,11 +71,11 @@ describe Inversion::RenderState do
 			state = Inversion::RenderState.new( attributes )
 
 			state.with_attributes( :foot => 'ball' ) do
-				state.foot.should == 'ball'
-				state.bear.should == 'in woods'
+				expect( state.foot ).to eq( 'ball' )
+				expect( state.bear ).to eq( 'in woods' )
 			end
 
-			state.scope[:foot].should == 'in mouth'
+			expect( state.scope[:foot] ).to eq( 'in mouth' )
 		end
 
 
@@ -108,7 +90,7 @@ describe Inversion::RenderState do
 				end
 			}.to raise_error()
 
-			state.scope[:foot].should == 'in mouth'
+			expect( state.scope[:foot] ).to eq( 'in mouth' )
 		end
 
 
@@ -122,12 +104,12 @@ describe Inversion::RenderState do
 
 			it "provides accessor methods for its attributes" do
 				state = Inversion::RenderState.new( :bar => :the_attribute_value )
-				state.scope.bar.should == :the_attribute_value
+				expect( state.scope.bar ).to eq( :the_attribute_value )
 			end
 
 			it "doesn't error if an accessor for a non-existant attribute is called" do
 				state = Inversion::RenderState.new( :bar => :the_attribute_value )
-				state.scope.foo.should be_nil()
+				expect( state.scope.foo ).to be_nil()
 			end
 
 		end
@@ -142,11 +124,11 @@ describe Inversion::RenderState do
 
 			thirdstate = state.merge( anotherstate )
 
-			thirdstate.attributes.should == {
+			expect( thirdstate.attributes ).to eq({
 				:bar => :the_bar_value,
 				:foo => :the_foo_value
-			}
-			thirdstate.options.should include(
+			})
+			expect( thirdstate.options ).to include(
 				:debugging_comments => true,
 				:on_render_error => :propagate
 			)
@@ -162,7 +144,7 @@ describe Inversion::RenderState do
 		end
 
 		it "provides a mechanism for storing tag state for the current render" do
-			@renderstate.tag_data.should be_a( Hash )
+			expect( @renderstate.tag_data ).to be_a( Hash )
 		end
 
 		it "can override tag state for the duration of a block" do
@@ -170,14 +152,14 @@ describe Inversion::RenderState do
 			@renderstate.tag_data[ :colorado ] = 'fine fishing'
 
 			@renderstate.with_tag_data( :alaska => 'good fishing' ) do
-				@renderstate.tag_data[:alaska].should == 'good fishing'
+				expect( @renderstate.tag_data[:alaska] ).to eq( 'good fishing' )
 				@renderstate.tag_data[:alaska] = 'blueberry bear poop'
 				@renderstate.tag_data[:colorado] = 'Boulder has hippies'
 			end
 
-			@renderstate.tag_data.should_not have_key( :alaska )
-			@renderstate.tag_data[:montana].should == 'excellent fishing'
-			@renderstate.tag_data[:colorado].should == 'fine fishing'
+			expect( @renderstate.tag_data ).to_not have_key( :alaska )
+			expect( @renderstate.tag_data[:montana] ).to eq( 'excellent fishing' )
+			expect( @renderstate.tag_data[:colorado] ).to eq( 'fine fishing' )
 		end
 
 	end
@@ -194,11 +176,11 @@ describe Inversion::RenderState do
 			rval = state.with_destination( newdest ) do
 				state << node
 			end
-			rval.should equal( newdest )
+			expect( rval ).to equal( newdest )
 
-			newdest.should have( 1 ).member
-			newdest.should include( 'New!' )
-			state.destination.should equal( original_dest )
+			expect( newdest.size ).to eq( 1 )
+			expect( newdest ).to include( 'New!' )
+			expect( state.destination ).to equal( original_dest )
 		end
 
 		it "restores the original destination if the block raises an exception" do
@@ -212,7 +194,7 @@ describe Inversion::RenderState do
 				end
 			}.to raise_error()
 
-			state.destination.should equal( original_dest )
+			expect( state.destination ).to equal( original_dest )
 		end
 
 		it "raises an error if #with_destination is called without a block" do
@@ -232,7 +214,7 @@ describe Inversion::RenderState do
 
 			state << node
 
-			state.to_s.should == '<!-- Attr: { template.foo } -->'
+			expect( state.to_s ).to eq( '<!-- Attr: { template.foo } -->' )
 		end
 
 		it "doesn't add a debugging comment when appending a node if debugging comments are disabled" do
@@ -241,7 +223,7 @@ describe Inversion::RenderState do
 
 			state << node
 
-			state.to_s.should == ''
+			expect( state.to_s ).to eq( '' )
 		end
 
 	end
@@ -255,7 +237,7 @@ describe Inversion::RenderState do
 
 			state << node
 
-			state.to_s.should == ''
+			expect( state.to_s ).to eq( '' )
 		end
 
 		it "adds a comment for errors while rendering appended nodes in 'comment' mode" do
@@ -264,7 +246,7 @@ describe Inversion::RenderState do
 
 			state << node
 
-			state.to_s.should == "<!-- NoMethodError: undefined method `klang' for nil:NilClass -->"
+			expect( state.to_s ).to eq( "<!-- NoMethodError: undefined method `klang' for nil:NilClass -->" )
 		end
 
 		it "includes a backtrace when rendering errors in 'comment' mode with 'debugging_comments' enabled" do
@@ -274,8 +256,8 @@ describe Inversion::RenderState do
 			state << node
 			output = state.to_s
 
-			output.should include( "<!-- NoMethodError: undefined method `klang' for nil:NilClass" )
-			output.should include( "#{__FILE__}:#{__LINE__ - 4}" )
+			expect( output ).to include( "<!-- NoMethodError: undefined method `klang' for nil:NilClass" )
+			expect( output ).to include( "#{__FILE__}:#{__LINE__ - 4}" )
 		end
 
 		it "re-raises errors while rendering appended nodes in 'propagate' mode" do
@@ -302,8 +284,8 @@ describe Inversion::RenderState do
 				end
 			}.to_not raise_error()
 
-			state.to_s.should =~ /yum, i eat nomethoderror/i
-			state.errhandler.should equal( defhandler )
+			expect( state.to_s ).to match( /yum, i eat nomethoderror/i )
+			expect( state.errhandler ).to equal( defhandler )
 		end
 
 		it "raises an exception if the error handler is set to something that doesn't respond to #call" do
@@ -332,7 +314,7 @@ describe Inversion::RenderState do
 		end
 
 		it "doesn't have any subscriptions by default" do
-			@state.subscriptions.should == {}
+			expect( @state.subscriptions ).to eq( {} )
 		end
 
 		it "allows an object to subscribe to node publications" do
@@ -340,8 +322,8 @@ describe Inversion::RenderState do
 
 			@state.subscribe( :the_key, subscriber )
 
-			@state.subscriptions.should have( 1 ).member
-			@state.subscriptions[ :the_key ].should == [ subscriber ]
+			expect( @state.subscriptions.size ).to eq( 1 )
+			expect( @state.subscriptions[:the_key] ).to eq( [subscriber] )
 		end
 
 	end
@@ -354,19 +336,19 @@ describe Inversion::RenderState do
 		end
 
 		it "allows rendering to be explicitly enabled and disabled" do
-			@state.rendering_enabled?.should be_true()
+			expect( @state.rendering_enabled? ).to be_truthy()
 			@state.disable_rendering
-			@state.rendering_enabled?.should be_false()
+			expect( @state.rendering_enabled? ).to be_falsey()
 			@state.enable_rendering
-			@state.rendering_enabled?.should be_true()
+			expect( @state.rendering_enabled? ).to be_truthy()
 		end
 
 		it "allows rendering to be toggled" do
-			@state.rendering_enabled?.should be_true()
+			expect( @state.rendering_enabled? ).to be_truthy()
 			@state.toggle_rendering
-			@state.rendering_enabled?.should be_false()
+			expect( @state.rendering_enabled? ).to be_falsey()
 			@state.toggle_rendering
-			@state.rendering_enabled?.should be_true()
+			expect( @state.rendering_enabled? ).to be_truthy()
 		end
 
 		it "doesn't render nodes that are appended to it if rendering is disabled" do
@@ -376,7 +358,7 @@ describe Inversion::RenderState do
 			@state.enable_rendering
 			@state << Inversion::Template::TextNode.new( "after" )
 
-			@state.to_s.should == 'beforeafter'
+			expect( @state.to_s ).to eq( 'beforeafter' )
 		end
 
 	end
@@ -390,7 +372,7 @@ describe Inversion::RenderState do
 
 
 		it "knows how many floating-point seconds have passed since it was created" do
-			@state.time_elapsed.should be_a( Float )
+			expect( @state.time_elapsed ).to be_a( Float )
 		end
 
 	end
@@ -409,7 +391,7 @@ describe Inversion::RenderState do
 			state << Inversion::Template::AttrTag.new( 'good_doggie' )
 			state << Inversion::Template::AttrTag.new( 'little' )
 
-			state.to_s.encoding.should be( Encoding::UTF_8 )
+			expect( state.to_s.encoding ).to be( Encoding::UTF_8 )
 		end
 
 		it "replaces characters with undefined conversions instead of raising an encoding error" do
@@ -426,7 +408,7 @@ describe Inversion::RenderState do
 			state << Inversion::Template::AttrTag.new( 'okay' )
 			state << Inversion::Template::AttrTag.new( 'bogus' )
 
-			state.to_s.encoding.should be( Encoding::UTF_8 )
+			expect( state.to_s.encoding ).to be( Encoding::UTF_8 )
 		end
 
 	end

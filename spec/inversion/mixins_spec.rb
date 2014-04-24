@@ -1,17 +1,7 @@
 #!/usr/bin/env rspec -cfd -b
 # vim: set noet nosta sw=4 ts=4 :
 
-BEGIN {
-	require 'pathname'
-	basedir = Pathname( __FILE__ ).dirname.parent.parent
-	libdir = basedir + 'lib'
-
-	$LOAD_PATH.unshift( basedir.to_s ) unless $LOAD_PATH.include?( basedir.to_s )
-	$LOAD_PATH.unshift( libdir.to_s ) unless $LOAD_PATH.include?( libdir.to_s )
-}
-
-require 'rspec'
-require 'spec/lib/helpers'
+require_relative '../helpers'
 
 require 'inversion/mixins'
 
@@ -30,15 +20,15 @@ describe Inversion, "mixins" do
 
 			result = Inversion::HashUtilities.stringify_keys( testhash )
 
-			result.should be_an_instance_of( Hash )
-			result.should_not be_equal( testhash )
-			result.should == {
+			expect( result ).to be_an_instance_of( Hash )
+			expect( result ).to_not be_equal( testhash )
+			expect( result ).to eq({
 				'foo' => 1,
 				'bar' => {
 					'klang' => 'klong',
 					'barang' => { 'kerklang' => 'dumdumdum' },
 				}
-			}
+			})
 		end
 
 
@@ -53,15 +43,15 @@ describe Inversion, "mixins" do
 
 			result = Inversion::HashUtilities.symbolify_keys( testhash )
 
-			result.should be_an_instance_of( Hash )
-			result.should_not be_equal( testhash )
-			result.should == {
+			expect( result ).to be_an_instance_of( Hash )
+			expect( result ).to_not be_equal( testhash )
+			expect( result ).to eq({
 				:foo => 1,
 				:bar => {
 					:klang => 'klong',
 					:barang => { :kerklang => 'dumdumdum' },
 				}
-			}
+			})
 		end
 
 	end
@@ -125,17 +115,17 @@ describe Inversion, "mixins" do
 
 		it "adds configurable escaping to including classes" do
 			render_state = Inversion::RenderState.new( {}, :escape_format => :html )
-			@obj.render( render_state ).should == "&lt;something&gt;"
+			expect( @obj.render( render_state ) ).to eq( "&lt;something&gt;" )
 		end
 
 		it "doesn't escape anything if escaping is disabled" do
 			render_state = Inversion::RenderState.new( {}, :escape_format => nil )
-			@obj.render( render_state ).should == "<something>"
+			expect( @obj.render( render_state ) ).to eq( "<something>" )
 		end
 
 		it "doesn't escape anything if escaping is set to ':none'" do
 			render_state = Inversion::RenderState.new( {}, :escape_format => :none )
-			@obj.render( render_state ).should == "<something>"
+			expect( @obj.render( render_state ) ).to eq( "<something>" )
 		end
 	end
 
@@ -143,26 +133,26 @@ describe Inversion, "mixins" do
 	describe Inversion::DataUtilities do
 
 		it "doesn't try to dup immediate objects" do
-			Inversion::DataUtilities.deep_copy( nil ).should be( nil )
-			Inversion::DataUtilities.deep_copy( 112 ).should be( 112 )
-			Inversion::DataUtilities.deep_copy( true ).should be( true )
-			Inversion::DataUtilities.deep_copy( false ).should be( false )
-			Inversion::DataUtilities.deep_copy( :a_symbol ).should be( :a_symbol )
+			expect( Inversion::DataUtilities.deep_copy( nil ) ).to be( nil )
+			expect( Inversion::DataUtilities.deep_copy( 112 ) ).to be( 112 )
+			expect( Inversion::DataUtilities.deep_copy( true ) ).to be( true )
+			expect( Inversion::DataUtilities.deep_copy( false ) ).to be( false )
+			expect( Inversion::DataUtilities.deep_copy( :a_symbol ) ).to be( :a_symbol )
 		end
 
 		it "doesn't try to dup modules/classes" do
 			klass = Class.new
-			Inversion::DataUtilities.deep_copy( klass ).should be( klass )
+			expect( Inversion::DataUtilities.deep_copy( klass ) ).to be( klass )
 		end
 
 		it "doesn't try to dup IOs" do
 			data = [ $stdin ]
-			Inversion::DataUtilities.deep_copy( data[0] ).should be( $stdin )
+			expect( Inversion::DataUtilities.deep_copy( data[0] ) ).to be( $stdin )
 		end
 
 		it "doesn't try to dup Tempfiles" do
 			data = Tempfile.new( 'inversion_deepcopy.XXXXX' )
-			Inversion::DataUtilities.deep_copy( data ).should be( data )
+			expect( Inversion::DataUtilities.deep_copy( data ) ).to be( data )
 		end
 
 		it "makes distinct copies of arrays and their members" do
@@ -170,14 +160,14 @@ describe Inversion, "mixins" do
 
 			copy = Inversion::DataUtilities.deep_copy( original )
 
-			copy.should == original
-			copy.should_not be( original )
-			copy[0].should == original[0]
-			copy[0].should_not be( original[0] )
-			copy[1].should == original[1]
-			copy[1].should_not be( original[1] )
-			copy[2].should == original[2]
-			copy[2].should be( original[2] ) # Immediate
+			expect( copy ).to eq( original )
+			expect( copy ).to_not be( original )
+			expect( copy[0] ).to eq( original[0] )
+			expect( copy[0] ).to_not be( original[0] )
+			expect( copy[1] ).to eq( original[1] )
+			expect( copy[1] ).to_not be( original[1] )
+			expect( copy[2] ).to eq( original[2] )
+			expect( copy[2] ).to be( original[2] ) # Immediate
 		end
 
 		it "makes recursive copies of deeply-nested Arrays" do
@@ -185,12 +175,12 @@ describe Inversion, "mixins" do
 
 			copy = Inversion::DataUtilities.deep_copy( original )
 
-			copy.should == original
-			copy.should_not be( original )
-			copy[1].should_not be( original[1] )
-			copy[1][2].should_not be( original[1][2] )
-			copy[3].should_not be( original[3] )
-			copy[3][1].should_not be( original[3][1] )
+			expect( copy ).to eq( original )
+			expect( copy ).to_not be( original )
+			expect( copy[1] ).to_not be( original[1] )
+			expect( copy[1][2] ).to_not be( original[1][2] )
+			expect( copy[3] ).to_not be( original[3] )
+			expect( copy[3][1] ).to_not be( original[3][1] )
 		end
 
 		it "makes distinct copies of Hashes and their members" do
@@ -202,13 +192,13 @@ describe Inversion, "mixins" do
 
 			copy = Inversion::DataUtilities.deep_copy( original )
 
-			copy.should == original
-			copy.should_not be( original )
-			copy[:a].should == 1
-			copy.key( 2 ).should == 'b'
-			copy.key( 2 ).should_not be( original.key(2) )
-			copy[3].should == 'c'
-			copy[3].should_not be( original[3] )
+			expect( copy ).to eq( original )
+			expect( copy ).to_not be( original )
+			expect( copy[:a] ).to eq( 1 )
+			expect( copy.key( 2 ) ).to eq( 'b' )
+			expect( copy.key( 2 ) ).to_not be( original.key(2) )
+			expect( copy[3] ).to eq( 'c' )
+			expect( copy[3] ).to_not be( original[3] )
 		end
 
 		it "makes distinct copies of deeply-nested Hashes" do
@@ -225,15 +215,15 @@ describe Inversion, "mixins" do
 
 			copy = Inversion::DataUtilities.deep_copy( original )
 
-			copy.should == original
-			copy[:a][:b][:c].should == 'd'
-			copy[:a][:b][:c].should_not be( original[:a][:b][:c] )
-			copy[:a][:b][:e].should == 'f'
-			copy[:a][:b][:e].should_not be( original[:a][:b][:e] )
-			copy[:a][:g].should == 'h'
-			copy[:a][:g].should_not be( original[:a][:g] )
-			copy[:i].should == 'j'
-			copy[:i].should_not be( original[:i] )
+			expect( copy ).to eq( original )
+			expect( copy[:a][:b][:c] ).to eq( 'd' )
+			expect( copy[:a][:b][:c] ).to_not be( original[:a][:b][:c] )
+			expect( copy[:a][:b][:e] ).to eq( 'f' )
+			expect( copy[:a][:b][:e] ).to_not be( original[:a][:b][:e] )
+			expect( copy[:a][:g] ).to eq( 'h' )
+			expect( copy[:a][:g] ).to_not be( original[:a][:g] )
+			expect( copy[:i] ).to eq( 'j' )
+			expect( copy[:i] ).to_not be( original[:i] )
 		end
 
 		it "copies the default proc of copied Hashes" do
@@ -241,7 +231,7 @@ describe Inversion, "mixins" do
 
 			copy = Inversion::DataUtilities.deep_copy( original )
 
-			copy.default_proc.should == original.default_proc
+			expect( copy.default_proc ).to eq( original.default_proc )
 		end
 
 		it "preserves taintedness of copied objects" do
@@ -250,8 +240,8 @@ describe Inversion, "mixins" do
 
 			copy = Inversion::DataUtilities.deep_copy( original )
 
-			copy.should_not be( original )
-			copy.should be_tainted()
+			expect( copy ).to_not be( original )
+			expect( copy ).to be_tainted()
 		end
 
 		it "preserves frozen-ness of copied objects" do
@@ -260,8 +250,8 @@ describe Inversion, "mixins" do
 
 			copy = Inversion::DataUtilities.deep_copy( original )
 
-			copy.should_not be( original )
-			copy.should be_frozen()
+			expect( copy ).to_not be( original )
+			expect( copy ).to be_frozen()
 		end
 	end
 end

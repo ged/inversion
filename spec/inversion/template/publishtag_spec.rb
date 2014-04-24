@@ -1,17 +1,8 @@
 #!/usr/bin/env rspec -cfd -b
 # vim: set noet nosta sw=4 ts=4 :
 
-BEGIN {
-	require 'pathname'
-	basedir = Pathname( __FILE__ ).dirname.parent.parent.parent
-	libdir = basedir + 'lib'
+require_relative '../../helpers'
 
-	$LOAD_PATH.unshift( basedir.to_s ) unless $LOAD_PATH.include?( basedir.to_s )
-	$LOAD_PATH.unshift( libdir.to_s ) unless $LOAD_PATH.include?( libdir.to_s )
-}
-
-require 'rspec'
-require 'spec/lib/helpers'
 require 'inversion/template/publishtag'
 
 describe Inversion::Template::PublishTag do
@@ -29,24 +20,16 @@ describe Inversion::Template::PublishTag do
 	end # class TestSubscriber
 
 
-	before( :all ) do
-		setup_logging( :fatal )
-	end
-
-	after( :all ) do
-		reset_logging()
-	end
-
 
 	it "raises a parse error if the body isn't a simple attribute" do
 		expect {
 			Inversion::Template::PublishTag.new( 'a.non-identifier' )
-		}.to raise_exception( Inversion::ParseError, /malformed key/i )
+		}.to raise_error( Inversion::ParseError, /malformed key/i )
 	end
 
 
 	it "doesn't render its contents in the template it's declared in" do
-		Inversion::Template.new( "<?publish foo ?>Some stuff<?end ?>" ).render.should == ''
+		expect( Inversion::Template.new( "<?publish foo ?>Some stuff<?end ?>" ).render ).to eq( '' )
 	end
 
 
@@ -61,7 +44,7 @@ describe Inversion::Template::PublishTag do
 
 		publishtag.render( renderstate )
 
-		subscriber.published_nodes.should == [ 'elveses' ]
+		expect( subscriber.published_nodes ).to eq( [ 'elveses' ] )
 	end
 
 end

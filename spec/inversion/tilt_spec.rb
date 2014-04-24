@@ -1,19 +1,10 @@
 #!/usr/bin/env rspec -cfd -b
 # vim: set noet nosta sw=4 ts=4 :
 
-BEGIN {
-	require 'pathname'
-	basedir = Pathname( __FILE__ ).dirname.parent.parent
-	libdir  = basedir + 'lib'
-
-	$LOAD_PATH.unshift( basedir.to_s ) unless $LOAD_PATH.include?( basedir.to_s )
-	$LOAD_PATH.unshift( libdir.to_s )  unless $LOAD_PATH.include?( libdir.to_s )
-}
-
-require 'rspec'
-require 'spec/lib/helpers'
+require_relative '../helpers'
 
 begin
+	require 'tilt'
 	require 'inversion/tilt'
 	$tilt_support = true
 rescue LoadError => err
@@ -28,19 +19,19 @@ describe "Tilt support", :if => $tilt_support do
 	end
 
 	it "registers itself with Tilt" do
-		Tilt['layout.tmpl'].should == Inversion::TiltWrapper
+		expect( Tilt['layout.tmpl'] ).to eq( Inversion::TiltWrapper )
 	end
 
 	it "merges locals with template attributes upon evaluation" do
-		File.stub( :open ).with( 'test.tmpl', 'rb' ).and_return( '<?attr foo ?>' )
-		Tilt.new( 'test.tmpl' ).render( Object.new, :foo => 'Booyakasha!' ).should == 'Booyakasha!'
+		expect( File ).to receive( :open ).with( 'test.tmpl', 'rb' ).and_return( '<?attr foo ?>' )
+		expect( Tilt.new( 'test.tmpl' ).render( Object.new, :foo => 'Booyakasha!' ) ).to eq( 'Booyakasha!' )
 	end
 
 	it "merges the 'scope' object if it responds_to #to_h" do
 		scope = Object.new
 		def scope.to_h; { :message => "Respek!" }; end
-		File.stub( :open ).with( 'test.tmpl', 'rb' ).and_return( '<?attr message ?>' )
-		Tilt.new( 'test.tmpl' ).render( scope, {} ).should == 'Respek!'
+		expect( File ).to receive( :open ).with( 'test.tmpl', 'rb' ).and_return( '<?attr message ?>' )
+		expect( Tilt.new( 'test.tmpl' ).render( scope, {} ) ).to eq( 'Respek!' )
 	end
 
 end
