@@ -1,3 +1,9 @@
+== v0.13.0 [2014-04-23] Michael Granger <ged@FaerieMUD.org>
+
+- Carry global configuration into instantiated template options.
+- Documentation update.
+
+
 == v0.12.3 [2013-09-20] Michael Granger <ged@FaerieMUD.org>
 
 - Don't deep_copy IOs or Tempfiles (bugfix).
