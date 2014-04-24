@@ -82,7 +82,7 @@ class Inversion::Template::AttrTag < Inversion::Template::CodeTag
 		value = self.evaluate( renderstate ) # :FIXME: or return value # nil or false?
 
 		# Apply the format if there is one
-		if self.format
+		if self.format && value
 			return self.format % value
 		else
 			return value
