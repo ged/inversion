@@ -42,7 +42,7 @@ class Inversion::Template::RescueTag < Inversion::Template::Tag
 
 
 	### Parsing callback -- check to be sure the node tree can have the
-	### 'else' tag appended to it.
+	### 'rescue' tag appended to it.
 	def before_appending( parsestate )
 		condtag = parsestate.node_stack.reverse.find do |node|
 			case node

@@ -20,6 +20,29 @@ You can mix tag forms in a single document.
 
 == Tags
 
+=== begin/rescue
+
+These tags work as you'd expect from their ruby counterparts. 
+
+The +begin+ section of the template to be rendered only if no exceptions are raised while it's
+being rendered. If an exception is raised, it is checked against any +rescue+ sections, and the
+first with a matching exception is rendered instead. If no +rescue+ block is found, the exception
+is handled by the configured exception behavior for the template (see options[Templates@Template+Options]).
+
+  <?begin ?><?call employees.length ?><?end?>
+  
+  <?begin ?>
+    <?for employee in employees.all ?>
+      <?attr employee.name ?> --> <?attr employee.title ?>
+    <?end for?>
+  <?rescue DatabaseError => err ?>
+    Oh no!! I can't talk to the database for some reason.  The
+    error was as follows:
+    <pre>
+      <?attr err.message ?>
+    </pre>
+  <?end?>
+
 === comment
 
 The +comment+ tag can be used to temporarily stop a section of a document from being rendered:
@@ -73,6 +96,32 @@ Multiple template options can be set simultaneously by using a YAML hash:
 Note that this also allows you to set multiple options on a single line, if you wrap them in braces:
 
   <?config { comment_start: "/*", comment_end: "*/" } ?>
+
+
+=== default
+
+The +default+ tag sets an attribute from within the template, and this value is used if the attribute is otherwise unset.
+
+  template = Inversion::Template.new <<-TMPL
+    <?default adjective to "cruel" ?>
+    <?default noun to "world" ?>
+    Goodbye, <?attr adjective ?> <?attr noun ?>!
+  TMPL
+
+  template.render
+
+  template.adjective = "delicious"
+  template.render
+
+  template.adjective = nil
+  template.noun = "banana"
+  template.render
+
+Would produce the output:
+
+  Goodbye, cruel world!
+  Goodbye, delicious world!
+  Goodbye, cruel banana!
 
 
 == Placeholder Tags
