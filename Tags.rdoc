@@ -124,6 +124,33 @@ Would produce the output:
   Goodbye, cruel banana!
 
 
+=== fragment
+
+A +fragment+ tag also sets an attribute from within the template, but under the scope of the global
+template itself.  A fragment can use other Inversion tags, and the attribute is both usable
+elsewhere in the template, and accessible from calling code after rendering.
+
+  template = Inversion::Template.new <<-TMPL
+	<?fragment subject ?>Your order status (Order #<?call order.number ?>)<?end ?>
+
+	Dear <?call order.customer.name ?>,
+
+	Your recent order was modified by our Order Fulfillment Team.
+
+	After careful deliberation, it was decided that no one should have need for that many hot dogs
+	with overnight shipping.  Frankly, we're more than a little concerned for your health.
+
+	Sincerely,
+	Rowe's Meat Emporium
+	(Buy!  Sell!  Consignment!)
+  TMPL
+
+  template.order = order
+  template.render
+
+  template.subject  #=> "Your order status (Order #3492)"
+
+
 == Placeholder Tags
 
 Placeholder tags represent the main functionality of Inversion; they create a placeholder in the output text which can be filled in via a method on the template object with the same name.
