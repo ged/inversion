@@ -7,6 +7,9 @@ require_relative '../helpers'
 require 'inversion/renderstate'
 require 'inversion/template/attrtag'
 require 'inversion/template/textnode'
+require 'inversion/template/fragmenttag'
+require 'inversion/template/subscribetag'
+require 'inversion/template/publishtag'
 
 describe Inversion::RenderState do
 
@@ -409,6 +412,75 @@ describe Inversion::RenderState do
 			state << Inversion::Template::AttrTag.new( 'bogus' )
 
 			expect( state.to_s.encoding ).to be( Encoding::UTF_8 )
+		end
+
+	end
+
+
+	describe "fragments" do
+
+		before( :each ) do
+			@state = Inversion::RenderState.new
+		end
+
+
+		it "can be set to an Array of rendered nodes" do
+			subscribe_node = Inversion::Template::SubscribeTag.new( 'brand' )
+			@state << subscribe_node
+
+			publish_node = Inversion::Template::PublishTag.new( 'brand' )
+			publish_node << Inversion::Template::TextNode.new( 'Acme' )
+			@state << publish_node
+
+			@state.add_fragment( :title, "Welcome to the ", subscribe_node, " website!" )
+
+			expect( @state.fragments ).to be_a( Hash )
+			expect( @state.fragments[:title] ).to eq([ "Welcome to the ", subscribe_node, " website!" ])
+		end
+
+
+		it "can be returned as a rendered Hash" do
+			subscribe_node = Inversion::Template::SubscribeTag.new( 'brand' )
+			@state << subscribe_node
+
+			publish_node = Inversion::Template::PublishTag.new( 'brand' )
+			publish_node << Inversion::Template::TextNode.new( 'Acme' )
+			@state << publish_node
+
+			@state.add_fragment( :title, "Welcome to the ", subscribe_node, " website!" )
+
+			expect( @state.rendered_fragments ).to be_a( Hash )
+			expect( @state.rendered_fragments[:title] ).to eq( "Welcome to the Acme website!" )
+		end
+
+
+		it "acts like a default if an attribute isn't set" do
+			node = Inversion::Template::FragmentTag.new( 'pork' )
+			node << Inversion::Template::AttrTag.new( 'bool' )
+			node << Inversion::Template::TextNode.new( ' please!' )
+
+			@state.scope[ :bool ] = 'yes'
+			@state << node
+			@state << Inversion::Template::TextNode.new( '--> ' )
+			@state << Inversion::Template::AttrTag.new( 'pork' )
+			@state << Inversion::Template::TextNode.new( ' <--' )
+
+			expect( @state.to_s ).to eq( '--> yes please! <--' )
+		end
+
+
+		it "don't override explicitly-set attributes" do
+			node = Inversion::Template::FragmentTag.new( 'pork' )
+			node << Inversion::Template::AttrTag.new( 'bool' )
+			node << Inversion::Template::TextNode.new( ' please!' )
+
+			@state.scope[ :pork ] = 'pie'
+			@state << node
+			@state << Inversion::Template::TextNode.new( '--> ' )
+			@state << Inversion::Template::AttrTag.new( 'pork' )
+			@state << Inversion::Template::TextNode.new( ' <--' )
+
+			expect( @state.to_s ).to eq( '--> pie <--' )
 		end
 
 	end
