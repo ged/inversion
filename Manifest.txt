@@ -29,6 +29,7 @@ lib/inversion/template/elsiftag.rb
 lib/inversion/template/endtag.rb
 lib/inversion/template/escapetag.rb
 lib/inversion/template/fortag.rb
+lib/inversion/template/fragmenttag.rb
 lib/inversion/template/iftag.rb
 lib/inversion/template/importtag.rb
 lib/inversion/template/includetag.rb
@@ -46,6 +47,7 @@ lib/inversion/template/yieldtag.rb
 lib/inversion/tilt.rb
 spec/data/sinatra/hello.inversion
 spec/data/unknown-tag.tmpl
+spec/helpers.rb
 spec/inversion/mixins_spec.rb
 spec/inversion/monkeypatches_spec.rb
 spec/inversion/parser_spec.rb
@@ -64,6 +66,7 @@ spec/inversion/template/elsiftag_spec.rb
 spec/inversion/template/endtag_spec.rb
 spec/inversion/template/escapetag_spec.rb
 spec/inversion/template/fortag_spec.rb
+spec/inversion/template/fragmenttag_spec.rb
 spec/inversion/template/iftag_spec.rb
 spec/inversion/template/importtag_spec.rb
 spec/inversion/template/includetag_spec.rb
@@ -81,5 +84,3 @@ spec/inversion/template/yieldtag_spec.rb
 spec/inversion/template_spec.rb
 spec/inversion/tilt_spec.rb
 spec/inversion_spec.rb
-spec/lib/constants.rb
-spec/lib/helpers.rb

@@ -8,7 +8,7 @@ gem "loggability", "~>0.11"
 
 gem "hoe-mercurial", "~>1.4", :group => [:development, :test]
 gem "hoe-manualgen", "~>0.3.0", :group => [:development, :test]
-gem "hoe-deveiate", "~>0.5", :group => [:development, :test]
+gem "hoe-deveiate", "~>0.6", :group => [:development, :test]
 gem "hoe-highline", "~>0.2", :group => [:development, :test]
 gem "rdoc", "~>4.0", :group => [:development, :test]
 gem "highline", "~>1.6", :group => [:development, :test]
@@ -20,6 +20,6 @@ gem "tilt", "~>2.0", :group => [:development, :test]
 gem "sysexits", "~>1.0", :group => [:development, :test]
 gem "trollop", "~>2.0", :group => [:development, :test]
 gem "rdoc-generator-fivefish", "~>0", :group => [:development, :test]
-gem "hoe", "~>3.11", :group => [:development, :test]
+gem "hoe", "~>3.13", :group => [:development, :test]
 
 # vim: syntax=ruby
