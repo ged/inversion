@@ -21,8 +21,9 @@ class Inversion::RenderState
 
 		### Create a new RenderState::Scope with its initial tag locals set to
 		### +locals+.
-		def initialize( locals={} )
+		def initialize( locals={}, fragments={} )
 			@locals = locals
+			@fragments = fragments
 		end
 
 
@@ -41,7 +42,7 @@ class Inversion::RenderState
 		### Return a copy of the receiving Scope merged with the given +values+,
 		### which can be either another Scope or a Hash.
 		def +( values )
-			return Scope.new( @locals.merge(values) )
+			return Scope.new( self.__locals__.merge(values), self.__fragments__ )
 		end
 
 
@@ -52,6 +53,12 @@ class Inversion::RenderState
 		alias_method :to_hash, :__locals__
 
 
+		### Returns the Hash of rendered fragments that belong to this scope.
+		def __fragments__
+			return @fragments
+		end
+
+
 		#########
 		protected
 		#########
@@ -60,7 +67,7 @@ class Inversion::RenderState
 		### and map them into values from the Scope's locals.
 		def method_missing( sym, *args, &block )
 			return super unless sym =~ /^\w+$/
-			@locals[ sym ]
+			return @locals[ sym ].nil? ? @fragments[ sym ] : @locals[ sym ]
 		end
 
 	end # class Scope
@@ -104,6 +111,7 @@ class Inversion::RenderState
 		# as a Symbol
 		@subscriptions      = Hash.new {|hsh, k| hsh[k] = [] } # Auto-vivify to an Array
 		@published_nodes    = Hash.new {|hsh, k| hsh[k] = [] }
+		@fragments          = Hash.new {|hsh, k| hsh[k] = [] }
 
 	end
 
@@ -126,6 +134,9 @@ class Inversion::RenderState
 
 	# Published nodes, keyed by subscription
 	attr_reader :published_nodes
+
+	# Fragment nodes, keyed by fragment name
+	attr_reader :fragments
 
 	# The stack of rendered output destinations, most-recent last.
 	attr_reader :destinations
@@ -296,14 +307,7 @@ class Inversion::RenderState
 
 	### Turn the rendered node structure into the final rendered String.
 	def to_s
-		strings = @output.flatten.map( &:to_s )
-
-		if enc = self.options[ :encoding ]
-			self.log.debug "Encoding rendered template parts to %s" % [ enc ]
-			strings.map! {|str| str.encode(enc, invalid: :replace, undef: :replace) }
-		end
-
-		return strings.join
+		return self.stringify_nodes( @output )
 	end
 
 
@@ -333,6 +337,23 @@ class Inversion::RenderState
 			self.log.debug "    re-publishing %d %p nodes to late subscriber" %
 				[ self.published_nodes[key].length, key ]
 			node.publish( *self.published_nodes[key] )
+		end
+	end
+
+
+	### Add one or more rendered +nodes+ to the state as a reusable fragment associated
+	### with the specified +name+.
+	def add_fragment( name, *nodes )
+		nodes.flatten!
+		self.fragments[ name.to_sym ] = nodes
+		self.scope.__fragments__[ name.to_sym ] = nodes
+	end
+
+
+	### Return the current fragments Hash rendered as Strings.
+	def rendered_fragments
+		return self.fragments.each_with_object( {} ) do |(key, nodes), accum|
+			accum[ key ] = self.stringify_nodes( nodes )
 		end
 	end
 
@@ -451,6 +472,20 @@ class Inversion::RenderState
 			content,
 			self.options[:comment_end],
 		].join
+	end
+
+
+	### Return the given +nodes+ as a String in the configured encoding.
+	def stringify_nodes( nodes )
+		self.log.debug "Rendering nodes: %p" % [ nodes ]
+		strings = nodes.flatten.map( &:to_s )
+
+		if enc = self.options[ :encoding ]
+			self.log.debug "Encoding rendered template parts to %s" % [ enc ]
+			strings.map! {|str| str.encode(enc, invalid: :replace, undef: :replace) }
+		end
+
+		return strings.join
 	end
 
 

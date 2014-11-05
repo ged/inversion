@@ -402,5 +402,41 @@ describe Inversion::Template do
 	end
 
 
+	describe "with fragment tags" do
+
+		before( :each ) do
+			@template = Inversion::Template.new <<-TMPL
+			<?default bool to 'yes' ?>
+			<?fragment pork ?>wooo<?end ?>
+			<?fragment beef ?><?attr bool ?> please<?end ?>
+			<?attr beef ?>
+			TMPL
+		end
+
+		it "doesn't have any fragments before it's been rendered" do
+			expect( @template.fragments ).to be_empty
+		end
+
+		it "has a fragment for each tag after it's been rendered" do
+			@template.render
+
+			expect( @template.fragments ).to be_a( Hash )
+			expect( @template.fragments ).to include( :pork, :beef )
+			expect( @template.fragments.size ).to eq( 2 )
+			expect( @template.fragments[:pork] ).to eq( 'wooo' )
+			expect( @template.fragments[:beef] ).to eq( 'yes please' )
+		end
+
+		it "clears previous fragments when rendered a second time" do
+			@template.render
+			expect( @template.fragments[:beef] ).to eq( 'yes please' )
+
+			@template.bool = 'no'
+			@template.render
+			expect( @template.fragments[:beef] ).to eq( 'no please' )
+		end
+
+	end
+
 end
 

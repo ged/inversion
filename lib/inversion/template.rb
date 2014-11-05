@@ -216,6 +216,7 @@ class Inversion::Template
 		@node_tree    = [] # Parser expects this to always be an Array
 		@options      = self.class.config.merge( opts )
 		@attributes   = {}
+		@fragments    = {}
 		@source_file  = nil
 		@created_at   = Time.now
 		@last_checked = @created_at
@@ -228,6 +229,7 @@ class Inversion::Template
 	def initialize_copy( other )
 		@options    = deep_copy( other.options )
 		@attributes = deep_copy( other.attributes )
+		@fragments  = deep_copy( other.fragments )
 	end
 
 
@@ -243,6 +245,9 @@ class Inversion::Template
 
 	# The Hash of template attributes
 	attr_reader :attributes
+
+	# The Hash of rendered template fragments
+	attr_reader :fragments
 
 	# The Template's configuration options hash
 	attr_reader :options
@@ -285,12 +290,16 @@ class Inversion::Template
 		opts = self.options
 		opts.merge!( parentstate.options ) if parentstate
 
+		self.fragments.clear
+
 		state = Inversion::RenderState.new( parentstate, self.attributes, opts, &block )
 
 		# self.log.debug "  rendering node tree: %p" % [ @node_tree ]
 		self.walk_tree {|node| state << node }
 		self.log.info "  done rendering template 0x%08x: %0.4fs" %
 			[ self.object_id/2, state.time_elapsed ]
+
+		self.fragments.replace( state.rendered_fragments )
 
 		return state.to_s
 	end
