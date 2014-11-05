@@ -1,7 +1,16 @@
+== v0.14.0 [2014-11-05] Michael Granger <ged@FaerieMUD.org>
+
+- Add the fragment tag and docs
+- Remove old manual doc artifacts. Add documentation for the
+  'begin/rescue' and 'default' tags.
+
+
 == v0.13.0 [2014-04-23] Michael Granger <ged@FaerieMUD.org>
 
 - Carry global configuration into instantiated template options.
 - Documentation update.
+
+(Never released.)
 
 
 == v0.12.3 [2013-09-20] Michael Granger <ged@FaerieMUD.org>
