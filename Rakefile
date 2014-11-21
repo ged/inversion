@@ -1,5 +1,6 @@
 #!/usr/bin/env rake
 
+require 'rake/clean'
 require 'rdoc/task'
 
 begin
@@ -7,6 +8,8 @@ begin
 rescue LoadError
 	abort "This Rakefile requires hoe (gem install hoe)"
 end
+
+GEMSPEC = 'inversion.gemspec'
 
 Hoe.plugin :mercurial
 Hoe.plugin :signing
@@ -62,12 +65,29 @@ task :coverage do
 end
 
 
-Rake::Task[ 'docs' ].clear
-RDoc::Task.new( 'docs' ) do |rdoc|
+# Use the fivefish formatter for docs generated from development checkout
+if File.directory?( '.hg' )
+	require 'rdoc/task'
+
+	Rake::Task[ 'docs' ].clear
+	RDoc::Task.new( 'docs' ) do |rdoc|
 	rdoc.main = "README.rdoc"
 	rdoc.rdoc_files.include( "*.rdoc", "ChangeLog", "lib/**/*.rb" )
 	rdoc.generator = :fivefish
 	rdoc.rdoc_dir = 'doc'
+	end
 end
 
+task :gemspec => GEMSPEC
+file GEMSPEC => __FILE__
+task GEMSPEC do |task|
+	spec = $hoespec.spec
+	spec.files.delete( '.gemtest' )
+	spec.version = "#{spec.version}.pre#{Time.now.strftime("%Y%m%d%H%M%S")}"
+	File.open( task.name, 'w' ) do |fh|
+		fh.write( spec.to_ruby )
+	end
+end
 
+CLOBBER.include( GEMSPEC.to_s )
+task :default => :gemspec
