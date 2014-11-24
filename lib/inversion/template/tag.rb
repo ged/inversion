@@ -66,7 +66,7 @@ class Inversion::Template::Tag < Inversion::Template::Node
 		tags = {}
 
 		Gem.find_files( TAG_PLUGIN_PATTERN ).each do |tagfile|
-			tagname = tagfile[ %r{/(\w+)tag\.rb$}, 1 ].untaint
+			tagname = tagfile[ %r{/(\w+?)_?tag\.rb$}, 1 ].untaint
 			next unless tagname
 
 			self.load( tagfile )
