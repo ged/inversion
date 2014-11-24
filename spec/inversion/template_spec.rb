@@ -120,6 +120,47 @@ describe Inversion::Template do
 	end
 
 
+	it "can be extended at runtime via an extension module" do
+		extension_mod = Module.new do
+			def some_extension_stuff
+				return :extension_stuff
+			end
+		end
+
+		described_class.add_extensions( extension_mod )
+
+		expect( described_class.new('a template').some_extension_stuff ).to eq( :extension_stuff )
+	end
+
+
+	it "can be extended at runtime with class methods via a ClassMethods submodule" do
+		extension_mod = Module.new do
+			module ClassMethods
+				def some_class_extension_stuff; :class_extension_stuff; end
+			end
+		end
+
+		described_class.add_extensions( extension_mod )
+
+		expect( described_class.some_class_extension_stuff ).to eq( :class_extension_stuff )
+	end
+
+
+	it "can override methods at runtime with a PrependedMethods submodule" do
+		extension_mod = Module.new do
+			def a_method; :original_a_method; end
+
+			module PrependedMethods
+				def a_method; :extension_a_method; end
+			end
+		end
+
+		described_class.add_extensions( extension_mod )
+
+		expect( described_class.new('a template').a_method ).to eq( :extension_a_method )
+	end
+
+
 	context "loaded from a file" do
 
 		before( :each ) do

@@ -202,6 +202,56 @@ class Inversion::Template
 	end
 
 
+	### Add one or more extension +modules+ to Inversion::Template. This allows tags to decorate
+	### the template class with new functionality.
+	###
+	### Each one of the given +modules+ will be included as a mixin, and if it also
+	### contains a constant called ClassMethods and/or PrependedMethods, it will
+	### also be extended/prepended (respectively) with it.
+	###
+	### == Example
+	###
+	### Add a layout attribute to templates from a 'layout' tag:
+	###   
+	###   class Inversion::Template::LayoutTag < Inversion::Tag
+	###
+	###     module TemplateExtension
+	###       
+	###       def layout
+	###         return @layout || 'default.tmpl'
+	###       end
+	###
+	###       module PrependedMethods
+	###         def initialize( * )
+	###           super
+	###           @layout = nil
+	###         end
+	###     end
+	###
+	###     Inversion::Template.add_extensions( TemplateExtension )
+	###
+	###     # ... more tag stuff
+	###
+	###   end
+	###
+	def self::add_extensions( *modules )
+		self.log.info "Adding extensions to %p: %p" % [ self, modules ]
+
+		modules.each do |mod|
+			include( mod )
+			if mod.const_defined?( :ClassMethods )
+				submod = mod.const_get( :ClassMethods )
+				extend( submod )
+			end
+			if mod.const_defined?( :PrependedMethods )
+				submod = mod.const_get( :PrependedMethods )
+				prepend( submod )
+			end
+		end
+
+	end
+
+
 	### Create a new Inversion:Template with the given +source+.
 	def initialize( source, parsestate=nil, opts={} )
 		if parsestate.is_a?( Hash )
