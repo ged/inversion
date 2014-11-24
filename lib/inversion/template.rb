@@ -212,11 +212,11 @@ class Inversion::Template
 	### == Example
 	###
 	### Add a layout attribute to templates from a 'layout' tag:
-	###   
+	###
 	###   class Inversion::Template::LayoutTag < Inversion::Tag
 	###
 	###     module TemplateExtension
-	###       
+	###
 	###       def layout
 	###         return @layout || 'default.tmpl'
 	###       end
