@@ -23,10 +23,10 @@ module Inversion
 	log_as :inversion
 
 
-	warn ">>> Inversion requires Ruby 1.9.2 or later. <<<" if RUBY_VERSION < '1.9.2'
+	warn ">>> Inversion requires Ruby 2.0.0 or later. <<<" if RUBY_VERSION < '2.0.0'
 
 	# Library version constant
-	VERSION = '0.15.0'
+	VERSION = '0.16.0'
 
 	# Version-control revision constant
 	REVISION = %q$Revision$
