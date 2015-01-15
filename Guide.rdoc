@@ -21,7 +21,7 @@ Finally, there are a number of {Annotated Examples}[rdoc-ref:Examples] that illu
 
 == License
 
-Copyright © 2011-2013, Michael Granger, Mahlon E. Smith
+Copyright © 2011-2015, Michael Granger, Mahlon E. Smith
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without modification, are
