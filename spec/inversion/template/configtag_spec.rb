@@ -7,15 +7,6 @@ require 'inversion/template/configtag'
 
 describe Inversion::Template::ConfigTag do
 
-	before( :all ) do
-		Inversion::Template.template_paths << 'spec/data'
-	end
-
-	after( :all ) do
-		Inversion::Template.template_paths.delete( 'spec/data' )
-	end
-
-
 	# <?config comment_start: /* ?>
 	# <?config comment_end: */ ?>
 	it "can contain a single configuration setting" do
@@ -97,7 +88,7 @@ describe Inversion::Template::ConfigTag do
 		<?include unknown-tag.tmpl ?>
 		TEMPLATE
 		expect {
-			Inversion::Template.new( source )
+			Inversion::Template.new( source, template_paths: %w[spec/data] )
 		}.to raise_error( Inversion::ParseError, /unknown tag "unknown"/i )
 	end
 
@@ -107,7 +98,7 @@ describe Inversion::Template::ConfigTag do
 		<?attr subtemplate ?>
 		TEMPLATE
 		tmpl = Inversion::Template.new( source )
-		tmpl.subtemplate = Inversion::Template.load( 'unknown-tag.tmpl' )
+		tmpl.subtemplate = Inversion::Template.load( 'unknown-tag.tmpl', template_paths: %w[spec/data] )
 
 		expect( tmpl.render ).to match( /commented out 1 nodes on line 3: some stuff/i )
 	end

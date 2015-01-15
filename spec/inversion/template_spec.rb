@@ -9,6 +9,16 @@ require 'inversion/template'
 
 describe Inversion::Template do
 
+	before( :all ) do
+		@default_template_path = Inversion::Template.template_paths
+		Inversion::Template::Tag.load_all
+	end
+
+	after( :all ) do
+		Inversion::Template.template_paths = @default_template_path
+	end
+
+
 	context "created from a simple string" do
 
 		let( :template ) { described_class.new("a template") }
@@ -278,6 +288,15 @@ describe Inversion::Template do
 			expect( IO ).to receive( :read ).with( tmplpath.to_s ).and_return( 'file contents' )
 			expect( described_class.load( 'hooowat.tmpl' ).source ).to eq( 'file contents' )
 		end
+
+		it "instances can be loaded from a path provided via options" do
+			expect( FileTest ).to receive( :exist? ).with( '/tmp/hooowat' ).and_return( true )
+			expect( IO ).to receive( :read ).with( '/tmp/hooowat' ).and_return( 'file contents' )
+			expect(
+				described_class.load( 'hooowat', template_paths: %w[/tmp] ).source
+			).to eq( 'file contents' )
+		end
+
 	end
 
 
@@ -397,8 +416,8 @@ describe Inversion::Template do
 
 			described_class.configure( config.templates )
 
-			expect( described_class.config[:ignore_unknown_tags] ).to be_false()
-			expect( described_class.config[:debugging_comments] ).to be_true()
+			expect( described_class.config[:ignore_unknown_tags] ).to be_falsey()
+			expect( described_class.config[:debugging_comments] ).to be_truthy()
 			expect( described_class.config[:comment_start] ).to eq( '#' )
 			expect( described_class.config[:comment_end] ).to eq( '' )
 

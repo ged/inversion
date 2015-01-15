@@ -10,6 +10,8 @@ require 'loggability/spechelpers'
 
 require 'inversion'
 
+Inversion::Template::Tag.load_all
+
 
 ### RSpec helper functions.
 module Inversion::SpecHelpers
