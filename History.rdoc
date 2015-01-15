@@ -1,3 +1,9 @@
+== v0.16.0 [2015-01-14] Michael Granger <ged@FaerieMUD.org>
+
+Add support for loading templates from an alternate path
+via :template_paths option to Inversion::Template.load.
+
+
 == v0.15.0 [2014-11-24] Michael Granger <ged@FaerieMUD.org>
 
 Add a mechanism to allow tags to extend the template.

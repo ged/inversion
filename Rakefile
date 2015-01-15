@@ -40,7 +40,7 @@ hoespec = Hoe.spec 'inversion' do
 	self.dependency 'trollop',       '~> 2.0', :development
 	self.dependency 'rdoc-generator-fivefish', '~> 0', :development
 
-	self.require_ruby_version( '>=1.9.2' )
+	self.require_ruby_version( '>=2.0.0' )
 	self.hg_sign_tags = true if self.respond_to?( :hg_sign_tags= )
 	self.check_history_on_release = true if self.respond_to?( :check_history_on_release= )
 	self.rdoc_locations << "deveiate:/usr/local/www/public/code/#{remote_rdoc_dir}"
