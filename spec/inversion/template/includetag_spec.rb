@@ -9,7 +9,6 @@ require 'inversion/template/includetag'
 
 describe Inversion::Template::IncludeTag do
 
-
 	it "renders the IncludeTag as an empty string" do
 		included_path = Pathname.pwd + 'included.tmpl'
 		expect( FileTest ).to receive( :exist? ).with( included_path.to_s ).and_return( true )

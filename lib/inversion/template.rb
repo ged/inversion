@@ -169,7 +169,9 @@ class Inversion::Template
 
 		tmpl = nil
 		path = Pathname( path )
-		template_paths = self.template_paths + [ Dir.pwd ]
+		opts[:template_paths] ||= self.template_paths
+		search_path = opts[:template_paths] + [ Dir.pwd ]
+		self.log.debug "Searching template paths: %p" % [ search_path ]
 
 		# Unrestricted template location.
 		if path.absolute?
@@ -178,12 +180,12 @@ class Inversion::Template
 		# Template files searched under paths specified in 'template_paths', then
 		# the current working directory. First match wins.
 		else
-			tmpl = template_paths.collect {|dir| Pathname(dir) + path }.find do |fullpath|
+			tmpl = search_path.collect {|dir| Pathname(dir) + path }.find do |fullpath|
 				fullpath.exist?
 			end
 
 			raise RuntimeError, "Unable to find template %p within configured paths %p" %
-				[ path.to_s, template_paths ] if tmpl.nil?
+				[ path.to_s, search_path ] if tmpl.nil?
 		end
 
 		# We trust files read from disk
