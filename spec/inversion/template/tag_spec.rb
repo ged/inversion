@@ -66,6 +66,28 @@ describe Inversion::Template::Tag do
 		}.to raise_error( ArgumentError, /invalid tag name/i )
 	end
 
+
+	it "includes support for snake_case tag names" do
+		pluginfile = '/usr/lib/ruby/gems/1.8/gems/inversion-extra-1.0.8/lib/inversion/template/two_hump_camel_tag.rb'
+		expect( Gem ).to receive( :find_files ).
+			with( Inversion::Template::Tag::TAG_PLUGIN_PATTERN ).
+			and_return([ pluginfile ])
+		expect( Inversion::Template::Tag ).to receive( :require ) do |filename|
+			expect( filename ).to eq( 'inversion/template/two_hump_camel_tag' )
+			Class.new( Inversion::Template::Tag ) do
+				def self::name; "TwoHumpCamelTag"; end
+			end
+		end
+		result = Inversion::Template::Tag.load_all
+		expect( result ).to be_a( Hash )
+		expect( result.size ).to eq( 2 )
+		expect( result ).to have_key( :twohumpcamel )
+		expect( result ).to have_key( :two_hump_camel )
+		expect( result[:two_hump_camel] ).to be_a( Class )
+		expect( result[:two_hump_camel] ).to be < Inversion::Template::Tag
+	end
+
+
 	describe "concrete subclass" do
 
 		before( :each ) do

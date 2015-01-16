@@ -80,7 +80,7 @@ class Inversion::Template::Tag < Inversion::Template::Node
 					# Inversion.log.debug "  skipping abstract class %p" % [ derivclass ]
 					nil
 				else
-					derivclass.name.downcase =~ /\b#{tagname}tag$/
+					derivclass.name.downcase =~ /\b#{tagname.gsub('_', '')}tag$/
 				end
 			end
 
@@ -90,7 +90,12 @@ class Inversion::Template::Tag < Inversion::Template::Node
 			end
 
 			Inversion.log.debug "  found: %p" % [ tagclass ]
-			tags[ tagname.to_sym ] = tagclass
+			snakecase_name = tagclass.name.sub( /Tag$/, '' )
+			snakecase_name = snakecase_name.gsub( /([a-z])([A-Z])/, '\1_\2' ).downcase
+			Inversion.log.debug "  mapping %p to names: %p"  % [ tagclass, snakecase_name ]
+
+			tags[ snakecase_name.to_sym ] = tagclass
+			tags[ snakecase_name.gsub('_', '').to_sym ] = tagclass
 		end
 
 		@types ||= {}
