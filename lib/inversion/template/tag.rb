@@ -90,7 +90,7 @@ class Inversion::Template::Tag < Inversion::Template::Node
 			end
 
 			Inversion.log.debug "  found: %p" % [ tagclass ]
-			snakecase_name = tagclass.name.sub( /Tag$/, '' )
+			snakecase_name = tagclass.name.sub( /^.*\b(\w+)Tag$/i, '\1' )
 			snakecase_name = snakecase_name.gsub( /([a-z])([A-Z])/, '\1_\2' ).downcase
 			Inversion.log.debug "  mapping %p to names: %p"  % [ tagclass, snakecase_name ]
 

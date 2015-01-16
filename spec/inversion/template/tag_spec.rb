@@ -31,7 +31,7 @@ describe Inversion::Template::Tag do
 		expect( Inversion::Template::Tag ).to receive( :require ) do |filename|
 			expect( filename ).to eq( 'inversion/template/zebratag' )
 			Class.new( Inversion::Template::Tag ) do
-				def self::name; "ZebraTag"; end
+				def self::name; "Inversion::Template::ZebraTag"; end
 			end
 		end
 		result = Inversion::Template::Tag.load_all
@@ -51,7 +51,7 @@ describe Inversion::Template::Tag do
 			expect( filename ).to eq( 'inversion/template/zebratag' )
 			Class.new( Inversion::Template::Tag ) do
 				include Inversion::AbstractClass
-				def self::name; "ZebraTag"; end
+				def self::name; "Inversion::Template::ZebraTag"; end
 			end
 		end
 		result = Inversion::Template::Tag.load_all
@@ -75,7 +75,7 @@ describe Inversion::Template::Tag do
 		expect( Inversion::Template::Tag ).to receive( :require ) do |filename|
 			expect( filename ).to eq( 'inversion/template/two_hump_camel_tag' )
 			Class.new( Inversion::Template::Tag ) do
-				def self::name; "TwoHumpCamelTag"; end
+				def self::name; "Inversion::Template::TwoHumpCamelTag"; end
 			end
 		end
 		result = Inversion::Template::Tag.load_all
