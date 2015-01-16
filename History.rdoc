@@ -1,3 +1,8 @@
+== v0.17.1 [2015-01-15] Michael Granger <ged@FaerieMUD.org>
+
+Re-push to fix a misbuilt gem.
+
+
 == v0.17.0 [2015-01-15] Michael Granger <ged@FaerieMUD.org>
 
 Support snakecase tag names/tag filenames
