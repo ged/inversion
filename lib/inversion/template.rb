@@ -338,7 +338,7 @@ class Inversion::Template
 	### Render the template, optionally passing a render state (if, for example, the
 	### template is being rendered inside another template).
 	def render( parentstate=nil, &block )
-		self.log.info "rendering template 0x%08x" % [ self.object_id/2 ]
+		self.log.info "rendering template %#x" % [ self.object_id/2 ]
 		opts = self.options
 		opts.merge!( parentstate.options ) if parentstate
 
@@ -348,10 +348,14 @@ class Inversion::Template
 
 		# self.log.debug "  rendering node tree: %p" % [ @node_tree ]
 		self.walk_tree {|node| state << node }
-		self.log.info "  done rendering template 0x%08x: %0.4fs" %
+		self.log.info "  done rendering template %#x: %0.4fs" %
 			[ self.object_id/2, state.time_elapsed ]
 
-		self.fragments.replace( state.rendered_fragments )
+		if parentstate
+			parentstate.fragments.merge!( state.fragments )
+		else
+			self.fragments.replace( state.rendered_fragments )
+		end
 
 		return state.to_s
 	end

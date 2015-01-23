@@ -344,6 +344,7 @@ class Inversion::RenderState
 	### Add one or more rendered +nodes+ to the state as a reusable fragment associated
 	### with the specified +name+.
 	def add_fragment( name, *nodes )
+		self.log.debug "Adding a %s fragment with %d nodes." % [ name, nodes.size ]
 		nodes.flatten!
 		self.fragments[ name.to_sym ] = nodes
 		self.scope.__fragments__[ name.to_sym ] = nodes
@@ -352,6 +353,7 @@ class Inversion::RenderState
 
 	### Return the current fragments Hash rendered as Strings.
 	def rendered_fragments
+		self.log.debug "Rendering fragments: %p." % [ self.fragments.keys ]
 		return self.fragments.each_with_object( {} ) do |(key, nodes), accum|
 			accum[ key ] = self.stringify_nodes( nodes )
 		end
