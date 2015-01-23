@@ -1,3 +1,11 @@
+== v0.17.2 [2015-01-22] Michael Granger <ged@FaerieMUD.org>
+
+- Fix a bug with the fragment tag.
+
+Fragments will now propagate to the container template when they're
+added by inner templates.
+
+
 == v0.17.1 [2015-01-15] Michael Granger <ged@FaerieMUD.org>
 
 Re-push to fix a misbuilt gem.
