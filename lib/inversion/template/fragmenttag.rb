@@ -45,11 +45,11 @@ class Inversion::Template::FragmentTag < Inversion::Template::Tag
 		rendered_nodes = []
 		renderstate.with_destination( rendered_nodes ) do
 			sn = self.render_subnodes( renderstate )
-			self.log.debug "  subnodes are: %p" % [ sn ]
+			# self.log.debug "  subnodes are: %p" % [ sn ]
 			sn
 		end
 
-		self.log.debug "  rendered nodes are: %p" % [ rendered_nodes ]
+		# self.log.debug "  rendered nodes are: %p" % [ rendered_nodes ]
 		renderstate.add_fragment( self.key, rendered_nodes )
 
 		return nil

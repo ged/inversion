@@ -36,5 +36,22 @@ describe Inversion::Template::FragmentTag do
 		expect( tmpl.fragments[:subject] ).to eq( "Order #2121bf8c4" )
 	end
 
+
+	it "propagates fragments to the outermost template when they're nested" do
+		inner_tmpl = Inversion::Template.new(
+			'<?fragment subject ?>Order #<?attr order_number ?><?end?>-- <?attr subject ?> --'
+		)
+		outer_tmpl = Inversion::Template.new(
+			'<?attr content ?>'
+		)
+
+		inner_tmpl.order_number = '2121bf8c4'
+		outer_tmpl.content = inner_tmpl
+		output = outer_tmpl.render
+
+		expect( output ).to eq( "-- Order #2121bf8c4 --" )
+		expect( outer_tmpl.fragments[:subject] ).to eq( "Order #2121bf8c4" )
+	end
+
 end
 
