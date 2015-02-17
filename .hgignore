@@ -7,3 +7,4 @@
 ^ChangeLog$
 ^pkg/
 ^Gemfile\.lock$
+^Gemfile\.devel$
