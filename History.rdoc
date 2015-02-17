@@ -1,3 +1,10 @@
+== v0.17.3 [2015-02-16] Michael Granger <ged@FaerieMUD.org>
+
+- Performance fix: Re-comment the #inspect logging message
+  in the RenderState
+- Updated tag docs
+
+
 == v0.17.2 [2015-01-22] Michael Granger <ged@FaerieMUD.org>
 
 - Fix a bug with the fragment tag.
