@@ -479,7 +479,7 @@ class Inversion::RenderState
 
 	### Return the given +nodes+ as a String in the configured encoding.
 	def stringify_nodes( nodes )
-		self.log.debug "Rendering nodes: %p" % [ nodes ]
+		# self.log.debug "Rendering nodes: %p" % [ nodes ]
 		strings = nodes.flatten.map( &:to_s )
 
 		if enc = self.options[ :encoding ]
