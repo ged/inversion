@@ -18,139 +18,6 @@ The second form is especially useful if you're generating HTML and want to put a
 You can mix tag forms in a single document.
 
 
-== Tags
-
-=== begin/rescue
-
-These tags work as you'd expect from their ruby counterparts. 
-
-The +begin+ section of the template to be rendered only if no exceptions are raised while it's
-being rendered. If an exception is raised, it is checked against any +rescue+ sections, and the
-first with a matching exception is rendered instead. If no +rescue+ block is found, the exception
-is handled by the configured exception behavior for the template (see Inversion::Template@Template+Options).
-
-  <?begin ?><?call employees.length ?><?end?>
-  
-  <?begin ?>
-    <?for employee in employees.all ?>
-      <?attr employee.name ?> --> <?attr employee.title ?>
-    <?end for?>
-  <?rescue DatabaseError => err ?>
-    Oh no!! I can't talk to the database for some reason.  The
-    error was as follows:
-    <pre>
-      <?attr err.message ?>
-    </pre>
-  <?end?>
-
-=== comment
-
-The +comment+ tag can be used to temporarily stop a section of a document from being rendered:
-
-  <?comment?>
-  This stuff won't be rendered.
-  <?end comment ?>
-  But this stuff will.
-
-Note that the tags inside the comment will still be parsed, so the template's interface won't be affected by the comment:
-
-  <?comment?>
-  <?attr content ?>
-  <?end comment ?>
-
-If you have +debugging_comments+ enabled in the template options[rdoc-ref:Templates@Template+Options], sections which are commented out will be rendered as a comment describing what was omitted, surrounded by the comment characters set in +comment_start+ and +comment_end+ options, respectively.
-
-  <!-- Commented out 1 nodes on line 1 -->
-
-You can also embed a description of why the section is commented in the tag body, which will be used as a label when rendering the comment. For example:
-
-  <?comment Disabled until there's content ?>
-  <?attr content ?>
-  <?end comment ?>
-
-will be rendered as:
-
-  <!-- Commented out 1 nodes on line 1: Disabled until there's content -->
-
-
-=== config
-
-The +config+ tag can be used to override template options[Templates@Template+Options]
-on a per-template basis.  It allows for convenient, inline settings from
-within a template rather than from the code in which the template is
-loaded.
-
-For example, if you want to enable debugging comments on a single template:
-
-  <?config debugging_comments: true ?>
-
-Multiple template options can be set simultaneously by using a YAML hash:
-
-  <?config
-      on_render_error: propagate
-      debugging_comments: true
-      comment_start: /*
-      comment_end: */
-  ?>
-
-Note that this also allows you to set multiple options on a single line, if you wrap them in braces:
-
-  <?config { comment_start: "/*", comment_end: "*/" } ?>
-
-
-=== default
-
-The +default+ tag sets an attribute from within the template, and this value is used if the attribute is otherwise unset.
-
-  template = Inversion::Template.new <<-TMPL
-    <?default adjective to "cruel" ?>
-    <?default noun to "world" ?>
-    Goodbye, <?attr adjective ?> <?attr noun ?>!
-  TMPL
-
-  template.render
-
-  template.adjective = "delicious"
-  template.render
-
-  template.adjective = nil
-  template.noun = "banana"
-  template.render
-
-Would produce the output:
-
-  Goodbye, cruel world!
-  Goodbye, delicious world!
-  Goodbye, cruel banana!
-
-
-=== fragment
-
-A +fragment+ tag also sets an attribute from within the template, but under the scope of the global
-template itself.  A fragment can use other Inversion tags, and the attribute is both usable
-elsewhere in the template, and accessible from calling code after rendering.
-
-  template = Inversion::Template.new <<-TMPL
-	<?fragment subject ?>Your order status (Order #<?call order.number ?>)<?end ?>
-
-	Dear <?call order.customer.name ?>,
-
-	Your recent order was modified by our Order Fulfillment Team.
-
-	After careful deliberation, it was decided that no one should have need for that many hot dogs
-	with overnight shipping.  Frankly, we're more than a little concerned for your health.
-
-	Sincerely,
-	Rowe's Meat Emporium
-	(Buy!  Sell!  Consignment!)
-  TMPL
-
-  template.order = order
-  template.render
-
-  template.fragments[ :subject ] #=> "Your order status (Order #3492)"
-
-
 == Placeholder Tags
 
 Placeholder tags represent the main functionality of Inversion; they create a placeholder in the output text which can be filled in via a method on the template object with the same name.
@@ -231,9 +98,9 @@ Dates are compared against the current time, and render to approximate descripti
 * less than a minute from now
 
 
-== Import and Publish/Subscribe
+== Inter-template Tags
 
-Both of these tags operate on nested templates: one copies objects from an outer template into an inner one (+import+), and the other publishes sections of content from one template to any other subscribed template.
+These tags operate on nested templates, allowing you to selectively use or send attributes or content from other templates.
 
 
 === import
@@ -401,6 +268,34 @@ The +include+ tag allows inclusion of other template files from within a templat
   Your Friends at Spime Thorpe!
 
 
+=== fragment
+
+A +fragment+ tag also sets an attribute from within the template, but under the
+scope of the global template itself. A fragment can use other Inversion tags,
+and the attribute is both usable elsewhere in the template, and accessible from
+calling code after rendering.
+
+  template = Inversion::Template.new <<-TMPL
+	<?fragment subject ?>Your order status (Order #<?call order.number ?>)<?end ?>
+
+	Dear <?call order.customer.name ?>,
+
+	Your recent order was modified by our Order Fulfillment Team.
+
+	After careful deliberation, it was decided that no one should have need for that many hot dogs
+	with overnight shipping.  Frankly, we're more than a little concerned for your health.
+
+	Sincerely,
+	Rowe's Meat Emporium
+	(Buy!  Sell!  Consignment!)
+  TMPL
+
+  template.order = order
+  template.render
+
+  template.fragments[ :subject ] #=> "Your order status (Order #3492)"
+
+
 == Flow Control
 
 The following tags are used to alter the flow of rendering from within templates.
@@ -515,6 +410,86 @@ The +yield+ tag is used to defer rendering of some part of the template to the c
   end
 
 This will insert the +report_table+ template in place of the yield, but only if $DEBUG is true.
+
+
+=== begin/rescue
+
+These tags work as you'd expect from their ruby counterparts. 
+
+The +begin+ section of the template to be rendered only if no exceptions are raised while it's
+being rendered. If an exception is raised, it is checked against any +rescue+ sections, and the
+first with a matching exception is rendered instead. If no +rescue+ block is found, the exception
+is handled by the configured exception behavior for the template (see Inversion::Template@Template+Options).
+
+  <?begin ?><?call employees.length ?><?end?>
+  
+  <?begin ?>
+    <?for employee in employees.all ?>
+      <?attr employee.name ?> --> <?attr employee.title ?>
+    <?end for?>
+  <?rescue DatabaseError => err ?>
+    Oh no!! I can't talk to the database for some reason.  The
+    error was as follows:
+    <pre>
+      <?attr err.message ?>
+    </pre>
+  <?end?>
+
+
+== Control Tags
+
+There are a few tags that can be used to set values in the templating system itself.
+
+=== config
+
+The +config+ tag can be used to override template options[Templates@Template+Options]
+on a per-template basis.  It allows for convenient, inline settings from
+within a template rather than from the code in which the template is
+loaded.
+
+For example, if you want to enable debugging comments on a single template:
+
+  <?config debugging_comments: true ?>
+
+Multiple template options can be set simultaneously by using a YAML hash:
+
+  <?config
+      on_render_error: propagate
+      debugging_comments: true
+      comment_start: /*
+      comment_end: */
+  ?>
+
+Note that this also allows you to set multiple options on a single line, if you wrap them in braces:
+
+  <?config { comment_start: "/*", comment_end: "*/" } ?>
+
+
+=== default
+
+The +default+ tag sets an attribute from within the template, and this value is used if the attribute is otherwise unset.
+
+  template = Inversion::Template.new <<-TMPL
+    <?default adjective to "cruel" ?>
+    <?default noun to "world" ?>
+    Goodbye, <?attr adjective ?> <?attr noun ?>!
+  TMPL
+
+  template.render
+
+  template.adjective = "delicious"
+  template.render
+
+  template.adjective = nil
+  template.noun = "banana"
+  template.render
+
+Would produce the output:
+
+  Goodbye, cruel world!
+  Goodbye, delicious world!
+  Goodbye, cruel banana!
+
 
 
 == Troubleshooting/Introspection
