@@ -1,14 +1,14 @@
 # -*- encoding: utf-8 -*-
-# stub: inversion 0.17.2.pre20150216161946 ruby lib
+# stub: inversion 0.18.0.pre20150227190437 ruby lib
 
 Gem::Specification.new do |s|
   s.name = "inversion"
-  s.version = "0.17.3"
+  s.version = "0.18.0.pre20150227190437"
 
   s.required_rubygems_version = Gem::Requirement.new("> 1.3.1") if s.respond_to? :required_rubygems_version=
   s.require_paths = ["lib"]
   s.authors = ["Michael Granger", "Mahlon E. Smith"]
-  s.date = "2015-02-17"
+  s.date = "2015-02-28"
   s.description = "Inversion is a templating system for Ruby. It uses the \"Inversion of Control\"\nprinciple to decouple the contents and structure of templates from the code\nthat uses them, making it easier to separate concerns, keep your tests simple,\nand avoid polluting scopes with ephemeral data."
   s.email = ["ged@FaerieMUD.org", "mahlon@martini.nu"]
   s.executables = ["inversion"]
@@ -33,11 +33,10 @@ Gem::Specification.new do |s|
       s.add_development_dependency(%q<hoe-highline>, ["~> 0.2"])
       s.add_development_dependency(%q<rdoc>, ["~> 4.0"])
       s.add_development_dependency(%q<highline>, ["~> 1.6"])
-      s.add_development_dependency(%q<hoe-bundler>, ["~> 1.2"])
       s.add_development_dependency(%q<rack-test>, ["~> 0.6"])
       s.add_development_dependency(%q<simplecov>, ["~> 0.8"])
       s.add_development_dependency(%q<sinatra>, ["~> 1.4"])
-      s.add_development_dependency(%q<tilt>, ["~> 2.0"])
+      s.add_development_dependency(%q<tilt>, ["~> 1.4"])
       s.add_development_dependency(%q<sysexits>, ["~> 1.0"])
       s.add_development_dependency(%q<trollop>, ["~> 2.0"])
       s.add_development_dependency(%q<rdoc-generator-fivefish>, ["~> 0"])
@@ -50,11 +49,10 @@ Gem::Specification.new do |s|
       s.add_dependency(%q<hoe-highline>, ["~> 0.2"])
       s.add_dependency(%q<rdoc>, ["~> 4.0"])
       s.add_dependency(%q<highline>, ["~> 1.6"])
-      s.add_dependency(%q<hoe-bundler>, ["~> 1.2"])
       s.add_dependency(%q<rack-test>, ["~> 0.6"])
       s.add_dependency(%q<simplecov>, ["~> 0.8"])
       s.add_dependency(%q<sinatra>, ["~> 1.4"])
-      s.add_dependency(%q<tilt>, ["~> 2.0"])
+      s.add_dependency(%q<tilt>, ["~> 1.4"])
       s.add_dependency(%q<sysexits>, ["~> 1.0"])
       s.add_dependency(%q<trollop>, ["~> 2.0"])
       s.add_dependency(%q<rdoc-generator-fivefish>, ["~> 0"])
@@ -68,11 +66,10 @@ Gem::Specification.new do |s|
     s.add_dependency(%q<hoe-highline>, ["~> 0.2"])
     s.add_dependency(%q<rdoc>, ["~> 4.0"])
     s.add_dependency(%q<highline>, ["~> 1.6"])
-    s.add_dependency(%q<hoe-bundler>, ["~> 1.2"])
     s.add_dependency(%q<rack-test>, ["~> 0.6"])
     s.add_dependency(%q<simplecov>, ["~> 0.8"])
     s.add_dependency(%q<sinatra>, ["~> 1.4"])
-    s.add_dependency(%q<tilt>, ["~> 2.0"])
+    s.add_dependency(%q<tilt>, ["~> 1.4"])
     s.add_dependency(%q<sysexits>, ["~> 1.0"])
     s.add_dependency(%q<trollop>, ["~> 2.0"])
     s.add_dependency(%q<rdoc-generator-fivefish>, ["~> 0"])

@@ -14,7 +14,6 @@ GEMSPEC = 'inversion.gemspec'
 Hoe.plugin :mercurial
 Hoe.plugin :signing
 Hoe.plugin :manualgen
-Hoe.plugin :bundler
 
 Hoe.plugins.delete :rubyforge
 
@@ -31,11 +30,10 @@ hoespec = Hoe.spec 'inversion' do
 
 	self.dependency 'highline',      '~> 1.6', :development
 	self.dependency 'hoe-deveiate',  '~> 0.5', :development
-	self.dependency 'hoe-bundler',   '~> 1.2', :development
 	self.dependency 'rack-test',     '~> 0.6', :development
 	self.dependency 'simplecov',     '~> 0.8', :development
 	self.dependency 'sinatra',       '~> 1.4', :development
-	self.dependency 'tilt',          '~> 2.0', :development
+	self.dependency 'tilt',          '~> 1.4', :development
 	self.dependency 'sysexits',      '~> 1.0', :development
 	self.dependency 'trollop',       '~> 2.0', :development
 	self.dependency 'rdoc-generator-fivefish', '~> 0', :development
@@ -49,7 +47,7 @@ end
 ENV['VERSION'] ||= hoespec.spec.version.to_s
 
 # Ensure the specs pass before checking in
-task 'hg:precheckin' => [:check_history, 'bundler:gemfile', :check_manifest, :spec]
+task 'hg:precheckin' => [:check_history, :check_manifest, :spec]
 
 if Rake::Task.task_defined?( '.gemtest' )
 	Rake::Task['.gemtest'].clear
@@ -74,6 +72,7 @@ if File.directory?( '.hg' )
 	rdoc.main = "README.rdoc"
 	rdoc.rdoc_files.include( "*.rdoc", "ChangeLog", "lib/**/*.rb" )
 	rdoc.generator = :fivefish
+	rdoc.title = "Inversion Templating"
 	rdoc.rdoc_dir = 'doc'
 	end
 end
@@ -83,7 +82,7 @@ file GEMSPEC => __FILE__
 task GEMSPEC do |task|
 	spec = $hoespec.spec
 	spec.files.delete( '.gemtest' )
-	spec.version = "#{spec.version}.pre#{Time.now.strftime("%Y%m%d%H%M%S")}"
+	spec.version = "#{spec.version.bump}.0.pre#{Time.now.strftime("%Y%m%d%H%M%S")}"
 	File.open( task.name, 'w' ) do |fh|
 		fh.write( spec.to_ruby )
 	end
