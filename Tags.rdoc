@@ -467,7 +467,8 @@ Note that this also allows you to set multiple options on a single line, if you 
 
 === default
 
-The +default+ tag sets an attribute from within the template, and this value is used if the attribute is otherwise unset.
+The +default+ tag sets an attribute from within the template,
+and this value is used if the attribute is set to nil or otherwise unset.
 
   template = Inversion::Template.new <<-TMPL
     <?default adjective to "cruel" ?>
