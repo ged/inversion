@@ -1,14 +1,14 @@
 # -*- encoding: utf-8 -*-
-# stub: inversion 0.18.0.pre20150227190437 ruby lib
+# stub: inversion 0.18.0.pre20150708173451 ruby lib
 
 Gem::Specification.new do |s|
   s.name = "inversion"
-  s.version = "0.18.0.pre20150227190437"
+  s.version = "0.18.0.pre20150708173451"
 
   s.required_rubygems_version = Gem::Requirement.new("> 1.3.1") if s.respond_to? :required_rubygems_version=
   s.require_paths = ["lib"]
   s.authors = ["Michael Granger", "Mahlon E. Smith"]
-  s.date = "2015-02-28"
+  s.date = "2015-07-09"
   s.description = "Inversion is a templating system for Ruby. It uses the \"Inversion of Control\"\nprinciple to decouple the contents and structure of templates from the code\nthat uses them, making it easier to separate concerns, keep your tests simple,\nand avoid polluting scopes with ephemeral data."
   s.email = ["ged@FaerieMUD.org", "mahlon@martini.nu"]
   s.executables = ["inversion"]
@@ -18,7 +18,7 @@ Gem::Specification.new do |s|
   s.licenses = ["BSD"]
   s.rdoc_options = ["--main", "README.rdoc"]
   s.required_ruby_version = Gem::Requirement.new(">= 2.0.0")
-  s.rubygems_version = "2.4.5"
+  s.rubygems_version = "2.4.7"
   s.signing_key = "/Volumes/Keys/ged-private_gem_key.pem"
   s.summary = "Inversion is a templating system for Ruby"
 
@@ -28,8 +28,7 @@ Gem::Specification.new do |s|
     if Gem::Version.new(Gem::VERSION) >= Gem::Version.new('1.2.0') then
       s.add_runtime_dependency(%q<loggability>, ["~> 0.11"])
       s.add_development_dependency(%q<hoe-mercurial>, ["~> 1.4"])
-      s.add_development_dependency(%q<hoe-manualgen>, ["~> 0.3.0"])
-      s.add_development_dependency(%q<hoe-deveiate>, ["~> 0.6"])
+      s.add_development_dependency(%q<hoe-deveiate>, ["~> 0.7"])
       s.add_development_dependency(%q<hoe-highline>, ["~> 0.2"])
       s.add_development_dependency(%q<rdoc>, ["~> 4.0"])
       s.add_development_dependency(%q<highline>, ["~> 1.6"])
@@ -44,8 +43,7 @@ Gem::Specification.new do |s|
     else
       s.add_dependency(%q<loggability>, ["~> 0.11"])
       s.add_dependency(%q<hoe-mercurial>, ["~> 1.4"])
-      s.add_dependency(%q<hoe-manualgen>, ["~> 0.3.0"])
-      s.add_dependency(%q<hoe-deveiate>, ["~> 0.6"])
+      s.add_dependency(%q<hoe-deveiate>, ["~> 0.7"])
       s.add_dependency(%q<hoe-highline>, ["~> 0.2"])
       s.add_dependency(%q<rdoc>, ["~> 4.0"])
       s.add_dependency(%q<highline>, ["~> 1.6"])
@@ -61,8 +59,7 @@ Gem::Specification.new do |s|
   else
     s.add_dependency(%q<loggability>, ["~> 0.11"])
     s.add_dependency(%q<hoe-mercurial>, ["~> 1.4"])
-    s.add_dependency(%q<hoe-manualgen>, ["~> 0.3.0"])
-    s.add_dependency(%q<hoe-deveiate>, ["~> 0.6"])
+    s.add_dependency(%q<hoe-deveiate>, ["~> 0.7"])
     s.add_dependency(%q<hoe-highline>, ["~> 0.2"])
     s.add_dependency(%q<rdoc>, ["~> 4.0"])
     s.add_dependency(%q<highline>, ["~> 1.6"])
