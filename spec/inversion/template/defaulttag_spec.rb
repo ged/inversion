@@ -19,6 +19,12 @@ describe Inversion::Template::DefaultTag do
 		expect( tmpl.render ).to eq( 'bar' )
 	end
 
+	it "doesn't override a falsy value set on the template as an attribute" do
+		tmpl = Inversion::Template.new( '<?default foo to true ?><?attr foo ?>' )
+		tmpl.foo = false
+		expect( tmpl.render ).to eq( 'false' )
+	end
+
 	it "can set a template attribute to the result of calling a methodchain" do
 		tmpl = Inversion::Template.
 			new( '<?default width to foo.length ?><?attr foo ?>:<?attr width ?>' )
