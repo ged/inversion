@@ -12,8 +12,8 @@ end
 GEMSPEC = 'inversion.gemspec'
 
 Hoe.plugin :mercurial
+Hoe.plugin :publish
 Hoe.plugin :signing
-Hoe.plugin :manualgen
 
 Hoe.plugins.delete :rubyforge
 
@@ -47,7 +47,7 @@ end
 ENV['VERSION'] ||= hoespec.spec.version.to_s
 
 # Ensure the specs pass before checking in
-task 'hg:precheckin' => [:check_history, :check_manifest, :spec]
+task 'hg:precheckin' => [:check_history, :check_manifest, :gemspec, :spec]
 
 if Rake::Task.task_defined?( '.gemtest' )
 	Rake::Task['.gemtest'].clear
