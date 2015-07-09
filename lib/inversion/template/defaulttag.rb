@@ -103,9 +103,10 @@ class Inversion::Template::DefaultTag < Inversion::Template::CodeTag
 
 	### Set the specified value (if it's nil) before rendering.
 	def before_rendering( renderstate )
-		if val = renderstate.attributes[ self.name.to_sym ]
+		existing_value = renderstate.attributes[ self.name.to_sym ]
+		unless existing_value.nil?
 			self.log.info "Not defaulting %s: already set to %p" %
-				[ self.name, val ]
+				[ self.name, existing_value ]
 			return nil
 		end
 
