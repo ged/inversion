@@ -1,3 +1,8 @@
+== v0.18.0 [2015-10-01] Michael Granger <ged@FaerieMUD.org>
+
+Add a `strict_attributes` option for templates.
+
+
 == v0.17.4 [2015-07-08] Michael Granger <ged@FaerieMUD.org>
 
 Fixes:
