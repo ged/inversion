@@ -121,6 +121,7 @@ class Inversion::Template
 		:ignore_unknown_tags => true,
 		:template_paths      => [],
 		:stat_delay          => 0,
+		:strict_attributes   => false,
 
 		# Rendering options
 		:on_render_error     => :comment,
@@ -391,6 +392,10 @@ class Inversion::Template
 	def method_missing( sym, *args, &block )
 		return super unless sym.to_s =~ /^([a-z]\w+)=?$/i
 		attribute = $1
+
+		raise NoMethodError, "no tag attribute '%s' (strict mode)" % [ attribute ] if
+			self.options[:strict_attributes]
+
 		self.install_accessors( attribute )
 
 		# Call the new method via #method to avoid a method_missing loop.
