@@ -65,6 +65,7 @@ describe Inversion::Template do
 		tmpl.render( &renderblock )
 	end
 
+
 	it "carries its global configuration to the parser" do
 		begin
 			orig_config = described_class.config
@@ -77,6 +78,7 @@ describe Inversion::Template do
 			described_class.config = orig_config
 		end
 	end
+
 
 	it "carries its global configuration to per-template options" do
 		begin
@@ -103,6 +105,7 @@ describe Inversion::Template do
 		expect( tmpl.inspect ).to_not match( /node_tree/ )
 	end
 
+
 	it "includes the node tree in the inspected object if debugging is enabled" do
 		begin
 			debuglevel = $DEBUG
@@ -115,11 +118,20 @@ describe Inversion::Template do
 		end
 	end
 
+
 	it "provides accessors for attributes that aren't identifiers in the template" do
 		tmpl = described_class.new( '' )
 		tmpl.foo = :bar
 		expect( tmpl.foo ).to eq( :bar )
 	end
+
+
+	it "raises instead of generating an accessor if configured with strict attributes" do
+		tmpl = described_class.new( '', strict_attributes: true )
+		expect { tmpl.foo = :bar }.to raise_error( NoMethodError, "no tag attribute 'foo' (strict mode)" )
+		expect { tmpl.foo }.to raise_error( NoMethodError, "no tag attribute 'foo' (strict mode)")
+	end
+
 
 	it "can pass an encoding option to IO.open through the template constructor" do
 		content = 'some stuff'.encode( 'utf-8' )
@@ -268,7 +280,6 @@ describe Inversion::Template do
 		end
 
 	end
-
 
 
 	context "without template paths set" do
