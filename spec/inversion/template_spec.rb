@@ -127,9 +127,12 @@ describe Inversion::Template do
 
 
 	it "raises instead of generating an accessor if configured with strict attributes" do
-		tmpl = described_class.new( '', strict_attributes: true )
+		tmpl = described_class.new( '<?attr bar ?>', strict_attributes: true )
 		expect { tmpl.foo = :bar }.to raise_error( NoMethodError, "no tag attribute 'foo' (strict mode)" )
 		expect { tmpl.foo }.to raise_error( NoMethodError, "no tag attribute 'foo' (strict mode)")
+
+		tmpl.bar = :foo
+		expect( tmpl.bar ).to eq( :foo )
 	end
 
 

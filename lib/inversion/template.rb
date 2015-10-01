@@ -82,6 +82,11 @@ end
 #   a purposeful delay between reloads for busy servers. Defaults to +0+
 #   (disabled).
 #
+# [:strict_attributes]
+#   Disable getting/setting attributes that aren't explicitly declared with a tag.
+#   Trying to get/set an attribute that isn't declared in the template with this
+#   option enabled will result in a NoMethodError being raised.
+#
 #
 class Inversion::Template
 	extend Loggability
