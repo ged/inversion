@@ -3,6 +3,7 @@
 
 require_relative '../helpers'
 
+require 'set'
 require 'inversion/mixins'
 
 
