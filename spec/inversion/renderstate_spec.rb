@@ -91,7 +91,7 @@ describe Inversion::RenderState do
 				state.with_attributes( {} ) do
 					raise "Charlie dooo!"
 				end
-			}.to raise_error()
+			}.to raise_error( RuntimeError )
 
 			expect( state.scope[:foot] ).to eq( 'in mouth' )
 		end
@@ -195,7 +195,7 @@ describe Inversion::RenderState do
 				state.with_destination( [] ) do
 					raise "New!"
 				end
-			}.to raise_error()
+			}.to raise_error( RuntimeError )
 
 			expect( state.destination ).to equal( original_dest )
 		end
