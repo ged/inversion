@@ -56,7 +56,7 @@ class Inversion::Command
 
 			banner (<<-END_BANNER).gsub(/^\t+/, '')
 			#{progname} OPTIONS SUBCOMMAND ARGS
-	
+
 			Run the specified SUBCOMMAND with the given ARGS.
 			END_BANNER
 			text ''
