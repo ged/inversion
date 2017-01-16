@@ -9,6 +9,7 @@ Rakefile
 Tags.rdoc
 bin/inversion
 lib/inversion.rb
+lib/inversion/command.rb
 lib/inversion/exceptions.rb
 lib/inversion/mixins.rb
 lib/inversion/monkeypatches.rb

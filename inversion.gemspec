@@ -1,75 +1,78 @@
 # -*- encoding: utf-8 -*-
-# stub: inversion 0.18.0.pre20150708173451 ruby lib
+# stub: inversion 1.1.0.pre20170116111030 ruby lib
 
 Gem::Specification.new do |s|
-  s.name = "inversion"
-  s.version = "0.18.0.pre20150708173451"
+  s.name = "inversion".freeze
+  s.version = "1.1.0.pre20170116111030"
 
-  s.required_rubygems_version = Gem::Requirement.new("> 1.3.1") if s.respond_to? :required_rubygems_version=
-  s.require_paths = ["lib"]
-  s.authors = ["Michael Granger", "Mahlon E. Smith"]
-  s.date = "2015-07-09"
-  s.description = "Inversion is a templating system for Ruby. It uses the \"Inversion of Control\"\nprinciple to decouple the contents and structure of templates from the code\nthat uses them, making it easier to separate concerns, keep your tests simple,\nand avoid polluting scopes with ephemeral data."
-  s.email = ["ged@FaerieMUD.org", "mahlon@martini.nu"]
-  s.executables = ["inversion"]
-  s.extra_rdoc_files = ["Examples.rdoc", "GettingStarted.rdoc", "Guide.rdoc", "History.rdoc", "Manifest.txt", "README.rdoc", "Tags.rdoc", "README.rdoc", "History.rdoc"]
-  s.files = ["ChangeLog", "Examples.rdoc", "GettingStarted.rdoc", "Guide.rdoc", "History.rdoc", "Manifest.txt", "README.rdoc", "Rakefile", "Tags.rdoc", "bin/inversion", "lib/inversion.rb", "lib/inversion/exceptions.rb", "lib/inversion/mixins.rb", "lib/inversion/monkeypatches.rb", "lib/inversion/parser.rb", "lib/inversion/renderstate.rb", "lib/inversion/sinatra.rb", "lib/inversion/template.rb", "lib/inversion/template/attrtag.rb", "lib/inversion/template/begintag.rb", "lib/inversion/template/calltag.rb", "lib/inversion/template/codetag.rb", "lib/inversion/template/commenttag.rb", "lib/inversion/template/configtag.rb", "lib/inversion/template/containertag.rb", "lib/inversion/template/defaulttag.rb", "lib/inversion/template/elsetag.rb", "lib/inversion/template/elsiftag.rb", "lib/inversion/template/endtag.rb", "lib/inversion/template/escapetag.rb", "lib/inversion/template/fortag.rb", "lib/inversion/template/fragmenttag.rb", "lib/inversion/template/iftag.rb", "lib/inversion/template/importtag.rb", "lib/inversion/template/includetag.rb", "lib/inversion/template/node.rb", "lib/inversion/template/pptag.rb", "lib/inversion/template/publishtag.rb", "lib/inversion/template/rescuetag.rb", "lib/inversion/template/subscribetag.rb", "lib/inversion/template/tag.rb", "lib/inversion/template/textnode.rb", "lib/inversion/template/timedeltatag.rb", "lib/inversion/template/unlesstag.rb", "lib/inversion/template/uriencodetag.rb", "lib/inversion/template/yieldtag.rb", "lib/inversion/tilt.rb", "spec/data/sinatra/hello.inversion", "spec/data/unknown-tag.tmpl", "spec/helpers.rb", "spec/inversion/mixins_spec.rb", "spec/inversion/monkeypatches_spec.rb", "spec/inversion/parser_spec.rb", "spec/inversion/renderstate_spec.rb", "spec/inversion/sinatra_spec.rb", "spec/inversion/template/attrtag_spec.rb", "spec/inversion/template/begintag_spec.rb", "spec/inversion/template/calltag_spec.rb", "spec/inversion/template/codetag_spec.rb", "spec/inversion/template/commenttag_spec.rb", "spec/inversion/template/configtag_spec.rb", "spec/inversion/template/containertag_spec.rb", "spec/inversion/template/defaulttag_spec.rb", "spec/inversion/template/elsetag_spec.rb", "spec/inversion/template/elsiftag_spec.rb", "spec/inversion/template/endtag_spec.rb", "spec/inversion/template/escapetag_spec.rb", "spec/inversion/template/fortag_spec.rb", "spec/inversion/template/fragmenttag_spec.rb", "spec/inversion/template/iftag_spec.rb", "spec/inversion/template/importtag_spec.rb", "spec/inversion/template/includetag_spec.rb", "spec/inversion/template/node_spec.rb", "spec/inversion/template/pptag_spec.rb", "spec/inversion/template/publishtag_spec.rb", "spec/inversion/template/rescuetag_spec.rb", "spec/inversion/template/subscribetag_spec.rb", "spec/inversion/template/tag_spec.rb", "spec/inversion/template/textnode_spec.rb", "spec/inversion/template/timedeltatag_spec.rb", "spec/inversion/template/unlesstag_spec.rb", "spec/inversion/template/uriencodetag_spec.rb", "spec/inversion/template/yieldtag_spec.rb", "spec/inversion/template_spec.rb", "spec/inversion/tilt_spec.rb", "spec/inversion_spec.rb"]
-  s.homepage = "http://deveiate.org/projects/Inversion"
-  s.licenses = ["BSD"]
-  s.rdoc_options = ["--main", "README.rdoc"]
-  s.required_ruby_version = Gem::Requirement.new(">= 2.0.0")
-  s.rubygems_version = "2.4.7"
-  s.signing_key = "/Volumes/Keys/ged-private_gem_key.pem"
-  s.summary = "Inversion is a templating system for Ruby"
+  s.required_rubygems_version = Gem::Requirement.new("> 1.3.1".freeze) if s.respond_to? :required_rubygems_version=
+  s.require_paths = ["lib".freeze]
+  s.authors = ["Michael Granger".freeze, "Mahlon E. Smith".freeze]
+  s.date = "2017-01-16"
+  s.description = "Inversion is a templating system for Ruby. It uses the \"Inversion of Control\"\nprinciple to decouple the contents and structure of templates from the code\nthat uses them, making it easier to separate concerns, keep your tests simple,\nand avoid polluting scopes with ephemeral data.".freeze
+  s.email = ["ged@FaerieMUD.org".freeze, "mahlon@martini.nu".freeze]
+  s.executables = ["inversion".freeze]
+  s.extra_rdoc_files = ["Examples.rdoc".freeze, "GettingStarted.rdoc".freeze, "Guide.rdoc".freeze, "History.rdoc".freeze, "Manifest.txt".freeze, "README.rdoc".freeze, "Tags.rdoc".freeze, "README.rdoc".freeze, "History.rdoc".freeze]
+  s.files = ["ChangeLog".freeze, "Examples.rdoc".freeze, "GettingStarted.rdoc".freeze, "Guide.rdoc".freeze, "History.rdoc".freeze, "Manifest.txt".freeze, "README.rdoc".freeze, "Rakefile".freeze, "Tags.rdoc".freeze, "bin/inversion".freeze, "lib/inversion.rb".freeze, "lib/inversion/command.rb".freeze, "lib/inversion/exceptions.rb".freeze, "lib/inversion/mixins.rb".freeze, "lib/inversion/monkeypatches.rb".freeze, "lib/inversion/parser.rb".freeze, "lib/inversion/renderstate.rb".freeze, "lib/inversion/sinatra.rb".freeze, "lib/inversion/template.rb".freeze, "lib/inversion/template/attrtag.rb".freeze, "lib/inversion/template/begintag.rb".freeze, "lib/inversion/template/calltag.rb".freeze, "lib/inversion/template/codetag.rb".freeze, "lib/inversion/template/commenttag.rb".freeze, "lib/inversion/template/configtag.rb".freeze, "lib/inversion/template/containertag.rb".freeze, "lib/inversion/template/defaulttag.rb".freeze, "lib/inversion/template/elsetag.rb".freeze, "lib/inversion/template/elsiftag.rb".freeze, "lib/inversion/template/endtag.rb".freeze, "lib/inversion/template/escapetag.rb".freeze, "lib/inversion/template/fortag.rb".freeze, "lib/inversion/template/fragmenttag.rb".freeze, "lib/inversion/template/iftag.rb".freeze, "lib/inversion/template/importtag.rb".freeze, "lib/inversion/template/includetag.rb".freeze, "lib/inversion/template/node.rb".freeze, "lib/inversion/template/pptag.rb".freeze, "lib/inversion/template/publishtag.rb".freeze, "lib/inversion/template/rescuetag.rb".freeze, "lib/inversion/template/subscribetag.rb".freeze, "lib/inversion/template/tag.rb".freeze, "lib/inversion/template/textnode.rb".freeze, "lib/inversion/template/timedeltatag.rb".freeze, "lib/inversion/template/unlesstag.rb".freeze, "lib/inversion/template/uriencodetag.rb".freeze, "lib/inversion/template/yieldtag.rb".freeze, "lib/inversion/tilt.rb".freeze, "spec/data/sinatra/hello.inversion".freeze, "spec/data/unknown-tag.tmpl".freeze, "spec/helpers.rb".freeze, "spec/inversion/mixins_spec.rb".freeze, "spec/inversion/monkeypatches_spec.rb".freeze, "spec/inversion/parser_spec.rb".freeze, "spec/inversion/renderstate_spec.rb".freeze, "spec/inversion/sinatra_spec.rb".freeze, "spec/inversion/template/attrtag_spec.rb".freeze, "spec/inversion/template/begintag_spec.rb".freeze, "spec/inversion/template/calltag_spec.rb".freeze, "spec/inversion/template/codetag_spec.rb".freeze, "spec/inversion/template/commenttag_spec.rb".freeze, "spec/inversion/template/configtag_spec.rb".freeze, "spec/inversion/template/containertag_spec.rb".freeze, "spec/inversion/template/defaulttag_spec.rb".freeze, "spec/inversion/template/elsetag_spec.rb".freeze, "spec/inversion/template/elsiftag_spec.rb".freeze, "spec/inversion/template/endtag_spec.rb".freeze, "spec/inversion/template/escapetag_spec.rb".freeze, "spec/inversion/template/fortag_spec.rb".freeze, "spec/inversion/template/fragmenttag_spec.rb".freeze, "spec/inversion/template/iftag_spec.rb".freeze, "spec/inversion/template/importtag_spec.rb".freeze, "spec/inversion/template/includetag_spec.rb".freeze, "spec/inversion/template/node_spec.rb".freeze, "spec/inversion/template/pptag_spec.rb".freeze, "spec/inversion/template/publishtag_spec.rb".freeze, "spec/inversion/template/rescuetag_spec.rb".freeze, "spec/inversion/template/subscribetag_spec.rb".freeze, "spec/inversion/template/tag_spec.rb".freeze, "spec/inversion/template/textnode_spec.rb".freeze, "spec/inversion/template/timedeltatag_spec.rb".freeze, "spec/inversion/template/unlesstag_spec.rb".freeze, "spec/inversion/template/uriencodetag_spec.rb".freeze, "spec/inversion/template/yieldtag_spec.rb".freeze, "spec/inversion/template_spec.rb".freeze, "spec/inversion/tilt_spec.rb".freeze, "spec/inversion_spec.rb".freeze]
+  s.homepage = "http://deveiate.org/projects/Inversion".freeze
+  s.licenses = ["BSD".freeze]
+  s.rdoc_options = ["--main".freeze, "README.rdoc".freeze]
+  s.required_ruby_version = Gem::Requirement.new(">= 2.2.0".freeze)
+  s.rubygems_version = "2.6.8".freeze
+  s.signing_key = "/Volumes/Keys/ged-private_gem_key.pem".freeze
+  s.summary = "Inversion is a templating system for Ruby".freeze
 
   if s.respond_to? :specification_version then
     s.specification_version = 4
 
     if Gem::Version.new(Gem::VERSION) >= Gem::Version.new('1.2.0') then
-      s.add_runtime_dependency(%q<loggability>, ["~> 0.11"])
-      s.add_development_dependency(%q<hoe-mercurial>, ["~> 1.4"])
-      s.add_development_dependency(%q<hoe-deveiate>, ["~> 0.7"])
-      s.add_development_dependency(%q<hoe-highline>, ["~> 0.2"])
-      s.add_development_dependency(%q<rdoc>, ["~> 4.0"])
-      s.add_development_dependency(%q<highline>, ["~> 1.6"])
-      s.add_development_dependency(%q<rack-test>, ["~> 0.6"])
-      s.add_development_dependency(%q<simplecov>, ["~> 0.8"])
-      s.add_development_dependency(%q<sinatra>, ["~> 1.4"])
-      s.add_development_dependency(%q<tilt>, ["~> 1.4"])
-      s.add_development_dependency(%q<sysexits>, ["~> 1.0"])
-      s.add_development_dependency(%q<trollop>, ["~> 2.0"])
-      s.add_development_dependency(%q<rdoc-generator-fivefish>, ["~> 0"])
-      s.add_development_dependency(%q<hoe>, ["~> 3.13"])
+      s.add_runtime_dependency(%q<loggability>.freeze, ["~> 0.12"])
+      s.add_development_dependency(%q<hoe-mercurial>.freeze, ["~> 1.4"])
+      s.add_development_dependency(%q<hoe-deveiate>.freeze, ["~> 0.8"])
+      s.add_development_dependency(%q<hoe-highline>.freeze, ["~> 0.2"])
+      s.add_development_dependency(%q<highline>.freeze, ["~> 1.6"])
+      s.add_development_dependency(%q<rack-test>.freeze, ["~> 0.6"])
+      s.add_development_dependency(%q<simplecov>.freeze, ["~> 0.8"])
+      s.add_development_dependency(%q<sinatra>.freeze, ["~> 1.4"])
+      s.add_development_dependency(%q<tilt>.freeze, ["~> 1.4"])
+      s.add_development_dependency(%q<sysexits>.freeze, ["~> 1.0"])
+      s.add_development_dependency(%q<trollop>.freeze, ["~> 2.0"])
+      s.add_development_dependency(%q<rdoc-generator-fivefish>.freeze, ["~> 0"])
+      s.add_development_dependency(%q<configurability>.freeze, ["~> 3.1"])
+      s.add_development_dependency(%q<rdoc>.freeze, ["~> 4.0"])
+      s.add_development_dependency(%q<hoe>.freeze, ["~> 3.15"])
     else
-      s.add_dependency(%q<loggability>, ["~> 0.11"])
-      s.add_dependency(%q<hoe-mercurial>, ["~> 1.4"])
-      s.add_dependency(%q<hoe-deveiate>, ["~> 0.7"])
-      s.add_dependency(%q<hoe-highline>, ["~> 0.2"])
-      s.add_dependency(%q<rdoc>, ["~> 4.0"])
-      s.add_dependency(%q<highline>, ["~> 1.6"])
-      s.add_dependency(%q<rack-test>, ["~> 0.6"])
-      s.add_dependency(%q<simplecov>, ["~> 0.8"])
-      s.add_dependency(%q<sinatra>, ["~> 1.4"])
-      s.add_dependency(%q<tilt>, ["~> 1.4"])
-      s.add_dependency(%q<sysexits>, ["~> 1.0"])
-      s.add_dependency(%q<trollop>, ["~> 2.0"])
-      s.add_dependency(%q<rdoc-generator-fivefish>, ["~> 0"])
-      s.add_dependency(%q<hoe>, ["~> 3.13"])
+      s.add_dependency(%q<loggability>.freeze, ["~> 0.12"])
+      s.add_dependency(%q<hoe-mercurial>.freeze, ["~> 1.4"])
+      s.add_dependency(%q<hoe-deveiate>.freeze, ["~> 0.8"])
+      s.add_dependency(%q<hoe-highline>.freeze, ["~> 0.2"])
+      s.add_dependency(%q<highline>.freeze, ["~> 1.6"])
+      s.add_dependency(%q<rack-test>.freeze, ["~> 0.6"])
+      s.add_dependency(%q<simplecov>.freeze, ["~> 0.8"])
+      s.add_dependency(%q<sinatra>.freeze, ["~> 1.4"])
+      s.add_dependency(%q<tilt>.freeze, ["~> 1.4"])
+      s.add_dependency(%q<sysexits>.freeze, ["~> 1.0"])
+      s.add_dependency(%q<trollop>.freeze, ["~> 2.0"])
+      s.add_dependency(%q<rdoc-generator-fivefish>.freeze, ["~> 0"])
+      s.add_dependency(%q<configurability>.freeze, ["~> 3.1"])
+      s.add_dependency(%q<rdoc>.freeze, ["~> 4.0"])
+      s.add_dependency(%q<hoe>.freeze, ["~> 3.15"])
     end
   else
-    s.add_dependency(%q<loggability>, ["~> 0.11"])
-    s.add_dependency(%q<hoe-mercurial>, ["~> 1.4"])
-    s.add_dependency(%q<hoe-deveiate>, ["~> 0.7"])
-    s.add_dependency(%q<hoe-highline>, ["~> 0.2"])
-    s.add_dependency(%q<rdoc>, ["~> 4.0"])
-    s.add_dependency(%q<highline>, ["~> 1.6"])
-    s.add_dependency(%q<rack-test>, ["~> 0.6"])
-    s.add_dependency(%q<simplecov>, ["~> 0.8"])
-    s.add_dependency(%q<sinatra>, ["~> 1.4"])
-    s.add_dependency(%q<tilt>, ["~> 1.4"])
-    s.add_dependency(%q<sysexits>, ["~> 1.0"])
-    s.add_dependency(%q<trollop>, ["~> 2.0"])
-    s.add_dependency(%q<rdoc-generator-fivefish>, ["~> 0"])
-    s.add_dependency(%q<hoe>, ["~> 3.13"])
+    s.add_dependency(%q<loggability>.freeze, ["~> 0.12"])
+    s.add_dependency(%q<hoe-mercurial>.freeze, ["~> 1.4"])
+    s.add_dependency(%q<hoe-deveiate>.freeze, ["~> 0.8"])
+    s.add_dependency(%q<hoe-highline>.freeze, ["~> 0.2"])
+    s.add_dependency(%q<highline>.freeze, ["~> 1.6"])
+    s.add_dependency(%q<rack-test>.freeze, ["~> 0.6"])
+    s.add_dependency(%q<simplecov>.freeze, ["~> 0.8"])
+    s.add_dependency(%q<sinatra>.freeze, ["~> 1.4"])
+    s.add_dependency(%q<tilt>.freeze, ["~> 1.4"])
+    s.add_dependency(%q<sysexits>.freeze, ["~> 1.0"])
+    s.add_dependency(%q<trollop>.freeze, ["~> 2.0"])
+    s.add_dependency(%q<rdoc-generator-fivefish>.freeze, ["~> 0"])
+    s.add_dependency(%q<configurability>.freeze, ["~> 3.1"])
+    s.add_dependency(%q<rdoc>.freeze, ["~> 4.0"])
+    s.add_dependency(%q<hoe>.freeze, ["~> 3.15"])
   end
 end
