@@ -46,6 +46,17 @@ describe Inversion::Template::UnlessTag do
 		expect( renderstate.to_s ).to eq( '' )
 	end
 
+	it "inverts its attribute with a ! operator" do
+		template = Inversion::Template.new( <<-END_TEMPLATE )
+		<?unless ! thing ?>Yep.<?else?>Nope.<?end?>
+		END_TEMPLATE
+
+		template.thing = false
+		expect( template.render ).to include( "Nope." )
+		template.thing = true
+		expect( template.render ).to include( "Yep." )
+	end
+
 	context "with an 'else' clause" do
 
 		before( :each ) do
