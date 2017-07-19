@@ -20,14 +20,40 @@ require 'inversion/template/elsetag'
 class Inversion::Template::UnlessTag < Inversion::Template::AttrTag
 	include Inversion::Template::ContainerTag
 
-	# Inherits AttrTag's tag patterns
+	# Inherit AttrTag's tag patterns first.
+	inherit_tag_patterns
+
+	# Append a 'not' tag matcher.
+	# <?unless ! foo ?>, <?unless !foo ?>
+	tag_pattern '$(op) sp* $(ident)' do |tag, match|
+		op = match.string( 1 )
+		raise Inversion::ParseError, "expected '!', got %p instead" % [ op ] unless op == '!'
+
+		tag.send( :log ).debug "  Identifier is: %p (inverted)" % [ match.string(2) ]
+		tag.name = match.string( 2 ).untaint.to_sym
+		tag.inverted = true
+	end
+
+
+	### Create a new UnlessTag.
+	def initialize( body, linenum=nil, colnum=nil )
+		@inverted = false
+		super
+	end
+
+	# Invert the tag's renderstate if created with the 'not' operator.
+	attr_accessor :inverted
+
 
 	### Render the tag's contents if the condition is true, or any else or elsif sections
 	### if the condition isn't true.
 	def render( state )
 
+		evaluated_state = self.evaluate( state )
+		evaluated_state = ! evaluated_state if self.inverted
+
 		# Start out with rendering *disabled* if the tag body evaluates trueishly
-		if self.evaluate( state )
+		if evaluated_state
 			self.log.debug "Initial state was TRUE; disabling rendering"
 			state.disable_rendering
 		else

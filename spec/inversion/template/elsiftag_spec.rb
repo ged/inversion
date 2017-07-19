@@ -58,6 +58,31 @@ describe Inversion::Template::ElsifTag do
 	end
 
 
+	it "inverts its attribute with a ! operator" do
+		template = Inversion::Template.new( <<-END_TEMPLATE )
+		<?if thing ?>
+			Thing!
+		<?elsif ! otherthing ?>
+			Otherthing!
+		<?else ?>
+			Nope.
+		<?end?>
+		END_TEMPLATE
+
+		template.thing = true
+		template.otherthing = true
+		expect( template.render ).to include( "Thing!" )
+
+		template.thing = false
+		template.otherthing = false
+		expect( template.render ).to include( "Otherthing!" )
+
+		template.thing = false
+		template.otherthing = true
+		expect( template.render ).to include( "Nope." )
+	end
+
+
 	it "renders as its attribute value if it's a simple attribute" do
 		renderstate = Inversion::RenderState.new( :bar => :the_attribute_value )
 		tag = Inversion::Template::ElsifTag.new( 'bar' )

@@ -47,6 +47,17 @@ describe Inversion::Template::IfTag do
 		expect( renderstate.to_s ).to eq( '' )
 	end
 
+	it "inverts its attribute with a ! operator" do
+		template = Inversion::Template.new( <<-END_TEMPLATE )
+		<?if ! thing ?>Yep.<?else?>Nope.<?end?>
+		END_TEMPLATE
+
+		template.thing = false
+		expect( template.render ).to include( "Yep." )
+		template.thing = true
+		expect( template.render ).to include( "Nope." )
+	end
+
 	it "works inside an iterator (ticket #3)" do
 		template = Inversion::Template.new( <<-END_TEMPLATE )
 		<?for item in items ?>
