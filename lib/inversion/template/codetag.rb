@@ -100,6 +100,15 @@ class Inversion::Template::CodeTag < Inversion::Template::Tag
 	end
 
 
+	### Declarative that forces a tag to inherit existing patterns from
+	### its parent, rather than replacing them.  Afterwards, you can use
+	### +tag_pattern+ regularly, appending to the list.
+	def self::inherit_tag_patterns
+		raise ScriptError, "Patterns already exist for this tag." if defined?( @tag_patterns )
+		@tag_patterns = self.superclass.tag_patterns
+	end
+
+
 	#################################################################
 	###	I N S T A N C E   M E T H O D S
 	#################################################################
