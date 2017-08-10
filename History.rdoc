@@ -1,3 +1,14 @@
+== v1.1.0 [2017-08-17] Mahlon E. Smith <mahlon@martini.nu>
+
+Mark as stable, update dependencies.
+
+- Allow the use of the '!' operator in conditional tags, logically
+  inverting the evaluated body.
+
+- Provide a method for children tags to inherit and append to their
+  parents matcher patterns.
+
+
 == v1.0.0 [2017-01-16] Michael Granger <ged@FaerieMUD.org>
 
 Mark as stable, update dependencies.
