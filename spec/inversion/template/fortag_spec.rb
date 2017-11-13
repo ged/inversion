@@ -11,11 +11,11 @@ require 'inversion/renderstate'
 
 describe Inversion::Template::ForTag do
 
-
 	it "knows which identifiers should be added to the template" do
 		tag = Inversion::Template::ForTag.new( 'foo in bar' )
 		expect( tag.identifiers ).to eq( [ :bar ] )
 	end
+
 
 	it "can iterate over single items of a collection attribute" do
 		tag = Inversion::Template::ForTag.new( 'foo in bar' )
@@ -23,6 +23,7 @@ describe Inversion::Template::ForTag do
 		expect( tag.block_args ).to eq( [ :foo ] )
 		expect( tag.enumerator ).to eq( 'bar' )
 	end
+
 
 	it "should render as nothing if the corresponding attribute in the template is unset" do
 		render_state = Inversion::RenderState.new( :bar => nil )
@@ -37,6 +38,7 @@ describe Inversion::Template::ForTag do
 
 		expect( tag.render( render_state ) ).to be_nil()
 	end
+
 
 	it "renders each of its subnodes for each iteration, replacing its " +
 	   "block arguments with the yielded values" do
@@ -53,6 +55,7 @@ describe Inversion::Template::ForTag do
 		tag.render( render_state )
 		expect( render_state.to_s ).to eq( "[monkey][goat]" )
 	end
+
 
 	it "supports nested iterators" do
 		render_state = Inversion::RenderState.new( :tic => [ 'x', 'o'], :tac => ['o', 'x'] )
@@ -74,6 +77,7 @@ describe Inversion::Template::ForTag do
 		expect( render_state.to_s ).to eq( "[x, o][x, x][o, o][o, x]" )
 	end
 
+
 	it "supports iterating over a range" do
 
 		# <?for omarker in tic ?><?for imarker in tac ?>
@@ -87,11 +91,13 @@ describe Inversion::Template::ForTag do
 		expect( render_state.to_s ).to eq( "0 1 2 3 4 5 6 7 8 9 10 " )
 	end
 
+
 	it "raises a ParseError if a keyword other than 'in' is used" do
 		expect {
 			Inversion::Template::ForTag.new( 'foo begin bar' )
 		}.to raise_error( Inversion::ParseError, /invalid/i )
 	end
+
 
 	context "multidimensional collections" do
 
@@ -109,6 +115,7 @@ describe Inversion::Template::ForTag do
 			expect( tag.block_args ).to eq( [ :splip, :splorp, :sploop ] )
 			expect( tag.enumerator ).to eq( 'splap' )
 		end
+
 
 		it "can be expanded into multiple block arguments from hash pairs" do
 			tag = Inversion::Template::ForTag.new( 'key, value in splap' )
@@ -128,6 +135,7 @@ describe Inversion::Template::ForTag do
 
 			expect( render_state.to_s ).to eq( '[one translates to uno][two translates to dos]' )
 		end
+
 
 		it "can be expanded into multiple block arguments with complex values" do
 			# [<?attr key?> translates to <?attr value?>]
@@ -152,6 +160,7 @@ describe Inversion::Template::ForTag do
 			expect( render_state.to_s ).to match( /foo \(3\) => foo\s+AKA: foom, foom_detail/ )
 			expect( render_state.to_s ).to match( /ch \(1\) => ch/ )
 		end
+
 
 		it "preserves an array of subhashes" do
 			tree = Inversion::Parser.new( nil ).parse( <<-"END_TEMPLATE" )
@@ -245,7 +254,9 @@ describe Inversion::Template::ForTag do
 			</section>
 			END_OUTPUT
 		end
+
 	end
+
 end
 
 
