@@ -1,9 +1,9 @@
 # -*- encoding: utf-8 -*-
-# stub: inversion 1.2.0.pre20171113182147 ruby lib
+# stub: inversion 1.2.0.pre20171113183403 ruby lib
 
 Gem::Specification.new do |s|
   s.name = "inversion".freeze
-  s.version = "1.2.0.pre20171113182147"
+  s.version = "1.2.0.pre20171113183403"
 
   s.required_rubygems_version = Gem::Requirement.new("> 1.3.1".freeze) if s.respond_to? :required_rubygems_version=
   s.require_paths = ["lib".freeze]
@@ -37,10 +37,10 @@ Gem::Specification.new do |s|
       s.add_development_dependency(%q<tilt>.freeze, ["~> 1.4"])
       s.add_development_dependency(%q<sysexits>.freeze, ["~> 1.0"])
       s.add_development_dependency(%q<trollop>.freeze, ["~> 2.0"])
-      s.add_development_dependency(%q<rdoc-generator-fivefish>.freeze, ["~> 0"])
+      s.add_development_dependency(%q<rdoc>.freeze, ["~> 5.1"])
+      s.add_development_dependency(%q<rdoc-generator-fivefish>.freeze, ["~> 0.3"])
       s.add_development_dependency(%q<configurability>.freeze, ["~> 3.1"])
       s.add_development_dependency(%q<rspec-wait>.freeze, ["~> 0.0"])
-      s.add_development_dependency(%q<rdoc>.freeze, ["~> 4.0"])
       s.add_development_dependency(%q<hoe>.freeze, ["~> 3.16"])
     else
       s.add_dependency(%q<loggability>.freeze, ["~> 0.12"])
@@ -54,10 +54,10 @@ Gem::Specification.new do |s|
       s.add_dependency(%q<tilt>.freeze, ["~> 1.4"])
       s.add_dependency(%q<sysexits>.freeze, ["~> 1.0"])
       s.add_dependency(%q<trollop>.freeze, ["~> 2.0"])
-      s.add_dependency(%q<rdoc-generator-fivefish>.freeze, ["~> 0"])
+      s.add_dependency(%q<rdoc>.freeze, ["~> 5.1"])
+      s.add_dependency(%q<rdoc-generator-fivefish>.freeze, ["~> 0.3"])
       s.add_dependency(%q<configurability>.freeze, ["~> 3.1"])
       s.add_dependency(%q<rspec-wait>.freeze, ["~> 0.0"])
-      s.add_dependency(%q<rdoc>.freeze, ["~> 4.0"])
       s.add_dependency(%q<hoe>.freeze, ["~> 3.16"])
     end
   else
@@ -72,10 +72,10 @@ Gem::Specification.new do |s|
     s.add_dependency(%q<tilt>.freeze, ["~> 1.4"])
     s.add_dependency(%q<sysexits>.freeze, ["~> 1.0"])
     s.add_dependency(%q<trollop>.freeze, ["~> 2.0"])
-    s.add_dependency(%q<rdoc-generator-fivefish>.freeze, ["~> 0"])
+    s.add_dependency(%q<rdoc>.freeze, ["~> 5.1"])
+    s.add_dependency(%q<rdoc-generator-fivefish>.freeze, ["~> 0.3"])
     s.add_dependency(%q<configurability>.freeze, ["~> 3.1"])
     s.add_dependency(%q<rspec-wait>.freeze, ["~> 0.0"])
-    s.add_dependency(%q<rdoc>.freeze, ["~> 4.0"])
     s.add_dependency(%q<hoe>.freeze, ["~> 3.16"])
   end
 end

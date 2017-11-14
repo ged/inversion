@@ -29,14 +29,15 @@ hoespec = Hoe.spec 'inversion' do
 	self.dependency 'loggability',   '~> 0.12'
 
 	self.dependency 'highline',                '~> 1.6', :development
-	self.dependency 'hoe-deveiate',            '~> 0.5', :development
+	self.dependency 'hoe-deveiate',            '~> 0.9', :development
 	self.dependency 'rack-test',               '~> 0.6', :development
 	self.dependency 'simplecov',               '~> 0.8', :development
 	self.dependency 'sinatra',                 '~> 1.4', :development
 	self.dependency 'tilt',                    '~> 1.4', :development
 	self.dependency 'sysexits',                '~> 1.0', :development
 	self.dependency 'trollop',                 '~> 2.0', :development
-	self.dependency 'rdoc-generator-fivefish', '~> 0',   :development
+	self.dependency 'rdoc',                    '~> 5.1', :development
+	self.dependency 'rdoc-generator-fivefish', '~> 0.3', :development
 	self.dependency 'configurability',         '~> 3.1', :development
 	self.dependency 'rspec-wait',              '~> 0.0', :development
 
