@@ -109,6 +109,29 @@ describe Inversion::Template::ForTag do
 		end
 
 
+		it "can be expanded by nesting", log: :debug do
+			tmpl = Inversion::Template.new( <<-"END_TEMPLATE" )
+			<?for outer in numbers ?>
+				-
+				<?for inner in outer ?>
+				:<?attr inner ?>:
+				<?end for ?>
+				-
+			<?end for ?>
+			END_TEMPLATE
+
+			Loggability.level = :debug
+			Loggability[ Inversion ].warn "About to assign and render!"
+			tmpl.numbers = [[1, 2, 3, 4], [5, 6, 7, 8], [9, 10]]
+
+			wait_for { results = tmpl.render }.to be_a( String )
+
+			expect( results ).to match( /-\s+:1:\s+:2:\s+:3:\s*:4:\s+-/ )
+			expect( results ).to match( /-\s+:5:\s+:6:\s+:7:\s*:8:\s+-/ )
+			expect( results ).to match( /-\s+:9:\s+:10:\s+-/ )
+		end
+
+
 		it "can be expanded into multiple block arguments (sans spaces)" do
 			tag = Inversion::Template::ForTag.new( 'splip,splorp,sploop in splap' )
 
