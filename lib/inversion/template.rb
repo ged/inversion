@@ -344,7 +344,7 @@ class Inversion::Template
 	### Render the template, optionally passing a render state (if, for example, the
 	### template is being rendered inside another template).
 	def render( parentstate=nil, &block )
-		self.log.info "rendering template %#x" % [ self.object_id/2 ]
+		self.log.info "rendering template %#x" % [ self.object_id * 2 ]
 		opts = self.options
 		opts.merge!( parentstate.options ) if parentstate
 
