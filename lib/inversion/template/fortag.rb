@@ -84,16 +84,20 @@ class Inversion::Template::ForTag < Inversion::Template::CodeTag
 		lvalue = state.eval( self.enumerator ) or return nil
 		lvalue = lvalue.each unless lvalue.respond_to?( :next )
 
-		# self.log.debug "Rendering %p via block args: %p" % [ lvalue, self.block_args ]
+		self.log.debug "Rendering %p via block args: %p" % [ lvalue, self.block_args ]
 
 		# Loop will exit as soon as the Enumerator runs out of elements
 		loop do
 			args = lvalue.next
-			args = [ args ] unless args.is_a?( Array )
 
 			# Turn the block arguments into an overrides hash by zipping up
 			# the arguments names and values
-			overrides = Hash[ self.block_args.zip(args) ]
+			overrides = if self.block_args.size > 1
+					args = [ args ] unless args.is_a?( Array )
+					Hash[ self.block_args.zip(args) ]
+				else
+					{ self.block_args.first => args }
+				end
 
 			# Overlay the block args from the 'for' over the template attributes and render
 			# each subnode

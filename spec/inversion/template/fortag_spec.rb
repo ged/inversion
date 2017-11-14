@@ -109,7 +109,7 @@ describe Inversion::Template::ForTag do
 		end
 
 
-		it "can be expanded by nesting", log: :debug do
+		it "can be expanded by nesting" do
 			tmpl = Inversion::Template.new( <<-"END_TEMPLATE" )
 			<?for outer in numbers ?>
 				-
@@ -120,10 +120,8 @@ describe Inversion::Template::ForTag do
 			<?end for ?>
 			END_TEMPLATE
 
-			Loggability.level = :debug
-			Loggability[ Inversion ].warn "About to assign and render!"
 			tmpl.numbers = [[1, 2, 3, 4], [5, 6, 7, 8], [9, 10]]
-
+			results = ''
 			wait_for { results = tmpl.render }.to be_a( String )
 
 			expect( results ).to match( /-\s+:1:\s+:2:\s+:3:\s*:4:\s+-/ )
@@ -200,7 +198,7 @@ describe Inversion::Template::ForTag do
 			render_state = Inversion::RenderState.new( :the_hash => the_hash )
 			tree.first.render( render_state )
 
-			expect( render_state.to_s ).to match( /Subhash is a Hash/i )
+			expect( render_state.to_s ).to match( /subhash is a hash.*subhash is a hash/i )
 		end
 
 	end
