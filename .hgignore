@@ -9,3 +9,4 @@
 ^Gemfile\.lock$
 ^Gemfile\.devel$
 ^Gemfile\.devel\.lock$
+spec/\.state$
