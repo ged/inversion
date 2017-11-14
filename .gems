@@ -12,3 +12,4 @@ sinatra
 sysexits
 tilt
 trollop
+rspec-wait

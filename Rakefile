@@ -36,8 +36,9 @@ hoespec = Hoe.spec 'inversion' do
 	self.dependency 'tilt',                    '~> 1.4', :development
 	self.dependency 'sysexits',                '~> 1.0', :development
 	self.dependency 'trollop',                 '~> 2.0', :development
-	self.dependency 'rdoc-generator-fivefish', '~> 0', :development
+	self.dependency 'rdoc-generator-fivefish', '~> 0',   :development
 	self.dependency 'configurability',         '~> 3.1', :development
+	self.dependency 'rspec-wait',              '~> 0.0', :development
 
 	self.require_ruby_version( '>=2.2.0' )
 	self.hg_sign_tags = true if self.respond_to?( :hg_sign_tags= )
