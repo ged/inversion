@@ -37,6 +37,11 @@ class Inversion::Template::TimeDeltaTag < Inversion::Template::AttrTag
 	def render( renderstate )
 		val = super( renderstate )
 		time = nil
+		omit_decorator = false
+
+		if val.respond_to?( :key )
+			val, omit_decorator = val.values_at( :time, :omit_decorator )
+		end
 
 		if val.respond_to?( :to_time )
 			time = val.to_time
@@ -49,10 +54,14 @@ class Inversion::Template::TimeDeltaTag < Inversion::Template::AttrTag
 		now = Time.now
 		if now > time
 			seconds = now - time
-			return "%s ago" % [ timeperiod(seconds) ]
+			period = timeperiod( seconds )
+			period += ' ago' unless omit_decorator
+			return period
 		else
 			seconds = time - now
-			return "%s from now" % [ timeperiod(seconds) ]
+			period = timeperiod( seconds )
+			period += ' from now' unless omit_decorator
+			return period
 		end
 	end
 

@@ -96,6 +96,13 @@ describe Inversion::Template::TimeDeltaTag do
 		expect( @tag.render( renderstate ) ).to eq( "about a day ago" )
 	end
 
+	it "omits decorators if requested" do
+		renderstate = Inversion::RenderState.new( :foo => { time: @pastsecs, omit_decorator: true } )
+		expect( @tag.render( renderstate ) ).to eq( "about a day" )
+		renderstate = Inversion::RenderState.new( :foo => { time: @futuresecs, omit_decorator: true } )
+		expect( @tag.render( renderstate ) ).to eq( "about a day" )
+	end
+
 
 	describe "time period calculation" do
 
