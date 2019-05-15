@@ -1,10 +1,11 @@
-#!/usr/bin/env ruby
+# -*- ruby -*-
+# frozen_string_literal: true
 # vim: set noet nosta sw=4 ts=4 :
 
+require 'inversion/template' unless defined?( Inversion::Template )
 require 'inversion/template/attrtag'
 require 'inversion/template/commenttag'
-require 'inversion/template/iftag' unless
-	defined?( Inversion::Template::IfTag )
+require 'inversion/template/iftag'
 
 
 # Inversion 'elsif' tag.

@@ -1,5 +1,5 @@
 # -*- ruby -*-
-#encoding: utf-8
+# frozen_string_literal: true
 # vim: set noet nosta sw=4 ts=4 :
 
 require 'loggability'
@@ -23,7 +23,7 @@ module Inversion
 	log_as :inversion
 
 
-	warn ">>> Inversion requires Ruby 2.2.0 or later. <<<" if RUBY_VERSION < '2.2.0'
+	warn ">>> Inversion requires Ruby 2.4.0 or later. <<<" if RUBY_VERSION < '2.4.0'
 
 	# Library version constant
 	VERSION = '1.1.1'

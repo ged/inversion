@@ -1,5 +1,6 @@
-#!/usr/bin/env ruby
-# vim: set nosta noet ts=4 sw=4:
+# -*- ruby -*-
+# frozen_string_literal: true
+# vim: set noet nosta sw=4 ts=4 :
 
 require 'pp'
 

@@ -1,9 +1,9 @@
-#!/usr/bin/env ruby
+# -*- ruby -*-
+# frozen_string_literal: true
 # vim: set noet nosta sw=4 ts=4 :
 
-require 'inversion' unless defined?( Inversion )
 require 'inversion/template' unless defined?( Inversion::Template )
-require 'inversion/template/tag' unless defined?( Inversion::Template::Tag )
+require 'inversion/template/tag'
 
 # Closing tag class
 class Inversion::Template::EndTag < Inversion::Template::Tag

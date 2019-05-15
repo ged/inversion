@@ -1,7 +1,9 @@
-#!/usr/bin/env ruby
+# -*- ruby -*-
+# frozen_string_literal: true
 # vim: set noet nosta sw=4 ts=4 :
 
 require 'ripper'
+require 'inversion/template' unless defined?( Inversion::Template )
 require 'inversion/template/tag'
 
 # The base class for Inversion tags that parse the body section of the tag using
@@ -52,7 +54,7 @@ class Inversion::Template::CodeTag < Inversion::Template::Tag
 					"invalid char in pattern: #{m[0].inspect}"
 			end
 
-			buf = '^'
+			buf = String.new( '^' )
 			pattern.scan( /(?:\w+|\$\(|[()\[\]\{\}?*+\.]+)/ ) do |tok|
 				case tok
 				when /\w/

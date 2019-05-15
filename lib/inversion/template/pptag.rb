@@ -1,7 +1,9 @@
-#!/usr/bin/env ruby
+# -*- ruby -*-
+# frozen_string_literal: true
 # vim: set noet nosta sw=4 ts=4 :
 
 require 'pp'
+require 'inversion/template' unless defined?( Inversion::Template )
 require 'inversion/template/calltag'
 
 # Inversion object inspection tag.
@@ -19,7 +21,7 @@ class Inversion::Template::PpTag < Inversion::Template::CallTag
 	### and return them.
 	def render( render_state )
 		raw = super
-		buf = ''
+		buf = String.new( '' )
 		PP.pp( raw, buf )
 		return self.escape( buf.chomp, render_state )
 	end

@@ -1,7 +1,9 @@
-#!/usr/bin/env ruby
+# -*- ruby -*-
+# frozen_string_literal: true
 # vim: set noet nosta sw=4 ts=4 :
 
 require 'uri'
+require 'inversion/template' unless defined?( Inversion::Template )
 require 'inversion/template/attrtag'
 
 # Inversion URL encoding tag.

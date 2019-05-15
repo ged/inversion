@@ -1,9 +1,9 @@
-#!/usr/bin/env ruby
+# -*- ruby -*-
+# frozen_string_literal: true
 # vim: set noet nosta sw=4 ts=4 :
 
 require 'loggability'
 
-require 'inversion' unless defined?( Inversion )
 require 'inversion/template' unless defined?( Inversion::Template )
 
 require 'inversion/template/node'

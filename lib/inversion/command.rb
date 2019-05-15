@@ -1,5 +1,6 @@
 # -*- ruby -*-
-#encoding: utf-8
+# frozen_string_literal: true
+# vim: set noet nosta sw=4 ts=4 :
 
 require 'logger'
 require 'trollop'

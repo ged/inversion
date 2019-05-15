@@ -1,5 +1,5 @@
-#!/usr/bin/env ruby
-# encoding: utf-8
+# -*- ruby -*-
+# frozen_string_literal: true
 # vim: set noet nosta sw=4 ts=4 :
 
 require 'loggability'

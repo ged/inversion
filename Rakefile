@@ -41,7 +41,7 @@ hoespec = Hoe.spec 'inversion' do
 	self.dependency 'configurability',         '~> 3.1', :development
 	self.dependency 'rspec-wait',              '~> 0.0', :development
 
-	self.require_ruby_version( '>=2.2.0' )
+	self.require_ruby_version( '>=2.4.0' )
 	self.hg_sign_tags = true if self.respond_to?( :hg_sign_tags= )
 	self.check_history_on_release = true if self.respond_to?( :check_history_on_release= )
 	self.rdoc_locations << "deveiate:/usr/local/www/public/code/#{remote_rdoc_dir}"

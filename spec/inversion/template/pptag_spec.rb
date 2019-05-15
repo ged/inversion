@@ -24,6 +24,7 @@ describe Inversion::Template::PpTag do
 		).to eq( "It looks like: <tt>{:a_complex=>[:datastructure, :or, :something]}</tt>." )
 	end
 
+
 	it "escapes as HTML if the format is set to :html" do
 		template = Inversion::Template.
 			new( 'It looks like: <tt><?pp foo.bar ?></tt>.', :escape_format => :html )
@@ -35,4 +36,5 @@ describe Inversion::Template::PpTag do
 			template.render
 		).to eq( "It looks like: <tt>{:a_complex=&gt;[:datastructure, :or, :something]}</tt>." )
 	end
+
 end
