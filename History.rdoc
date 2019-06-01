@@ -1,3 +1,12 @@
+== v1.2.0 [2019-05-14] Michael Granger <ged@FaerieMUD.org>
+
+Enhancements:
+
+- Add frozen string literal support (Ruby 2.6+)
+- Allow the timedelta tag to accept hash arguments and make
+  'decorators' optional.
+
+
 == v1.1.1 [2017-11-13] Michael Granger <ged@FaerieMUD.org>
 
 Bugfixes:
@@ -7,7 +16,7 @@ Bugfixes:
 
 == v1.1.0 [2017-08-17] Mahlon E. Smith <mahlon@martini.nu>
 
-Mark as stable, update dependencies.
+Enhancements:
 
 - Allow the use of the '!' operator in conditional tags, logically
   inverting the evaluated body.
