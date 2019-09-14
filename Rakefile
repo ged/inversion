@@ -27,6 +27,7 @@ hoespec = Hoe.spec 'inversion' do
 	self.developer 'Mahlon E. Smith', 'mahlon@martini.nu'
 
 	self.dependency 'loggability',   '~> 0.12'
+	self.dependency 'safe_yaml',     '~> 1.0'
 
 	self.dependency 'highline',                '~> 1.6', :development
 	self.dependency 'hoe-deveiate',            '~> 0.9', :development
