@@ -21,7 +21,7 @@ class Inversion::Template::ImportTag < Inversion::Template::Tag
 	### Ruby identifier.
 	def initialize( body, linenum=nil, colnum=nil )
 		super
-		@attributes = body.split( /\s*,\s*/ ).collect {|name| name.untaint.strip.to_sym }
+		@attributes = body.split( /\s*,\s*/ ).collect {|name| name.strip.to_sym }
 	end
 
 

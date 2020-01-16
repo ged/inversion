@@ -66,7 +66,7 @@ class Inversion::Template::Tag < Inversion::Template::Node
 		tags = {}
 
 		Gem.find_files( TAG_PLUGIN_PATTERN ).each do |tagfile|
-			tagname = tagfile[ %r{/(\w+?)_?tag\.rb$}, 1 ].untaint
+			tagname = tagfile[ %r{/(\w+?)_?tag\.rb$}, 1 ]
 			next unless tagname
 
 			self.load( tagfile )
@@ -121,7 +121,7 @@ class Inversion::Template::Tag < Inversion::Template::Node
 	### Create a new Inversion::Template::Tag from the specified +tagname+ and +body+.
 	def self::create( tagname, body, linenum=nil, colnum=nil )
 		tagname =~ /^(\w+)$/i or raise ArgumentError, "invalid tag name %p" % [ tagname ]
-		tagtype = $1.downcase.untaint
+		tagtype = $1.downcase
 
 		unless tagclass = self.types[ tagtype.to_sym ]
 			Inversion.log.warn "Unknown tag type %p; registered: %p" %

@@ -19,7 +19,7 @@ class Inversion::Template::AttrTag < Inversion::Template::CodeTag
 	# <?attr foo ?>
 	tag_pattern '$(ident)' do |tag, match|
 		tag.send( :log ).debug "  Identifier is: %p" % [ match.string(1) ]
-		tag.name = match.string( 1 ).untaint.to_sym
+		tag.name = match.string( 1 ).to_sym
 	end
 
 	# <?attr "%s" % foo ?>
@@ -28,12 +28,12 @@ class Inversion::Template::AttrTag < Inversion::Template::CodeTag
 		raise Inversion::ParseError, "expected '%%', got %p instead" % [ op ] unless op == '%'
 
 		tag.format = match.string( 1 )
-		tag.name   = match.string( 3 ).untaint.to_sym
+		tag.name   = match.string( 3 ).to_sym
 	end
 
 	# <?attr foo.methodchain ?>
 	tag_pattern '$(ident) $( .+ )' do |tag, match|
-		tag.name = match.string( 1 ).untaint.to_sym
+		tag.name = match.string( 1 ).to_sym
 		tag.methodchain = match.string( 2 )
 	end
 
@@ -43,7 +43,7 @@ class Inversion::Template::AttrTag < Inversion::Template::CodeTag
 		raise Inversion::ParseError, "expected '%%', got %p instead" % [ op ] unless op == '%'
 
 		tag.format      = match.string( 1 )
-		tag.name        = match.string( 3 ).untaint.to_sym
+		tag.name        = match.string( 3 ).to_sym
 		tag.methodchain = match.string( 4 )
 	end
 
@@ -60,7 +60,7 @@ class Inversion::Template::AttrTag < Inversion::Template::CodeTag
 		super
 
 		# Add an identifier for the tag name
-		self.identifiers << self.name.untaint.to_sym
+		self.identifiers << self.name.to_sym
 	end
 
 

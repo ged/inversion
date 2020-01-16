@@ -66,7 +66,7 @@ class Inversion::Template::DefaultTag < Inversion::Template::CodeTag
 		super
 
 		# Add an identifier for the tag name
-		self.identifiers << self.name.untaint.to_sym
+		self.identifiers << self.name.to_sym
 	end
 
 

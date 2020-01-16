@@ -201,7 +201,6 @@ class Inversion::Template
 			else
 				tmpl.read
 			end
-		source.untaint
 
 		# Load the instance and set the path to the source
 		template = self.new( source, parsestate, opts )

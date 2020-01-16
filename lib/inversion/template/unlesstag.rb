@@ -32,7 +32,7 @@ class Inversion::Template::UnlessTag < Inversion::Template::AttrTag
 		raise Inversion::ParseError, "expected '!', got %p instead" % [ op ] unless op == '!'
 
 		tag.send( :log ).debug "  Identifier is: %p (inverted)" % [ match.string(2) ]
-		tag.name = match.string( 2 ).untaint.to_sym
+		tag.name = match.string( 2 ).to_sym
 		tag.inverted = true
 	end
 

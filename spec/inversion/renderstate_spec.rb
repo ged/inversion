@@ -41,15 +41,6 @@ describe Inversion::RenderState do
 			expect( state.scope[:bear] ).to_not equal( attributes[:bear] )
 		end
 
-		it "preserves tainted status when copying its attributes" do
-			attributes = { :danger => "in pants" }
-			attributes[:danger].taint
-
-			state = Inversion::RenderState.new( attributes )
-
-			expect( state.scope[:danger] ).to be_tainted()
-		end
-
 		it "preserves singleton methods on attribute objects when copying" do
 			obj = Object.new
 			def obj.foo; "foo!"; end

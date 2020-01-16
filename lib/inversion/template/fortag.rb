@@ -36,8 +36,8 @@ class Inversion::Template::ForTag < Inversion::Template::CodeTag
 		raise Inversion::ParseError, "invalid keyword: expected 'in', got %p for %p" %
 			[ match.string(2), tag.body ] unless match.string(2) == 'in'
 
-		tag.block_args << match.string( 1 ).untaint.to_sym
-		tag.identifiers << match.string( 3 ).untaint.to_sym
+		tag.block_args << match.string( 1 ).to_sym
+		tag.identifiers << match.string( 3 ).to_sym
 
 		tag.enumerator = match.string( 3 )
 		tag.enumerator << match.string( 4 ) if match.string( 4 )
@@ -50,8 +50,8 @@ class Inversion::Template::ForTag < Inversion::Template::CodeTag
 		raise Inversion::ParseError, "invalid keyword: expected 'in', got %p for %p" %
 			[ match.string(2), tag.body ] unless match.string(2) == 'in'
 
-		tag.block_args += match.string( 1 ).untaint.split(/,\s?/).map( &:to_sym )
-		tag.identifiers << match.string( 3 ).untaint.to_sym
+		tag.block_args += match.string( 1 ).split(/,\s?/).map( &:to_sym )
+		tag.identifiers << match.string( 3 ).to_sym
 
 		tag.enumerator = match.string( 3 )
 		tag.enumerator << match.string( 4 ) if match.string( 4 )

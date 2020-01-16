@@ -88,7 +88,7 @@ module Inversion
 
 
 		### Return a duplicate of the given +hash+ with its identifier-like keys
-		### untainted and transformed into symbols from whatever they were before.
+		### transformed into symbols from whatever they were before.
 		###
 		###    symbolhash = symbolify_keys( stringhash )
 		###
@@ -96,7 +96,7 @@ module Inversion
 			newhash = {}
 
 			hash.each do |key,val|
-				keysym = key.to_s.dup.untaint.to_sym
+				keysym = key.to_s.to_sym
 
 				if val.is_a?( Hash )
 					newhash[ keysym ] = symbolify_keys( val )

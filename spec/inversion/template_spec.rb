@@ -190,18 +190,14 @@ describe Inversion::Template do
 
 		before( :each ) do
 			@timestamp = Time.now
-			content = 'file contents'.taint
+			content = 'file contents'
 			allow( IO ).to receive( :read ).with( '/tmp/hooowat' ).and_return( content )
 			@template = described_class.load( '/tmp/hooowat' )
 		end
 
 
-		it "untaints template content loaded from a file" do
-			expect( @template.source ).to_not be_tainted()
-		end
-
 		it "can be reloaded" do
-			newcontent = 'changed file contents'.taint
+			newcontent = 'changed file contents'
 			expect( IO ).to receive( :read ).with( '/tmp/hooowat' ).and_return( newcontent )
 			@template.reload
 			expect( @template.source ).to eq( newcontent )
