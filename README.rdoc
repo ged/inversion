@@ -1,8 +1,9 @@
 = inversion
 
-home :: http://deveiate.org/projects/Inversion
-code :: http://repo.deveiate.org/Inversion
-github :: http://github.com/ged/inversion.git
+home:: https://hg.sr.ht/~ged/Inversion
+code:: https://hg.sr.ht/~ged/Inversion/browse
+github:: https://github.com/ged/inversion
+docs:: http://deveiate.org/code/Inversion
 
 
 == Description
@@ -116,10 +117,15 @@ After checking out the source, run:
 This task will install any missing dependencies, run the tests/specs,
 and generate the API documentation.
 
+== Authors
+
+* Michael Granger <ged@faeriemud.org>
+* Mahlon E. Smith <mahlon@martini.nu>
+
 
 == License
 
-Copyright © 2011-2015, Michael Granger and Mahlon E. Smith
+Copyright © 2011-2020, Michael Granger and Mahlon E. Smith
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without

@@ -1,3 +1,11 @@
+
+== v1.3.0 [2020-04-08] Mahlon E. Smith <mahlon@martini.nu>
+
+- Use safe_yaml when deserializing config tag contents.
+- Un-hoeify.
+- Updates for Ruby 2.7.
+
+
 == v1.2.0 [2019-05-14] Michael Granger <ged@FaerieMUD.org>
 
 Enhancements:

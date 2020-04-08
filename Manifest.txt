@@ -1,4 +1,3 @@
-ChangeLog
 Examples.rdoc
 GettingStarted.rdoc
 Guide.rdoc
