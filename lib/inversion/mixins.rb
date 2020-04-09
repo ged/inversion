@@ -130,6 +130,20 @@ module Inversion
 		# The fallback escape format
 		DEFAULT_ESCAPE_FORMAT = :none
 
+		# Unreserved characters from section 2.3 of RFC 3986
+		# ALPHA / DIGIT / "-" / "." / "_" / "~"
+		URI_ENCODED_CHARACTERS = /[^\w\-\.~]/
+
+
+		### Inclusion callback; add Loggability if it isn't already present
+		def self::included( mod )
+			super
+			unless mod < Loggability
+				mod.extend( Loggability )
+				mod.log_to( :inversion )
+			end
+		end
+
 
 		### Escape the +output+ using the format specified by the given +render_state+'s config.
 		def escape( output, render_state )
@@ -152,6 +166,17 @@ module Inversion
 				gsub( /&/, '&amp;' ).
 				gsub( /</, '&lt;' ).
 				gsub( />/, '&gt;' )
+		end
+
+
+		### Escape the given +output+ using the encoding specified in RFC3986 (URIs)
+		def escape_uri( output )
+			return output.to_s.gsub( URI_ENCODED_CHARACTERS ) do |m|
+				bytes = m[ 0 ].each_byte
+				bytes.inject( String.new ) do |buf, char|
+					buf + sprintf( '%%%0X', char )
+				end
+			end.force_encoding( Encoding::US_ASCII )
 		end
 
 	end # Escaping

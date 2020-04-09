@@ -6,7 +6,5 @@
 ^coverage.info$
 ^ChangeLog$
 ^pkg/
-^Gemfile\.lock$
-^Gemfile\.devel$
-^Gemfile\.devel\.lock$
+\.lock$
 spec/\.state$

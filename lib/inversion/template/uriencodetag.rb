@@ -16,16 +16,14 @@ require 'inversion/template/attrtag'
 #   <?uriencode foo.bar ?>
 #
 class Inversion::Template::UriencodeTag < Inversion::Template::AttrTag
+	include Inversion::Escaping
 
-	# Unreserved characters from section 2.3 of RFC 3986
-	# ALPHA / DIGIT / "-" / "." / "_" / "~"
-	DEFAULT_ENCODED_CHARACTERS = /[^\w\-\.~]/
 
 	### Render the method chains against the attributes of the specified +render_state+
 	### and return them.
 	def render( render_state )
 		raw = super
-		return URI.encode( raw.to_s, DEFAULT_ENCODED_CHARACTERS )
+		return escape_uri( raw.to_s )
 	end
 
 end # class Inversion::Template::UriencodeTag

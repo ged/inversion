@@ -108,7 +108,7 @@ describe Inversion, "mixins" do
 				include Inversion::Escaping
 
 				def render( state )
-					return self.escape( "<something>", state )
+					return self.escape( "</something>", state )
 				end
 			end
 			@obj = objclass.new
@@ -116,18 +116,28 @@ describe Inversion, "mixins" do
 
 		it "adds configurable escaping to including classes" do
 			render_state = Inversion::RenderState.new( {}, :escape_format => :html )
-			expect( @obj.render( render_state ) ).to eq( "&lt;something&gt;" )
+			expect( @obj.render( render_state ) ).to eq( "&lt;/something&gt;" )
 		end
 
 		it "doesn't escape anything if escaping is disabled" do
 			render_state = Inversion::RenderState.new( {}, :escape_format => nil )
-			expect( @obj.render( render_state ) ).to eq( "<something>" )
+			expect( @obj.render( render_state ) ).to eq( "</something>" )
 		end
 
 		it "doesn't escape anything if escaping is set to ':none'" do
 			render_state = Inversion::RenderState.new( {}, :escape_format => :none )
-			expect( @obj.render( render_state ) ).to eq( "<something>" )
+			expect( @obj.render( render_state ) ).to eq( "</something>" )
 		end
+
+		it "supports URI escaping" do
+			render_state = Inversion::RenderState.new( {}, :escape_format => :uri )
+
+			rval = @obj.render( render_state )
+
+			expect( rval.encoding ).to eq( Encoding::US_ASCII )
+			expect( rval ).to eq( "%3C%2Fsomething%3E" )
+		end
+
 	end
 
 
