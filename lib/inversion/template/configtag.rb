@@ -2,7 +2,8 @@
 # frozen_string_literal: true
 # vim: set noet nosta sw=4 ts=4 :
 
-require 'safe_yaml'
+require 'yaml'
+
 require 'inversion/mixins'
 require 'inversion/template' unless defined?( Inversion::Template )
 require 'inversion/template/tag'
@@ -36,7 +37,12 @@ class Inversion::Template::ConfigTag < Inversion::Template::Tag
 		raise Inversion::ParseError, 'Empty config settings' if
 			body.nil? || body.strip.empty?
 
-		opts = YAML.load( body, safe: true )
+		opts = if defined?( SafeYAML ) then
+				YAML.load( body, safe: true )
+			else
+				YAML.load( body )
+			end
+
 		@options = symbolify_keys( opts )
 
 		super
