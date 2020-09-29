@@ -14,5 +14,6 @@ group :development do
     gem 'simplecov', '~> 0.18'
     gem 'sinatra', '~> 2.0'
     gem 'tilt', '~> 2.0'
+    gem 'safe_yaml', '~> 1.0'
 end
 
