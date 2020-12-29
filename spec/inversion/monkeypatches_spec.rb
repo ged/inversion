@@ -8,7 +8,7 @@ require 'ripper'
 require 'inversion/monkeypatches'
 
 
-describe Inversion, "monkeypatches" do
+RSpec.describe Inversion, "monkeypatches" do
 
 	describe Inversion::RipperAdditions do
 

@@ -5,7 +5,7 @@ require_relative '../../helpers'
 
 require 'inversion/template/configtag'
 
-describe Inversion::Template::ConfigTag do
+RSpec.describe Inversion::Template::ConfigTag do
 
 	# <?config comment_start: /* ?>
 	# <?config comment_end: */ ?>

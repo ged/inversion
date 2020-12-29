@@ -5,7 +5,7 @@ require_relative '../../helpers'
 
 require 'inversion/template/yieldtag'
 
-describe Inversion::Template::YieldTag do
+RSpec.describe Inversion::Template::YieldTag do
 
 
 	it "calls the renderstate's block before rendering, and renders as its return value" do

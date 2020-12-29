@@ -5,7 +5,7 @@ require_relative '../../helpers'
 
 require 'inversion/template/tag'
 
-describe Inversion::Template::Tag do
+RSpec.describe Inversion::Template::Tag do
 
 	before( :all ) do
 		@real_derivatives = Inversion::Template::Tag.derivatives.dup

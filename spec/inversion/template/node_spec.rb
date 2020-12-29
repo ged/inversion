@@ -5,7 +5,7 @@ require_relative '../../helpers'
 
 require 'inversion/template/node'
 
-describe Inversion::Template::Node do
+RSpec.describe Inversion::Template::Node do
 
 	let( :concrete_subclass ) { Class.new(Inversion::Template::Node) }
 

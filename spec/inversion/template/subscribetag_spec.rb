@@ -7,7 +7,7 @@ require 'inversion/template'
 require 'inversion/template/textnode'
 require 'inversion/template/subscribetag'
 
-describe Inversion::Template::SubscribeTag do
+RSpec.describe Inversion::Template::SubscribeTag do
 
 
 	it "raises a parse error if the key isn't a simple attribute" do

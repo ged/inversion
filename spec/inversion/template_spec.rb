@@ -7,7 +7,7 @@ require 'stringio'
 
 require 'inversion/template'
 
-describe Inversion::Template do
+RSpec.describe Inversion::Template do
 
 	before( :all ) do
 		@default_template_path = Inversion::Template.template_paths

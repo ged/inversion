@@ -8,7 +8,7 @@ require 'inversion/template/textnode'
 require 'inversion/template/endtag'
 require 'inversion/renderstate'
 
-describe Inversion::Template::EndTag do
+RSpec.describe Inversion::Template::EndTag do
 
 	before( :each ) do
 		@tag = Inversion::Template::EndTag.new

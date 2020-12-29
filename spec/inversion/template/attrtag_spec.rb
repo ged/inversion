@@ -5,7 +5,7 @@ require_relative '../../helpers'
 
 require 'inversion/template/attrtag'
 
-describe Inversion::Template::AttrTag do
+RSpec.describe Inversion::Template::AttrTag do
 
 	describe "parsing" do
 

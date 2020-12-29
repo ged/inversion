@@ -7,7 +7,7 @@ require 'timeout'
 require 'inversion/template'
 require 'inversion/template/includetag'
 
-describe Inversion::Template::IncludeTag do
+RSpec.describe Inversion::Template::IncludeTag do
 
 	it "renders the IncludeTag as an empty string" do
 		included_path = Pathname.pwd + 'included.tmpl'

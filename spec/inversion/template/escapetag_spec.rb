@@ -5,7 +5,7 @@ require_relative '../../helpers'
 
 require 'inversion/template/escapetag'
 
-describe Inversion::Template::EscapeTag do
+RSpec.describe Inversion::Template::EscapeTag do
 
 	before( :each ) do
 		@attribute_object = double( "template attribute" )

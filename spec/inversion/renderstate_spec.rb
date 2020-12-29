@@ -11,7 +11,7 @@ require 'inversion/template/fragmenttag'
 require 'inversion/template/subscribetag'
 require 'inversion/template/publishtag'
 
-describe Inversion::RenderState do
+RSpec.describe Inversion::RenderState do
 
 
 	it "provides access to the block it was constructed with if there was one" do

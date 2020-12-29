@@ -13,7 +13,7 @@ rescue LoadError => err
 	$sinatra_support = false
 end
 
-describe "Sinatra support", :if => $sinatra_support do
+RSpec.describe "Sinatra support", :if => $sinatra_support do
 	include Rack::Test::Methods if defined?( ::Rack )
 
 	before( :each ) do

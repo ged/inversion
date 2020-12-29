@@ -37,19 +37,25 @@ end
 
 
 ### Mock with RSpec
-RSpec.configure do |c|
+RSpec.configure do |config|
 
-	c.run_all_when_everything_filtered = true
-	c.filter_run :focus
-	c.order = 'random'
-	c.mock_with( :rspec ) do |mock|
+	config.mock_with( :rspec ) do |mock|
 		mock.syntax = :expect
 	end
-	c.wait_timeout = 3
-	c.example_status_persistence_file_path = 'spec/.state'
 
-	c.include( Inversion::SpecHelpers )
-	c.include( Loggability::SpecHelpers )
+	config.disable_monkey_patching!
+	config.example_status_persistence_file_path = "spec/.status"
+	config.filter_run :focus
+	config.filter_run_when_matching :focus
+	config.order = :random
+	config.profile_examples = 5
+	config.run_all_when_everything_filtered = true
+	config.shared_context_metadata_behavior = :apply_to_host_groups
+	config.wait_timeout = 3
+	# config.warnings = true
+
+	config.include( Inversion::SpecHelpers )
+	config.include( Loggability::SpecHelpers )
 end
 
 # vim: set nosta noet ts=4 sw=4:

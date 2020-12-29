@@ -5,7 +5,7 @@ require_relative '../../helpers'
 
 require 'inversion/template/codetag'
 
-describe Inversion::Template::CodeTag do
+RSpec.describe Inversion::Template::CodeTag do
 
 
 	it "is an abstract class" do

@@ -5,7 +5,7 @@ require_relative '../../helpers'
 
 require 'inversion/template/containertag'
 
-describe Inversion::Template::ContainerTag do
+RSpec.describe Inversion::Template::ContainerTag do
 
 	context "instances of including classes" do
 

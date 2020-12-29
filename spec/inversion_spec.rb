@@ -5,7 +5,7 @@ require_relative 'helpers'
 
 require 'inversion'
 
-describe Inversion do
+RSpec.describe Inversion do
 
 	it "defines a version" do
 		expect( described_class::VERSION ).to match( /^\d+(\.\d+)*$/ )

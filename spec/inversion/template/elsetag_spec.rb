@@ -10,7 +10,7 @@ require 'inversion/template/commenttag'
 require 'inversion/template/fortag'
 require 'inversion/renderstate'
 
-describe Inversion::Template::ElseTag do
+RSpec.describe Inversion::Template::ElseTag do
 
 	it "handles a non-existant body" do
 		Inversion::Template::ElseTag.new( nil )

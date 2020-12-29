@@ -7,7 +7,7 @@ require 'inversion/template/iftag'
 require 'inversion/template/textnode'
 require 'inversion/renderstate'
 
-describe Inversion::Template::IfTag do
+RSpec.describe Inversion::Template::IfTag do
 
 
 	it "renders its contents if its attribute is true" do

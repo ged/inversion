@@ -5,7 +5,7 @@ require_relative '../../helpers'
 
 require 'inversion/template/publishtag'
 
-describe Inversion::Template::PublishTag do
+RSpec.describe Inversion::Template::PublishTag do
 
 	class TestSubscriber
 		def initialize

@@ -5,7 +5,7 @@ require_relative '../../helpers'
 
 require 'inversion/template/pptag'
 
-describe Inversion::Template::PpTag do
+RSpec.describe Inversion::Template::PpTag do
 
 	before( :each ) do
 		@attribute_object = double( "template attribute" )

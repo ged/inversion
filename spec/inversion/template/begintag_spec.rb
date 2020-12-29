@@ -11,7 +11,7 @@ require 'inversion/template/rescuetag'
 require 'inversion/template/endtag'
 require 'inversion/renderstate'
 
-describe Inversion::Template::BeginTag do
+RSpec.describe Inversion::Template::BeginTag do
 
 
 	context "without any rescue clauses" do

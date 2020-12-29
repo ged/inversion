@@ -5,7 +5,7 @@ require_relative '../../helpers'
 
 require 'inversion/template/importtag'
 
-describe Inversion::Template::ImportTag do
+RSpec.describe Inversion::Template::ImportTag do
 
 	it "can import a single attribute" do
 		tag = Inversion::Template::ImportTag.new( 'txn ' )

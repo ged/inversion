@@ -5,7 +5,7 @@ require_relative '../../helpers'
 
 require 'inversion/template/textnode'
 
-describe Inversion::Template::TextNode do
+RSpec.describe Inversion::Template::TextNode do
 
 	before( :each ) do
 		@state = Inversion::RenderState.new

@@ -5,7 +5,7 @@ require_relative '../../helpers'
 
 require 'inversion/template/defaulttag'
 
-describe Inversion::Template::DefaultTag do
+RSpec.describe Inversion::Template::DefaultTag do
 
 
 	it "sets a template attribute to a default value" do

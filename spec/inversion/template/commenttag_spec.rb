@@ -8,7 +8,7 @@ require 'inversion/template/attrtag'
 require 'inversion/template/textnode'
 require 'inversion/renderstate'
 
-describe Inversion::Template::CommentTag do
+RSpec.describe Inversion::Template::CommentTag do
 
 	it "allows any free-form text in its body" do
 		# <?comment Disabled for now ?>...<?end?>

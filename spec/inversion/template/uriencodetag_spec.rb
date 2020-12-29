@@ -5,7 +5,7 @@ require_relative '../../helpers'
 
 require 'inversion/template/uriencodetag'
 
-describe Inversion::Template::UriencodeTag do
+RSpec.describe Inversion::Template::UriencodeTag do
 
 	before( :each ) do
 		@attribute_object = double( "template attribute" )

@@ -5,7 +5,7 @@ require_relative '../helpers'
 
 require 'inversion/parser'
 
-describe Inversion::Parser do
+RSpec.describe Inversion::Parser do
 
 	before( :all ) do
 		Inversion::Template::Tag.load_all

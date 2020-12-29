@@ -5,7 +5,7 @@ require_relative '../../helpers'
 
 require 'inversion/template/timedeltatag'
 
-describe Inversion::Template::TimeDeltaTag do
+RSpec.describe Inversion::Template::TimeDeltaTag do
 
 	MINUTES = 60
 	HOURS   = 60  * MINUTES

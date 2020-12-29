@@ -9,7 +9,7 @@ require 'inversion/template/commenttag'
 require 'inversion/template/fortag'
 require 'inversion/renderstate'
 
-describe Inversion::Template::RescueTag do
+RSpec.describe Inversion::Template::RescueTag do
 
 	it "handles a non-existant body" do
 		tag = Inversion::Template::RescueTag.new( nil )

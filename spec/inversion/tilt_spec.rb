@@ -12,7 +12,7 @@ rescue LoadError => err
 	$tilt_support = false
 end
 
-describe "Tilt support", :if => $tilt_support do
+RSpec.describe "Tilt support", :if => $tilt_support do
 
 	before( :all ) do
 		setup_logging( :fatal )

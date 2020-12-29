@@ -9,7 +9,7 @@ require 'inversion/template/attrtag'
 require 'inversion/template/textnode'
 require 'inversion/renderstate'
 
-describe Inversion::Template::ForTag do
+RSpec.describe Inversion::Template::ForTag do
 
 	it "knows which identifiers should be added to the template" do
 		tag = Inversion::Template::ForTag.new( 'foo in bar' )

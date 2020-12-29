@@ -5,7 +5,7 @@ require_relative '../../helpers'
 
 require 'inversion/template/calltag'
 
-describe Inversion::Template::CallTag do
+RSpec.describe Inversion::Template::CallTag do
 
 	# Since call is just an alias, the attrtag_spec already tests all of
 	# this.

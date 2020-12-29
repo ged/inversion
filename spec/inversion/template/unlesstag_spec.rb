@@ -7,7 +7,7 @@ require 'inversion/template/unlesstag'
 require 'inversion/template/textnode'
 require 'inversion/renderstate'
 
-describe Inversion::Template::UnlessTag do
+RSpec.describe Inversion::Template::UnlessTag do
 
 
 	it "renders its contents if its attribute is false" do

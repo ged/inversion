@@ -9,7 +9,7 @@ require 'inversion/template/unlesstag'
 require 'inversion/template/textnode'
 require 'inversion/renderstate'
 
-describe Inversion::Template::ElsifTag do
+RSpec.describe Inversion::Template::ElsifTag do
 
 
 	it "can be appended to an 'if' tag" do

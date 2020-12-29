@@ -8,3 +8,4 @@
 ^pkg/
 \.lock$
 spec/\.state$
+^spec/\.status$

@@ -8,7 +8,7 @@ require 'inversion/template/attrtag'
 require 'inversion/template/textnode'
 require 'inversion/renderstate'
 
-describe Inversion::Template::FragmentTag do
+RSpec.describe Inversion::Template::FragmentTag do
 
 	it "raises a parse error if the body isn't a simple attribute" do
 		expect {

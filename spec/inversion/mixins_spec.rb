@@ -7,7 +7,7 @@ require 'set'
 require 'inversion/mixins'
 
 
-describe Inversion, "mixins" do
+RSpec.describe Inversion, "mixins" do
 
 	describe Inversion::HashUtilities do
 		it "includes a function for stringifying Hash keys" do
