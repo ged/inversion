@@ -1,9 +1,10 @@
 source 'https://rubygems.org/'
 
-gem 'highline', '~> 2.0'
 gem 'loggability', '~> 0.17'
 gem 'sysexits', '~> 1.2'
-gem 'trollop', '~> 2.9'
+gem 'gli', '~> 2.21'
+gem 'tty-prompt', '~> 0.23'
+gem 'pastel', '~> 0.8'
 
 group :development do
     gem 'rack-test', '~> 1.1'

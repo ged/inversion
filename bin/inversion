@@ -1,11 +1,8 @@
 # -*- ruby -*-
 # vim: set noet nosta sw=4 ts=4 :
 
-require 'inversion'
-require 'inversion/command'
+require 'loggability'
+Loggability.level = :fatal
 
-Inversion::Command.run( ARGV )
-
-
-
-
+require 'inversion/cli'
+exit Inversion::CLI.run( ARGV )
