@@ -104,7 +104,7 @@ class Inversion::Template::Tag < Inversion::Template::Node
 	end
 
 
-	### Safely load the specified +tagfile+.
+	### Safely load the specified `tagfile`.
 	def self::load( tagfile )
 		tagrequire = tagfile[ %r{inversion/template/\w+tag} ] or
 			raise "tag file %p doesn't look like a tag plugin" % [ tagfile ]
@@ -117,7 +117,7 @@ class Inversion::Template::Tag < Inversion::Template::Node
 	end
 
 
-	### Create a new Inversion::Template::Tag from the specified +tagname+ and +body+.
+	### Create a new Inversion::Template::Tag from the specified `tagname` and `body`.
 	def self::create( tagname, body, linenum=nil, colnum=nil )
 		tagname =~ /^(\w+)$/i or raise ArgumentError, "invalid tag name %p" % [ tagname ]
 		tagtype = $1.downcase
@@ -136,7 +136,7 @@ class Inversion::Template::Tag < Inversion::Template::Node
 	### I N S T A N C E   M E T H O D S
 	########################################################################
 
-	### Create a new Inversion::Template::Tag with the specified +body+.
+	### Create a new Inversion::Template::Tag with the specified `body`.
 	def initialize( body, linenum=nil, colnum=nil )
 		super
 		@body = body.to_s.strip

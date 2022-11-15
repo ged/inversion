@@ -44,7 +44,7 @@ class Inversion::Parser
 	}
 
 
-	### Create a new Inversion::Parser with the specified config +options+.
+	### Create a new Inversion::Parser with the specified config `options`.
 	def initialize( template, options={} )
 		@template = template
 		@options  = DEFAULT_OPTIONS.merge( options )
@@ -59,7 +59,7 @@ class Inversion::Parser
 	attr_reader :options
 
 
-	### Parse the given +source+ into one or more Inversion::Template::Nodes and return
+	### Parse the given `source` into one or more Inversion::Template::Nodes and return
 	### it as an Array.
 	def parse( source, inherited_state=nil )
 		state = nil
@@ -152,7 +152,7 @@ class Inversion::Parser
 	private
 	#######
 
-	### Return at most +length+ characters long from the given +string+, appending +ellipsis+
+	### Return at most `length` characters long from the given `string`, appending `ellipsis`
 	### at the end if it was truncated.
 	def abbrevstring( string, length=30, ellipsis='…' )
 		return string if string.length < length
@@ -267,7 +267,7 @@ class Inversion::Parser
 		end
 
 
-		### Return the node that is currently being appended to, or +nil+ if there aren't any
+		### Return the node that is currently being appended to, or `nil` if there aren't any
 		### opened container nodes.
 		def current_node
 			return self.node_stack.last
@@ -281,7 +281,7 @@ class Inversion::Parser
 		end
 
 
-		### Load a subtemplate from the specified +path+, checking for recursive-dependency.
+		### Load a subtemplate from the specified `path`, checking for recursive-dependency.
 		def load_subtemplate( path )
 			if self.include_stack.include?( path )
 				stack_desc = ( self.include_stack + [path] ).join( ' --> ' )

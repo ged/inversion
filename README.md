@@ -1,12 +1,19 @@
-= inversion
+# inversion
 
-home:: https://hg.sr.ht/~ged/Inversion
-code:: https://hg.sr.ht/~ged/Inversion/browse
-github:: https://github.com/ged/inversion
-docs:: http://deveiate.org/code/Inversion
+home
+: https://hg.sr.ht/~ged/Inversion
+
+code
+: https://hg.sr.ht/~ged/Inversion/browse
+
+github
+: https://github.com/ged/inversion
+
+docs
+: http://deveiate.org/code/Inversion
 
 
-== Description
+## Description
 
 Inversion is a templating system for Ruby. It uses the "Inversion of Control"
 principle to decouple the contents and structure of templates from the code
@@ -14,7 +21,7 @@ that uses them, making it easier to separate concerns, keep your tests simple,
 and avoid polluting scopes with ephemeral data.
 
 
-=== Details
+### Details
 
 Inversion, like most other templating systems, works by giving you a way of
 defining the static parts of your output, and then letting you combine that at
@@ -22,12 +29,12 @@ a later point with the dynamic parts:
 
 Create the template and use it to render an exciting message:
 
-	tmpl = Inversion::Template.new( "Hello, <?attr name ?>!" )
-	tmpl.name = "World"
-	puts tmpl.render
+    tmpl = Inversion::Template.new( "Hello, <?attr name ?>!" )
+    tmpl.name = "World"
+    puts tmpl.render
 
-The <tt><?attr name ?></tt> tag defines the _name_ accessor on the template
-object, the value of which is substituted for any occurrences of +name+ in the
+The `<?attr name ?>` tag defines the _name_ accessor on the template
+object, the value of which is substituted for any occurrences of `name` in the
 template:
 
     Hello, World!
@@ -45,15 +52,15 @@ You can also interact with the values set in the template:
 
     Name: <?attr employee.full_name ?>
 
-This will call the +#full_name+ method on whatever is set as the +employee+
+This will call the #full_name method on whatever is set as the `employee`
 attribute when rendered, and the result will take the place of the tag.
 
-Inversion also comes with {a collection of other tags}[rdoc-ref:Tags] that
+Inversion also comes with [a collection of other tags](rdoc-ref:Tags) that
 provide flow control, exception-handling, etc.
 
 Here's a slightly more complex example: Say we have a layout template that
 contains all the boilerplate, navigation, etc. for the site, and then an
-<code><?attr body ?></code> somewhere in the content area for the content specific to
+`<?attr body ?>` somewhere in the content area for the content specific to
 each view:
 
     layout = Inversion::Template.load( 'templates/layout.tmpl' )
@@ -70,8 +77,8 @@ Then there's a view template that displays a bulleted list of article titles:
     </section>
 
 Loading this template results in a Ruby object whose API contains one method:
-+#articles+. To render the view, we just call that accessor with instances of
-an +Article+ domain class we defined elsewhere, and then drop the +alist+
+`#articles`. To render the view, we just call that accessor with instances of
+an `Article` domain class we defined elsewhere, and then drop the `alist`
 template into the layout and render them:
 
     alist = Inversion::Template.load( 'templates/alist.tmpl' )
@@ -80,8 +87,8 @@ template into the layout and render them:
     layout.body = alist
     puts layout.render
 
-The +for+ tag in the alist will iterate over the enumerable Articles and
-generate an +<li>+ for each one. The resulting template object will be set as
+The `for` tag in the alist will iterate over the enumerable Articles and
+generate an `<li>` for each one. The resulting template object will be set as
 the body of the layout template, and stringified when the enclosing template
 is rendered. Templates can be nested this way as deeply as you like.
 
@@ -89,43 +96,45 @@ For detailed tag documentation and examples, start with the Inversion::Template
 class in the API documentation.
 
 
-== References
+## References
 
-* {Inversion of Control}[http://en.wikipedia.org/wiki/Inversion_of_control]
-* {Passive View}[http://martinfowler.com/eaaDev/PassiveScreen.html]
-* {Supervising Controller}[http://martinfowler.com/eaaDev/SupervisingPresenter.html]
+* Inversion of Control - https://en.wikipedia.org/wiki/Inversion_of_control
+* Passive View - https://martinfowler.com/eaaDev/PassiveScreen.html
+* Supervising Controller - https://martinfowler.com/eaaDev/SupervisingPresenter.html
 
 
-== Installation
+## Installation
 
     gem install inversion
 
 
-== Contributing
+## Contributing
 
 You can check out the current development source
-{with Mercurial}[http://repo.deveiate.org/Inversion], or if you prefer Git, via the
-project's {Github mirror}[https://github.com/ged/Inversion].
+[with Mercurial](https://hg.sr.ht/~ged/Inversion), or if you prefer Git, via the
+project's [Github mirror](https://github.com/ged/Inversion).
 
 You can submit bug reports, suggestions, and read more about future plans at
-{the project page}[http://deveiate.org/projects/Inversion].
+[the project page](https://hg.sr.ht/~ged/Inversion).
 
 After checking out the source, run:
 
-	$ rake newb
+    $ gem install -Ng
+    $ rake setup
 
-This task will install any missing dependencies, run the tests/specs,
-and generate the API documentation.
+This task will install any missing dependencies and do any necessary developer
+setup.
 
-== Authors
+
+## Authors
 
 * Michael Granger <ged@faeriemud.org>
 * Mahlon E. Smith <mahlon@martini.nu>
 
 
-== License
+## License
 
-Copyright © 2011-2020, Michael Granger and Mahlon E. Smith
+Copyright © 2011-2022, Michael Granger and Mahlon E. Smith
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without

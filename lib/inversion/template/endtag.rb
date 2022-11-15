@@ -7,7 +7,7 @@ require 'inversion/template/tag'
 # Closing tag class
 class Inversion::Template::EndTag < Inversion::Template::Tag
 
-	### Overridden to provide a default +body+.
+	### Overridden to provide a default `body`.
 	def initialize( body='', linenum=nil, colnum=nil )
 		super
 		@opener = nil
@@ -22,7 +22,7 @@ class Inversion::Template::EndTag < Inversion::Template::Tag
 	attr_reader :opener
 
 
-	### Parser callback -- close the given +state+'s currently-open container node.
+	### Parser callback -- close the given `state`'s currently-open container node.
 	def before_appending( state )
 		@opener = state.pop
 		self.log.debug "End tag for %s at %s" % [ @opener.tagname, @opener.location ]

@@ -17,7 +17,7 @@ require 'inversion/template/attrtag'
 class Inversion::Template::EscapeTag < Inversion::Template::AttrTag
 	include Inversion::Escaping
 
-	### Render the method chains against the attributes of the specified +render_state+
+	### Render the method chains against the attributes of the specified `render_state`
 	### and return them.
 	def render( render_state )
 		return self.escape( super, render_state )

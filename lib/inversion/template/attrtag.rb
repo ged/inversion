@@ -4,6 +4,9 @@
 require 'inversion/template' unless defined?( Inversion::Template )
 require 'inversion/template/codetag'
 
+using Inversion::Refinements
+
+
 # Inversion attribute tag.
 #
 # Attribute tags add an accessor to a template like 'attr_accessor' does for Ruby classes.
@@ -48,8 +51,8 @@ class Inversion::Template::AttrTag < Inversion::Template::CodeTag
 
 
 
-	### Create a new AttrTag with the given +name+, which should be a valid
-	### Ruby identifier. The +linenum+ and +colnum+ should be the line and column of
+	### Create a new AttrTag with the given `name`, which should be a valid
+	### Ruby identifier. The `linenum` and `colnum` should be the line and column of
 	### the tag in the template source, if available.
 	def initialize( body, linenum=nil, colnum=nil )
 		@name        = nil
@@ -78,7 +81,7 @@ class Inversion::Template::AttrTag < Inversion::Template::CodeTag
 	attr_accessor :methodchain
 
 
-	### Render the tag attributes of the specified +renderstate+ and return them.
+	### Render the tag attributes of the specified `renderstate` and return them.
 	def render( renderstate )
 		value = self.evaluate( renderstate ) # :FIXME: or return value # nil or false?
 
@@ -91,7 +94,7 @@ class Inversion::Template::AttrTag < Inversion::Template::CodeTag
 	end
 
 
-	### Evaluate the body of the tag in the context of +renderstate+ and return the results.
+	### Evaluate the body of the tag in the context of `renderstate` and return the results.
 	def evaluate( renderstate )
 		code = [ self.name.to_s, self.methodchain ].join( '' )
 		return renderstate.eval( code )

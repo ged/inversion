@@ -39,8 +39,8 @@ module Inversion
 	end
 
 	require 'inversion/exceptions'
+	require 'inversion/refinements'
 	require 'inversion/mixins'
-	require 'inversion/monkeypatches'
 	require 'inversion/template'
 
 end # module Inversion

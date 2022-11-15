@@ -1,5 +1,5 @@
 ^.yardoc/
-^doc/
+^docs/
 ^tags$
 ^manual/output/
 ^coverage/

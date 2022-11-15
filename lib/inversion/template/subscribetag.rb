@@ -28,7 +28,7 @@ require 'inversion/template/tag'
 #
 class Inversion::Template::SubscribeTag < Inversion::Template::Tag
 
-	### Create a new SubscribeTag with the given +body+.
+	### Create a new SubscribeTag with the given `body`.
 	def initialize( body, line=nil, column=nil )
 		super
 
@@ -59,7 +59,7 @@ class Inversion::Template::SubscribeTag < Inversion::Template::Tag
 	attr_reader :content
 
 
-	### Tell the +renderstate+ that this tag is interested in nodes that are published with
+	### Tell the `renderstate` that this tag is interested in nodes that are published with
 	### its key.
 	def before_rendering( renderstate )
 		@content.clear
@@ -73,7 +73,7 @@ class Inversion::Template::SubscribeTag < Inversion::Template::Tag
 	end
 
 
-	### Pub/sub callback. Called from the RenderState when a PublishTag publishes +nodes+
+	### Pub/sub callback. Called from the RenderState when a PublishTag publishes `nodes`
 	### with the same key as the current tag.
 	def publish( *nodes )
 		self.log.debug "Adding published nodes %p to %p" % [ nodes, @content ]

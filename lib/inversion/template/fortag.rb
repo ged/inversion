@@ -58,7 +58,7 @@ class Inversion::Template::ForTag < Inversion::Template::CodeTag
 
 
 
-	### Create a new ForTag with the specified +body+.
+	### Create a new ForTag with the specified `body`.
 	def initialize( body, linenum=nil, colnum=nil )
 		@block_args = []
 		@enumerator = nil
@@ -79,7 +79,7 @@ class Inversion::Template::ForTag < Inversion::Template::CodeTag
 	attr_accessor :enumerator
 
 
-	### Iterate over the enumerator in +state+ and render the tag's
+	### Iterate over the enumerator in `state` and render the tag's
 	### contents for each iteration.
 	def render( state )
 		lvalue = state.eval( self.enumerator ) or return nil

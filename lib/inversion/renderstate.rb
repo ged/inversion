@@ -20,26 +20,26 @@ class Inversion::RenderState
 	class Scope < BasicObject
 
 		### Create a new RenderState::Scope with its initial tag locals set to
-		### +locals+.
+		### `locals`.
 		def initialize( locals={}, fragments={} )
 			@locals = locals
 			@fragments = fragments
 		end
 
 
-		### Return the tag local with the specified +name+.
+		### Return the tag local with the specified `name`.
 		def []( name )
 			return @locals[ name.to_sym ]
 		end
 
 
-		### Set the tag local with the specified +name+ to +value+.
+		### Set the tag local with the specified `name` to `value`.
 		def []=( name, value )
 			@locals[ name.to_sym ] = value
 		end
 
 
-		### Return a copy of the receiving Scope merged with the given +values+,
+		### Return a copy of the receiving Scope merged with the given `values`,
 		### which can be either another Scope or a Hash.
 		def +( values )
 			return Scope.new( self.__locals__.merge(values), self.__fragments__ )
@@ -74,9 +74,9 @@ class Inversion::RenderState
 
 
 	### Create a new RenderState. If the template is being rendered inside another one, the
-	### containing template's RenderState will be passed as the +containerstate+. The
-	### +initial_attributes+ will be deep-copied, and the +options+ will be merged with
-	### Inversion::Template::DEFAULT_CONFIG. The +block+ is stored for use by
+	### containing template's RenderState will be passed as the `containerstate`. The
+	### `initial_attributes` will be deep-copied, and the `options` will be merged with
+	### Inversion::Template::DEFAULT_CONFIG. The `block` is stored for use by
 	### template nodes.
 	def initialize( containerstate=nil, initial_attributes={}, options={}, &block )
 
@@ -164,7 +164,7 @@ class Inversion::RenderState
 	end
 
 
-	### Evaluate the specified +code+ in the context of itself and
+	### Evaluate the specified `code` in the context of itself and
 	### return the result.
 	def eval( code )
 		# self.log.debug "Evaling: %p" [ code ]
@@ -178,7 +178,7 @@ class Inversion::RenderState
 	end
 
 
-	### Override the state's attributes with the given +overrides+, call the +block+, then
+	### Override the state's attributes with the given `overrides`, call the `block`, then
 	### restore the attributes to their original values.
 	def with_attributes( overrides )
 		raise LocalJumpError, "no block given" unless block_given?
@@ -227,8 +227,8 @@ class Inversion::RenderState
 	end
 
 
-	### Set the state's error handler to +handler+ for the duration of the block, restoring
-	### the previous handler after the block exits. +Handler+ must respond to #call, and will
+	### Set the state's error handler to `handler` for the duration of the block, restoring
+	### the previous handler after the block exits. `Handler` must respond to #call, and will
 	### be called with two arguments: the node that raised the exception, and the exception object
 	### itself.
 	def with_error_handler( handler )
@@ -250,7 +250,7 @@ class Inversion::RenderState
 
 
 	### Returns a new RenderState containing the attributes and options of the receiver
-	### merged with those of the +otherstate+.
+	### merged with those of the `otherstate`.
 	def merge( otherstate )
 		merged = self.dup
 		merged.merge!( otherstate )
@@ -258,7 +258,7 @@ class Inversion::RenderState
 	end
 
 
-	### Merge the attributes and options of the +otherstate+ with those of the receiver,
+	### Merge the attributes and options of the `otherstate` with those of the receiver,
 	### replacing any with the same keys.
 	def merge!( otherstate )
 		@scopes.push( @scopes.pop + otherstate.scope )
@@ -268,7 +268,7 @@ class Inversion::RenderState
 	end
 
 
-	### Append operator -- add an node to the final rendered output. If the +node+ renders
+	### Append operator -- add an node to the final rendered output. If the `node` renders
 	### as an object that itself responds to the #render method, #render will be called and
 	### the return value will be appended instead. This will continue until the returned
 	### object either doesn't respond to #render or #renders as itself.
@@ -311,7 +311,7 @@ class Inversion::RenderState
 	end
 
 
-	### Publish the given +nodes+ to all subscribers to the specified +key+.
+	### Publish the given `nodes` to all subscribers to the specified `key`.
 	def publish( key, *nodes )
 		key = key.to_sym
 		# self.log.debug "[0x%016x] Publishing %p nodes: %p" % [ self.object_id * 2, key, nodes ]
@@ -327,7 +327,7 @@ class Inversion::RenderState
 	alias_method :publish_nodes, :publish
 
 
-	### Subscribe the given +node+ to nodes published with the specified +key+.
+	### Subscribe the given `node` to nodes published with the specified `key`.
 	def subscribe( key, node )
 		key = key.to_sym
 		self.log.debug "Adding subscription to %p nodes for %p" % [ key, node ]
@@ -341,8 +341,8 @@ class Inversion::RenderState
 	end
 
 
-	### Add one or more rendered +nodes+ to the state as a reusable fragment associated
-	### with the specified +name+.
+	### Add one or more rendered `nodes` to the state as a reusable fragment associated
+	### with the specified `name`.
 	def add_fragment( name, *nodes )
 		self.log.debug "Adding a %s fragment with %d nodes." % [ name, nodes.size ]
 		nodes.flatten!
@@ -360,7 +360,7 @@ class Inversion::RenderState
 	end
 
 
-	### Handle an +exception+ that was raised while appending a node by calling the
+	### Handle an `exception` that was raised while appending a node by calling the
 	### #errhandler.
 	def handle_render_error( node, exception )
 		self.log.error "%s while rendering %p: %s" %
@@ -385,7 +385,7 @@ class Inversion::RenderState
 	end
 
 
-	### Default exception handler: Handle an +exception+ while rendering +node+ according to the
+	### Default exception handler: Handle an `exception` while rendering `node` according to the
 	### behavior specified by the `on_render_error` option. Returns the string which should be
 	### appended to the output, if any.
 	def default_error_handler( state, node, exception )
@@ -413,7 +413,7 @@ class Inversion::RenderState
 	end
 
 
-	### Return +true+ if rendered nodes are being saved for output.
+	### Return `true` if rendered nodes are being saved for output.
 	def rendering_enabled?
 		return @rendering_enabled ? true : false
 	end
@@ -460,14 +460,14 @@ class Inversion::RenderState
 	protected
 	#########
 
-	### Return the +node+ as a comment if debugging comments are enabled.
+	### Return the `node` as a comment if debugging comments are enabled.
 	def make_node_comment( node )
 		comment_body = node.as_comment_body or return ''
 		return self.make_comment( comment_body )
 	end
 
 
-	### Return the specified +content+ inside of the configured comment characters.
+	### Return the specified `content` inside of the configured comment characters.
 	def make_comment( content )
 		return [
 			self.options[:comment_start],
@@ -477,7 +477,7 @@ class Inversion::RenderState
 	end
 
 
-	### Return the given +nodes+ as a String in the configured encoding.
+	### Return the given `nodes` as a String in the configured encoding.
 	def stringify_nodes( nodes )
 		# self.log.debug "Rendering nodes: %p" % [ nodes ]
 		strings = nodes.flatten.map( &:to_s )

@@ -6,6 +6,9 @@ require 'inversion/template' unless defined?( Inversion::Template )
 require 'inversion/template/attrtag'
 require 'inversion/template/containertag'
 
+using Inversion::Refinements
+
+
 # Inversion 'if' tag.
 #
 # This tag causes a section of the template to be rendered only if its methodchain or attribute

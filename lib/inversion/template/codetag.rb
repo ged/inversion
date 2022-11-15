@@ -1,14 +1,19 @@
 # -*- ruby -*-
 # vim: set noet nosta sw=4 ts=4 :
 
+require 'loggability'
+
 require 'ripper'
 require 'inversion/template' unless defined?( Inversion::Template )
 require 'inversion/template/tag'
 
+using Inversion::Refinements
+
+
 # The base class for Inversion tags that parse the body section of the tag using
 # a Ruby parser.
 #
-# It provides a +tag_pattern+ declarative method that is used to specify a pattern of
+# It provides a `tag_pattern` declarative method that is used to specify a pattern of
 # tokens to match, and a block for handling tag instances that match the pattern.
 #
 #    class Inversion::Template::MyTag < Inversion::Template::CodeTag
@@ -20,7 +25,7 @@ require 'inversion/template/tag'
 #
 #    end
 #
-# The tokens in the +tag_pattern+ are Ruby token names used by the parser. If you're creating
+# The tokens in the `tag_pattern` are Ruby token names used by the parser. If you're creating
 # your own tag, you can dump the tokens for a particular snippet using the 'inversion'
 # command-line tool that comes with the gem:
 #
@@ -35,47 +40,51 @@ class Inversion::Template::CodeTag < Inversion::Template::Tag
 	include Inversion::AbstractClass
 
 
-	### A subclass of Ripper::TokenPattern that binds matches to the beginning and
-	### end of the matched string.
 	class TokenPattern < Ripper::TokenPattern
+		extend Loggability
 
-		# the token pattern's source string
+		# Loggability API -- use Inversion's logger
+		log_to :inversion
+
+		# Expose the source attribute
 		attr_reader :source
 
-		#########
-		protected
-		#########
 
-		### Compile the token pattern into a Regexp
+		### Overloaded to generate a bound regex.
 		def compile( pattern )
+			self.log.debug "Compiling token pattern from: %p" % [ pattern ]
+
 			if m = /[^\w\s$()\[\]{}?*+\.]/.match( pattern )
-				raise Ripper::TokenPattern::CompileError,
-					"invalid char in pattern: #{m[0].inspect}"
+				raise Ripper::CompileError, "invalid char in pattern: #{m[0].inspect}"
 			end
 
-			buf = String.new( '^' )
-			pattern.scan( /(?:\w+|\$\(|[()\[\]\{\}?*+\.]+)/ ) do |tok|
+			buf = +'\\A'
+			pattern.scan(/(?:\w+|\$\(|[()\[\]\{\}?*+\.]+)/) do |tok|
 				case tok
 				when /\w/
-					buf << map_token( tok )
+					buf.concat( map_token(tok) )
 				when '$('
-					buf << '('
+					buf.concat( '(' )
 				when '('
-					buf << '(?:'
+					buf.concat( '(?:' )
 				when /[?*\[\])\.]/
-					buf << tok
+					buf.concat( tok )
 				else
-					raise ScriptError, "invalid token in pattern: %p" % [ tok ]
+					raise 'must not happen'
 				end
 			end
-			buf << '$'
+			buf.concat( '\z' )
 
-			Regexp.compile( buf )
+			self.log.debug "  resulting token pattern is: %p" % [ buf ]
+			return Regexp.compile( buf )
+
 		rescue RegexpError => err
-			raise Ripper::TokenPattern::CompileError, err.message
+			raise Ripper::CompileError, err.message
 		end
 
+
 	end # class TokenPattern
+
 
 
 	#################################################################
@@ -90,10 +99,10 @@ class Inversion::Template::CodeTag < Inversion::Template::Tag
 	end
 
 
-	### Declare a +token_pattern+ for tag bodies along with a +callback+ that will
-	### be called when a tag matching the pattern is instantiated. The +callback+ will
+	### Declare a `token_pattern` for tag bodies along with a `callback` that will
+	### be called when a tag matching the pattern is instantiated. The `callback` will
 	### be called with the tag instance, and the MatchData object that resulted from
-	### matching the input, and should set up the yielded +tag+ object appropriately.
+	### matching the input, and should set up the yielded `tag` object appropriately.
 	def self::tag_pattern( token_pattern, &callback ) #:yield: tag, match_data
 		pattern = TokenPattern.compile( token_pattern )
 		@tag_patterns = [] unless defined?( @tag_patterns )
@@ -103,7 +112,7 @@ class Inversion::Template::CodeTag < Inversion::Template::Tag
 
 	### Declarative that forces a tag to inherit existing patterns from
 	### its parent, rather than replacing them.  Afterwards, you can use
-	### +tag_pattern+ regularly, appending to the list.
+	### `tag_pattern` regularly, appending to the list.
 	def self::inherit_tag_patterns
 		raise ScriptError, "Patterns already exist for this tag." if defined?( @tag_patterns )
 		@tag_patterns = self.superclass.tag_patterns
@@ -114,8 +123,8 @@ class Inversion::Template::CodeTag < Inversion::Template::Tag
 	###	I N S T A N C E   M E T H O D S
 	#################################################################
 
-	### Initialize a new tag that expects Ruby code in its +body+. Calls the
-	### tag's #parse_pi_body method with the specified +body+.
+	### Initialize a new tag that expects Ruby code in its `body`. Calls the
+	### tag's #parse_pi_body method with the specified `body`.
 	def initialize( body, linenum=nil, colnum=nil ) # :notnew:
 		super
 
@@ -145,12 +154,13 @@ class Inversion::Template::CodeTag < Inversion::Template::Tag
 	protected
 	#########
 
-	### Match the given +body+ against one of the tag's tag patterns, calling the
+	### Match the given `body` against one of the tag's tag patterns, calling the
 	### block associated with the first one that matches and returning the matching
 	### pattern.
 	def match_tag_pattern( body )
 
 		self.class.tag_patterns.each do |tp, callback|
+			self.log.debug "Testing for a match against %p" % [ tp ]
 			if match = tp.match( body.strip )
 				self.log.debug "Matched tag pattern: %p, match is: %p" % [ tp, match ]
 				callback.call( self, match )

@@ -39,7 +39,7 @@ module Inversion::Template::ContainerTag
 	end
 
 
-	### Append the container's subnodes to the +renderstate+.
+	### Append the container's subnodes to the `renderstate`.
 	def render_subnodes( renderstate )
 		self.subnodes.each {|node| renderstate << node }
 	end

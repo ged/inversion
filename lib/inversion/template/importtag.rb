@@ -16,7 +16,7 @@ require 'inversion/template/tag'
 #
 class Inversion::Template::ImportTag < Inversion::Template::Tag
 
-	### Create a new ImportTag with the given +name+, which should be a valid
+	### Create a new ImportTag with the given `name`, which should be a valid
 	### Ruby identifier.
 	def initialize( body, linenum=nil, colnum=nil )
 		super
@@ -32,7 +32,7 @@ class Inversion::Template::ImportTag < Inversion::Template::Tag
 	attr_reader :attributes
 
 
-	### Merge the inherited renderstate into the current template's +renderstate+.
+	### Merge the inherited renderstate into the current template's `renderstate`.
 	def render( renderstate )
 		if (( cstate = renderstate.containerstate ))
 			# self.log.debug "Importing inherited attributes: %p from %p" %

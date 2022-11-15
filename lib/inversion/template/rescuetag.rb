@@ -71,7 +71,7 @@ class Inversion::Template::RescueTag < Inversion::Template::Tag
 	private
 	#######
 
-	### Parse one or more exception classes from the given +rescuespec+ and return them.
+	### Parse one or more exception classes from the given `rescuespec` and return them.
 	def parse_exception_types( rescuespec )
 		return [ ::RuntimeError ] if rescuespec.nil? || rescuespec == ''
 

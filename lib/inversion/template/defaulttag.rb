@@ -54,7 +54,7 @@ class Inversion::Template::DefaultTag < Inversion::Template::CodeTag
 	end
 
 
-	### Create a new DefaultTag with the given +name+, which should be a valid
+	### Create a new DefaultTag with the given `name`, which should be a valid
 	### Ruby identifier.
 	def initialize( body, linenum=nil, colnum=nil )
 		@name        = nil

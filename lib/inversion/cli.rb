@@ -126,7 +126,7 @@ class Inversion::CLI
 	end
 
 
-	### Add the specified +mod+ule containing subcommands to the 'inversion' command.
+	### Add the specified `mod`ule containing subcommands to the 'inversion' command.
 	def self::register_subcommands( mod )
 		self.subcommand_modules ||= []
 		self.subcommand_modules.push( mod )
@@ -168,7 +168,7 @@ class Inversion::CLI
 	end
 
 
-	### Set the global logging +level+ if it's defined.
+	### Set the global logging `level` if it's defined.
 	def self::set_logging_level( level=nil )
 		if level
 			Loggability.level = level.to_sym
@@ -207,7 +207,7 @@ class Inversion::CLI
 	end
 
 
-	### Set up the output levels and globals based on the associated +global+ options.
+	### Set up the output levels and globals based on the associated `global` options.
 	def self::setup_output( global )
 
 		if global[:verbose]
@@ -246,13 +246,13 @@ class Inversion::CLI
 		module_function
 		###############
 
-		### Exit with the specified +exit_code+ after printing the given +message+.
+		### Exit with the specified `exit_code` after printing the given `message`.
 		def exit_now!( message, exit_code=1 )
 			raise GLI::CustomExit.new( message, exit_code )
 		end
 
 
-		### Exit with a helpful +message+ and display the usage.
+		### Exit with a helpful `message` and display the usage.
 		def help_now!( message=nil )
 			exception = OptionParser::ParseError.new( message )
 			def exception.exit_code; 64; end
@@ -273,31 +273,31 @@ class Inversion::CLI
 		end
 
 
-		### Return the specified +string+ in the 'headline' ANSI color.
+		### Return the specified `string` in the 'headline' ANSI color.
 		def headline_string( string )
 			return hl.headline( string )
 		end
 
 
-		### Return the specified +string+ in the 'highlight' ANSI color.
+		### Return the specified `string` in the 'highlight' ANSI color.
 		def highlight_string( string )
 			return hl.highlight( string )
 		end
 
 
-		### Return the specified +string+ in the 'success' ANSI color.
+		### Return the specified `string` in the 'success' ANSI color.
 		def success_string( string )
 			return hl.success( string )
 		end
 
 
-		### Return the specified +string+ in the 'error' ANSI color.
+		### Return the specified `string` in the 'error' ANSI color.
 		def error_string( string )
 			return hl.error( string )
 		end
 
 
-		### Output a table with the given +header+ (an array) and +rows+
+		### Output a table with the given `header` (an array) and `rows`
 		### (an array of arrays).
 		def display_table( header, rows )
 			table = TTY::Table.new( header, rows )
@@ -323,7 +323,7 @@ class Inversion::CLI
 		end
 
 
-		### Display the given list of +items+.
+		### Display the given list of `items`.
 		def display_list( items )
 			items.flatten.each do |item|
 				self.prompt.say( "- %s" % [ self.highlight_string(item) ] )
@@ -332,14 +332,14 @@ class Inversion::CLI
 		end
 
 
-		### Return the count of visible (i.e., non-control) characters in the given +string+.
+		### Return the count of visible (i.e., non-control) characters in the given `string`.
 		def visible_chars( string )
 			return string.to_s.gsub(/\e\[.*?m/, '').scan( /\P{Cntrl}/ ).size
 		end
 
 
 		### In dry-run mode, output the description instead of running the provided block and
-		### return the +return_value+.
+		### return the `return_value`.
 		### If dry-run mode is not enabled, yield to the block.
 		def unless_dryrun( description, return_value=true )
 			if $DRYRUN
@@ -353,8 +353,8 @@ class Inversion::CLI
 
 
 
-		### Load the Inversion::Template from the specified +tmplpath+ and return it. If there
-		### is an error loading the template, output the error and return +nil+.
+		### Load the Inversion::Template from the specified `tmplpath` and return it. If there
+		### is an error loading the template, output the error and return `nil`.
 		def load_template( tmplpath )
 			template = Inversion::Template.load( tmplpath )
 			return template
@@ -384,7 +384,7 @@ class Inversion::CLI
 		end
 
 
-		### Output a subheader with the given +caption+.
+		### Output a subheader with the given `caption`.
 		def output_subheader( caption )
 			self.prompt.say( highlight_string caption )
 		end

@@ -35,7 +35,7 @@ if defined?( ::Tilt )
 			self.evaluate( *args )
 		end
 
-		### Tilt::Template API: render the template with the given +scope+, +locals+, and +block+.
+		### Tilt::Template API: render the template with the given `scope`, `locals`, and `block`.
 		def evaluate( scope, locals, &block )
 			@template.attributes.merge!( scope.to_h ) if scope.respond_to?( :to_h )
 			@template.attributes.merge!( locals )

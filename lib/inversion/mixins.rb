@@ -5,7 +5,7 @@ require 'tempfile'
 
 module Inversion
 
-	# Hides your class's ::new method and adds a +pure_virtual+ method generator for
+	# Hides your class's ::new method and adds a `pure_virtual` method generator for
 	# defining API methods. If subclasses of your class don't provide implementations of
 	# "pure_virtual" methods, NotImplementedErrors will be raised if they are called.
 	#
@@ -66,7 +66,7 @@ module Inversion
 		module_function
 		###############
 
-		### Return a version of the given +hash+ with its keys transformed
+		### Return a version of the given `hash` with its keys transformed
 		### into Strings from whatever they were before.
 		###
 		###    stringhash = stringify_keys( symbolhash )
@@ -86,7 +86,7 @@ module Inversion
 		end
 
 
-		### Return a duplicate of the given +hash+ with its identifier-like keys
+		### Return a duplicate of the given `hash` with its identifier-like keys
 		### transformed into symbols from whatever they were before.
 		###
 		###    symbolhash = symbolify_keys( stringhash )
@@ -144,7 +144,7 @@ module Inversion
 		end
 
 
-		### Escape the +output+ using the format specified by the given +render_state+'s config.
+		### Escape the `output` using the format specified by the given `render_state`'s config.
 		def escape( output, render_state )
 			format = render_state.options[:escape_format] || DEFAULT_ESCAPE_FORMAT
 			return output if format == :none
@@ -159,7 +159,7 @@ module Inversion
 		end
 
 
-		### Escape the given +output+ using HTML entity-encoding.
+		### Escape the given `output` using HTML entity-encoding.
 		def escape_html( output )
 			return output.to_s.
 				gsub( /&/, '&amp;' ).
@@ -168,7 +168,7 @@ module Inversion
 		end
 
 
-		### Escape the given +output+ using the encoding specified in RFC3986 (URIs)
+		### Escape the given `output` using the encoding specified in RFC3986 (URIs)
 		def escape_uri( output )
 			return output.to_s.gsub( URI_ENCODED_CHARACTERS ) do |m|
 				bytes = m[ 0 ].each_byte
@@ -194,7 +194,7 @@ module Inversion
 	module MethodUtilities
 
 		### Creates instance variables and corresponding methods that return their
-		### values for each of the specified +symbols+ in the singleton of the
+		### values for each of the specified `symbols` in the singleton of the
 		### declaring object (e.g., class instance variables and methods if declared
 		### in a Class).
 		def singleton_attr_reader( *symbols )
@@ -204,7 +204,7 @@ module Inversion
 		end
 
 		### Creates methods that allow assignment to the attributes of the singleton
-		### of the declaring object that correspond to the specified +symbols+.
+		### of the declaring object that correspond to the specified `symbols`.
 		def singleton_attr_writer( *symbols )
 			symbols.each do |sym|
 				singleton_class.__send__( :attr_writer, sym )
@@ -213,7 +213,7 @@ module Inversion
 
 		### Creates readers and writers that allow assignment to the attributes of
 		### the singleton of the declaring object that correspond to the specified
-		### +symbols+.
+		### `symbols`.
 		def singleton_attr_accessor( *symbols )
 			symbols.each do |sym|
 				singleton_class.__send__( :attr_accessor, sym )
@@ -230,7 +230,7 @@ module Inversion
 		module_function
 		###############
 
-		### Recursively copy the specified +obj+ and return the result.
+		### Recursively copy the specified `obj` and return the result.
 		def deep_copy( obj )
 			# self.log.debug "Deep copying: %p" % [ obj ]
 

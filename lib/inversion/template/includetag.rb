@@ -19,7 +19,7 @@ require 'inversion/template/tag'
 #
 class Inversion::Template::IncludeTag < Inversion::Template::Tag
 
-	### Create a new IncludeTag with the specified +path+.
+	### Create a new IncludeTag with the specified `path`.
 	def initialize( path, linenum=nil, colnum=nil )
 		super
 		self.log.debug "Body is: %p" % [ @body ]

@@ -36,7 +36,7 @@ module Inversion::CLI::TreeCommand
 	module_function
 	###############
 
-	### Output the given +tree+ of nodes at the specified +indent+ level.
+	### Output the given `tree` of nodes at the specified `indent` level.
 	def output_template_nodes( tree, indent=0 )
 		indenttxt = ' ' * indent
 		tree.each do |node|
@@ -46,7 +46,7 @@ module Inversion::CLI::TreeCommand
 	end
 
 
-	### Dump the node tree of the given +templates+.
+	### Dump the node tree of the given `templates`.
 	def dump_node_trees( templates )
 		templates.each do |path|
 			template = self.load_template( path )
@@ -57,7 +57,7 @@ module Inversion::CLI::TreeCommand
 	end
 
 
-	### Output the given +tree+ of nodes at the specified +indent+ level.
+	### Output the given `tree` of nodes at the specified `indent` level.
 	def output_template_nodes( tree, indent=0 )
 		indenttxt = ' ' * indent
 		tree.each do |node|

@@ -7,7 +7,7 @@ require 'inversion/template/node'
 # Inversion text node class -- container for static content in templates between tags.
 class Inversion::Template::TextNode < Inversion::Template::Node
 
-	### Create a new TextNode with the specified +source+.
+	### Create a new TextNode with the specified `source`.
 	def initialize( body, linenum=nil, colnum=nil )
 		@body = body
 		super

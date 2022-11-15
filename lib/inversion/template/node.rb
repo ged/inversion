@@ -20,7 +20,7 @@ class Inversion::Template::Node
 	log_to :inversion
 
 
-	### Create a new TextNode with the specified +source+.
+	### Create a new TextNode with the specified `source`.
 	def initialize( body, linenum=nil, colnum=nil )
 		@body    = body
 		@linenum = linenum
@@ -39,8 +39,8 @@ class Inversion::Template::Node
 	attr_reader :colnum
 
 
-	### Render the node using the given +render_state+. By default, rendering a node
-	### returns +nil+.
+	### Render the node using the given `render_state`. By default, rendering a node
+	### returns `nil`.
 	def render( render_state )
 		return nil
 	end
@@ -52,7 +52,7 @@ class Inversion::Template::Node
 	end
 
 
-	### Returns +true+ if the node introduces a new parsing/rendering scope.
+	### Returns `true` if the node introduces a new parsing/rendering scope.
 	def is_container?
 		return false
 	end

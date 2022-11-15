@@ -11,7 +11,7 @@ require 'loggability/spechelpers'
 
 require 'inversion'
 
-Inversion::Template::Tag.load_all
+# Inversion::Template::Tag.load_all
 
 
 ### RSpec helper functions.
@@ -21,14 +21,14 @@ module Inversion::SpecHelpers
 	module_function
 	###############
 
-	### Make an easily-comparable version vector out of +ver+ and return it.
+	### Make an easily-comparable version vector out of `ver` and return it.
 	def vvec( ver )
 		return ver.split('.').collect {|char| char.to_i }.pack('N*')
 	end
 
 
-	### Create a string containing an XML Processing Instruction with the given +name+
-	### and +data+.
+	### Create a string containing an XML Processing Instruction with the given `name`
+	### and `data`.
 	def create_pi( name, data )
 		return "<?#{name} #{data} ?>"
 	end

@@ -20,7 +20,7 @@ class Inversion::Template::FragmentTag < Inversion::Template::Tag
 	include Inversion::Template::ContainerTag
 
 
-	### Create a new FragmentTag with the given +body+.
+	### Create a new FragmentTag with the given `body`.
 	def initialize( body, line=nil, column=nil )
 		super
 

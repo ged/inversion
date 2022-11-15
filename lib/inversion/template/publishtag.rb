@@ -30,7 +30,7 @@ class Inversion::Template::PublishTag < Inversion::Template::Tag
 	include Inversion::Template::ContainerTag
 
 
-	### Create a new PublishTag with the given +body+.
+	### Create a new PublishTag with the given `body`.
 	def initialize( body, line=nil, column=nil )
 		super
 
@@ -49,7 +49,7 @@ class Inversion::Template::PublishTag < Inversion::Template::Tag
 	attr_reader :key
 
 
-	### Render the published subnodes in the context of the given +renderstate+, but
+	### Render the published subnodes in the context of the given `renderstate`, but
 	### save them for publication after the render is done.
 	def render( renderstate )
 		self.log.debug "Publishing %d nodes as %s" % [ self.subnodes.length, self.key ]

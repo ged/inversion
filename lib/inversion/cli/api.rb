@@ -37,7 +37,7 @@ module Inversion::CLI::ApiCommand
 	###############
 
 
-	### Output a description of the +template+'s attributes, subscriptions, etc.
+	### Output a description of the `template`'s attributes, subscriptions, etc.
 	def describe_template_api( template )
 		attrs = template.attributes.keys.map( &:to_s )
 		return if attrs.empty?

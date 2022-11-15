@@ -27,23 +27,23 @@ end
 #
 # == Template Options
 #
-# Inversion supports the {Configurability}[http://rubygems.org/gems/configurability]
-# API, and registers itself with the +templates+ key. This means you can either add
-# a +templates+ section to your Configurability config, or call
+# Inversion supports the [Configurability](http://rubygems.org/gems/configurability)
+# API, and registers itself with the `templates` key. This means you can either add
+# a `templates` section to your Configurability config, or call
 # ::configure yourself with a config Hash (or something that quacks like one).
 #
 # To set options on a per-template basis, you can pass an options hash to either
 # Inversion::Template::load or Inversion::Template::new, or set them from within the template
-# itself using the {config tag}[rdoc-ref:Tags@config].
+# itself using the [config tag](rdoc-ref:Tags@config).
 #
 # The available options are:
 #
 # [:ignore_unknown_tags]
 #   Setting to false causes unknown tags used in templates to raise an
-#   Inversion::ParseError. Defaults to +true+.
+#   Inversion::ParseError. Defaults to `true`.
 #
 # [:on_render_error]
-#   Dictates the behavior of exceptions during rendering. Defaults to +:comment+.
+#   Dictates the behavior of exceptions during rendering. Defaults to `:comment`.
 #
 #   [:ignore]
 #     Exceptions are silently ignored.
@@ -54,7 +54,7 @@ end
 #
 #
 # [:debugging_comments]
-#   Insert various Inversion parse and render statements while rendering. Defaults to +false+.
+#   Insert various Inversion parse and render statements while rendering. Defaults to `false`.
 #
 # [:comment_start]
 #   When rendering debugging comments, the comment is started with these characters.
@@ -70,16 +70,16 @@ end
 #   last checked member of this. Defaults to <code>[]</code>.
 #
 # [:escape_format]
-#   The escaping used by tags such as +escape+ and +pp+. Default: +:html+.
+#   The escaping used by tags such as `escape` and `pp`. Default: `:html`.
 #
 # [:strip_tag_lines]
 #   If a tag's presence introduces a blank line into the output, this option
-#   removes it. Defaults to +true+.
+#   removes it. Defaults to `true`.
 #
 # [:stat_delay]
 #   Templates know when they've been altered on disk, and can dynamically
 #   reload themselves in long running applications.  Setting this option creates
-#   a purposeful delay between reloads for busy servers. Defaults to +0+
+#   a purposeful delay between reloads for busy servers. Defaults to `0`
 #   (disabled).
 #
 # [:strict_attributes]
@@ -109,9 +109,6 @@ class Inversion::Template
 	require 'inversion/template/node'
 	require 'inversion/template/tag'
 	require 'inversion/renderstate'
-
-	# Alias to maintain backward compatibility with <0.2.0 code
-	Parser = Inversion::Parser
 
 	# Valid actions for 'on_render_error'
 	VALID_ERROR_ACTIONS = [
@@ -164,7 +161,7 @@ class Inversion::Template
 	end
 
 
-	### Read a template object from the specified +path+.
+	### Read a template object from the specified `path`.
 	def self::load( path, parsestate=nil, opts={} )
 
 		# Shift the options hash over if there isn't a parse state
@@ -209,10 +206,10 @@ class Inversion::Template
 	end
 
 
-	### Add one or more extension +modules+ to Inversion::Template. This allows tags to decorate
+	### Add one or more extension `modules` to Inversion::Template. This allows tags to decorate
 	### the template class with new functionality.
 	###
-	### Each one of the given +modules+ will be included as a mixin, and if it also
+	### Each one of the given `modules` will be included as a mixin, and if it also
 	### contains a constant called ClassMethods and/or PrependedMethods, it will
 	### also be extended/prepended (respectively) with it.
 	###
@@ -259,7 +256,7 @@ class Inversion::Template
 	end
 
 
-	### Create a new Inversion:Template with the given +source+.
+	### Create a new Inversion:Template with the given `source`.
 	def initialize( source, parsestate=nil, opts={} )
 		if parsestate.is_a?( Hash )
 			# self.log.debug "Shifting template options: %p" % [ parsestate ]
@@ -324,7 +321,7 @@ class Inversion::Template
 	end
 
 
-	### Returns +true+ if the template was loaded from a file and the file's mtime
+	### Returns `true` if the template was loaded from a file and the file's mtime
 	### is after the time the template was created.
 	def changed?
 		return false unless file = self.source_file
@@ -407,7 +404,7 @@ class Inversion::Template
 	end
 
 
-	### Parse the given +source+ into the template node tree.
+	### Parse the given `source` into the template node tree.
 	def parse( source, parsestate=nil )
 		opts = self.class.config.merge( self.options )
 		parser = Inversion::Parser.new( self, opts )
@@ -441,7 +438,7 @@ class Inversion::Template
 	end
 
 
-	### Add attributes for the given +node+'s identifiers.
+	### Add attributes for the given `node`'s identifiers.
 	def add_attributes_from_node( node )
 		if node.respond_to?( :identifiers )
 			node.identifiers.each do |id|
@@ -452,7 +449,7 @@ class Inversion::Template
 	end
 
 
-	### Install reader and writer methods for the attribute associated with the specified +key+.
+	### Install reader and writer methods for the attribute associated with the specified `key`.
 	def install_accessors( key )
 		reader, writer = self.make_attribute_accessors( key )
 

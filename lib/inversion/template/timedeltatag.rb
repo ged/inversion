@@ -73,7 +73,7 @@ class Inversion::Template::TimeDeltaTag < Inversion::Template::AttrTag
 	private
 	#######
 
-	### Return a string describing +seconds+ as an approximate interval of time.
+	### Return a string describing `seconds` as an approximate interval of time.
 	def timeperiod( seconds )
 		return case
 			when seconds < MINUTES - 5
