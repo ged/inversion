@@ -55,7 +55,7 @@ class Inversion::Template::CodeTag < Inversion::Template::Tag
 			self.log.debug "Compiling token pattern from: %p" % [ pattern ]
 
 			if m = /[^\w\s$()\[\]{}?*+\.]/.match( pattern )
-				raise Ripper::CompileError, "invalid char in pattern: #{m[0].inspect}"
+				raise Ripper::TokenPattern::CompileError, "invalid char in pattern: #{m[0].inspect}"
 			end
 
 			buf = +'\\A'
@@ -79,7 +79,7 @@ class Inversion::Template::CodeTag < Inversion::Template::Tag
 			return Regexp.compile( buf )
 
 		rescue RegexpError => err
-			raise Ripper::CompileError, err.message
+			raise Ripper::TokenPattern::CompileError, err.message
 		end
 
 

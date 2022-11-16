@@ -8,9 +8,9 @@ gem 'pastel', '~> 0.8'
 
 group :development do
     gem 'rack-test', '~> 1.1'
-	gem 'rake-deveiate', '~> 0.14'
+	gem 'rake-deveiate', '~> 0.21'
     gem 'rdoc', '~> 6.2'
-	gem 'rdoc-generator-fivefish', '~> 0.4'
+	gem 'rdoc-generator-sixfish', '~> 0.1'
     gem 'rspec-wait', '~> 0.0'
     gem 'simplecov', '~> 0.18'
     gem 'sinatra', '~> 2.0'

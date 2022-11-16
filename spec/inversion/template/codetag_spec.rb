@@ -70,4 +70,27 @@ RSpec.describe Inversion::Template::CodeTag do
 			}.to raise_exception( ScriptError, /patterns already exist/i )
 		end
 	end
+
+
+	it "throws an error if trying to declare a tag pattern with an invalid character" do
+		expect {
+			Class.new( described_class ) do
+				tag_pattern "°°°" do |tag, match|
+					:foo
+				end
+			end
+		}.to raise_error( Ripper::TokenPattern::CompileError, /invalid char/i )
+	end
+
+
+	it "throws an error if given an invalid tag pattern" do
+		expect {
+			Class.new( described_class ) do
+				tag_pattern "$(ident)$(" do |tag, match|
+					:foo
+				end
+			end
+		}.to raise_error( Ripper::TokenPattern::CompileError, /unmatched paren/i )
+	end
+
 end
