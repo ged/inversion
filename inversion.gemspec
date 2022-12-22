@@ -1,15 +1,15 @@
 # -*- encoding: utf-8 -*-
-# stub: inversion 1.4.0.pre.20221115160325 ruby lib
+# stub: inversion 1.4.0.pre.20221221163546 ruby lib
 
 Gem::Specification.new do |s|
   s.name = "inversion".freeze
-  s.version = "1.4.0.pre.20221115160325"
+  s.version = "1.4.0.pre.20221221163546"
 
   s.required_rubygems_version = Gem::Requirement.new("> 1.3.1".freeze) if s.respond_to? :required_rubygems_version=
   s.metadata = { "bug_tracker_uri" => "https://todo.sr.ht/~ged/Inversion/browse", "documentation_uri" => "http://deveiate.org/code/Inversion", "homepage_uri" => "https://hg.sr.ht/~ged/Inversion", "source_uri" => "https://hg.sr.ht/~ged/Inversion/browse" } if s.respond_to? :metadata=
   s.require_paths = ["lib".freeze]
   s.authors = ["Michael Granger".freeze, "Mahlon E. Smith".freeze]
-  s.date = "2022-11-15"
+  s.date = "2022-12-21"
   s.description = "Inversion is a templating system for Ruby. It uses the \u201CInversion of Control\u201D principle to decouple the contents and structure of templates from the code that uses them, making it easier to separate concerns, keep your tests simple, and avoid polluting scopes with ephemeral data.".freeze
   s.email = ["ged@faeriemud.org".freeze, "mahlon@martini.nu".freeze]
   s.executables = ["inversion".freeze]

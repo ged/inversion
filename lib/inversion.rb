@@ -25,7 +25,7 @@ module Inversion
 	warn ">>> Inversion requires Ruby 2.4.0 or later. <<<" if RUBY_VERSION < '2.4.0'
 
 	# Library version constant
-	VERSION = '1.3.1'
+	VERSION = '1.4.0'
 
 	# Version-control revision constant
 	REVISION = %q$Revision$

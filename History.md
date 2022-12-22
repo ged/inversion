@@ -2,6 +2,15 @@
 
 ---
 
+## v1.4.0 [2022-12-21] Michael Granger <ged@faeriemud.org>
+
+Improvements:
+
+- Update for Ruby 3, modernize RSpec setup
+- Convert CLI to GLI+TTY
+- Fix up error class in codetag.
+
+
 ## v1.3.1 [2020-09-29] Michael Granger <ged@faeriemud.org>
 
 Improvements:
