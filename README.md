@@ -10,7 +10,7 @@ github
 : https://github.com/ged/inversion
 
 docs
-: http://deveiate.org/code/Inversion
+: http://deveiate.org/code/inversion
 
 
 ## Description
